@@ -24,7 +24,7 @@ function renderLanguageGrid() {
   const grid = document.getElementById('languageGrid');
   if (!grid) return;
   grid.innerHTML = '';
-  
+
   languages.forEach(lang => {
     const chip = document.createElement('div');
     chip.className = `lang-chip ${lang.code === selectedLang ? 'active' : ''}`;
