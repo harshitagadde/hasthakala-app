@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=99.0">
+  <link rel="stylesheet" href="css/main.css?v=100.0">
 
   <style>
     /* ENFORCED PARCHMENT LIGHT THEME PALETTE */
@@ -62,19 +62,6 @@
       overflow: hidden;
     }
 
-    .screen-overlay {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: #F8F4EE !important;
-      background-color: #F8F4EE !important;
-      z-index: 200;
-      display: flex;
-      flex-direction: column;
-      padding: 24px 20px;
-      overflow-y: auto;
-    }
-    .screen-overlay.hidden { display: none !important; }
-
     /* In-App Navigation Bar for Overlays */
     .overlay-back-bar {
       display: flex;
@@ -97,11 +84,6 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.03);
     }
     .back-arrow-btn:active { transform: scale(0.96); }
-
-    #screenWelcome {
-      background: #F8F4EE !important;
-      background-color: #F8F4EE !important;
-    }
 
     .app-header {
       padding: 14px 18px;
@@ -202,27 +184,33 @@
     .pay-tabs { display: flex; gap: 6px; margin: 12px 0; }
     .pay-tab { flex: 1; padding: 8px 4px; font-size: 0.75rem; background: #FFF; border: 1px solid #EBE3D8; color: #787067; border-radius: 10px; cursor: pointer; text-align: center; font-weight: 700; }
     .pay-tab.active { background: #234E35 !important; color: #FFF !important; font-weight: 800; border-color: #234E35 !important; }
-
-    /* INCREASED NAVIGATION BAR & ENLARGED ICON STYLES */
-    .bottom-nav { display: flex !important; background: #FFFFFF !important; border-top: 1px solid #EBE3D8 !important; padding: 12px 0 10px 0 !important; margin-top: auto !important; z-index: 100 !important; }
-    .nav-item { flex: 1 !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 3px !important; background: none !important; border: none !important; color: #787067 !important; font-size: 0.75rem !important; font-weight: 700 !important; cursor: pointer !important; }
-    .nav-item .nav-icon { font-size: 1.8rem !important; line-height: 1 !important; display: block !important; }
-    .nav-item.active { color: #234E35 !important; font-weight: 800 !important; }
-    .nav-item.active .nav-icon { transform: scale(1.15) !important; }
   </style>
 </head>
 <body>
 
   <div class="app-container" id="appContainer">
 
-    <!-- OVERLAY 0: WELCOME SCREEN -->
-    <div id="screenWelcome" class="screen-overlay" style="align-items:center; justify-content:center; text-align:center;">
-      <div style="background:#FFF; border-radius:50%; width:120px; height:120px; display:flex; align-items:center; justify-content:center; border:1px solid #EBE3D8; margin-bottom:20px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); overflow:hidden;">
-        <img src="logo.jpeg" alt="Hasthakala Logo" style="width:100%; height:100%; object-fit:cover;" />
+    <!-- OVERLAY 0: WELCOME SCREEN (MATCHING SCREEN 1 DESIGN) -->
+    <div id="screenWelcome" class="screen-overlay">
+      <div class="welcome-logo-container">
+        <img src="logo.jpeg" alt="Hasthakala Logo" />
       </div>
-      <h1 style="font-family:'Cinzel',serif; color:#234E35 !important; font-size:1.6rem; font-weight:800;" id="lblWelcomeTitle">WELCOME TO HASTHAKALA</h1>
-      <p style="font-size:0.9rem; color:#9B3B2B !important; font-style:italic; margin-top:6px; font-weight:600;" id="lblWelcomeSubtitle">Rural Hands • Global Reach</p>
-      <button class="action-btn" onclick="startAppFromWelcome()" style="margin-top:32px; width:88%; font-size:1rem;" id="btnGetStarted">Get Started ➔</button>
+
+      <div class="welcome-text-group">
+        <h1 style="font-family:'Cinzel',serif; color:#234E35; font-size:1.75rem; font-weight:800; letter-spacing:1px;" id="lblWelcomeTitle">
+          HASTHAKALA
+        </h1>
+        <p style="font-size:0.85rem; color:#9B3B2B; font-weight:700; letter-spacing:1px; margin-top:4px;" id="lblWelcomeSubtitle">
+          Rural Hands • Global Reach
+        </p>
+
+        <div class="welcome-tagline-main">Authentic Crafts from Rural India</div>
+        <div class="welcome-tagline-sub">Support artisans. Celebrate heritage.</div>
+      </div>
+
+      <button class="action-btn" onclick="startAppFromWelcome()" style="width:100%; font-size:1rem; margin-bottom:10px;" id="btnGetStarted">
+        Get Started ➔
+      </button>
     </div>
 
     <!-- OVERLAY 1: LANGUAGE SELECTION -->
@@ -1063,7 +1051,7 @@
       document.getElementById('screenCartModal').classList.add('hidden');
     }
 
-    // --- FULL FIXED DRAGGABLE VOICE ASSISTANT ICON LOGIC ---
+    // --- DRAGGABLE VOICE ASSISTANT ICON LOGIC ---
     const dragBtn = document.getElementById('draggableVoiceBtn');
     let activeDrag = false;
     let currentPosX = 0, currentPosY = 0, initialPosX = 0, initialPosY = 0;
