@@ -477,7 +477,6 @@
     function saveProducts() { localStorage.setItem('hasthakala_products', JSON.stringify(publishedProducts)); }
     function saveCart() { localStorage.setItem('hasthakala_cart', JSON.stringify(cart)); }
 
-    // COMPREHENSIVE INDIAN LANGUAGES LIST (All major official/scheduled regional languages plus English)
     const languages = [
       { code: 'en-IN', name: 'English (India)' },
       { code: 'hi-IN', name: 'हिन्दी (Hindi)' },
@@ -570,7 +569,7 @@
       try { new QRCode(container, { text: upiString, width: 110, height: 110, colorDark: "#234E35", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M }); } catch(e) {}
     }
 
-    // PERFECT CONDITION VOICE RECOGNITION & TRANSCRIPTION ENGINE
+    // ROBUST VOICE RECORDING ENGINE WITH CLEAN TRANSCRIPTION HANDLING
     function toggleRealVoiceRecording() {
       const btn = document.getElementById('recordBtn');
       const output = document.getElementById('transcriptOutput');
@@ -583,7 +582,9 @@
 
       if (!isRecording) {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (recognition) { try { recognition.stop(); } catch(e){} }
+        if (recognition) {
+          try { recognition.abort(); } catch(e){}
+        }
 
         recognition = new SpeechRecognition();
         recognition.continuous = true;
@@ -681,13 +682,15 @@
       }
     }
 
-    // VOICE ASSISTANT MODAL & NAVIGATION COMMANDS
+    // VOICE ASSISTANT MODAL & NAVIGATION COMMANDS (FIXED STICKING ISSUES)
     function toggleVoiceAssistantModal() {
       const modal = document.getElementById('voiceAssistantModal');
       if (!modal) return;
       if (modal.style.display === 'flex') {
         modal.style.display = 'none';
-        if (assistantRecognition) try { assistantRecognition.stop(); } catch(e){}
+        if (assistantRecognition) {
+          try { assistantRecognition.abort(); } catch(e){}
+        }
       } else {
         modal.style.display = 'flex';
         startAssistantListening();
@@ -700,7 +703,9 @@
         return;
       }
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (assistantRecognition) try { assistantRecognition.stop(); } catch(e){}
+      if (assistantRecognition) {
+        try { assistantRecognition.abort(); } catch(e){}
+      }
 
       assistantRecognition = new SpeechRecognition();
       assistantRecognition.continuous = true;
@@ -710,23 +715,48 @@
 
       assistantRecognition.onresult = function(event) {
         let text = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) text += event.results[i][0].transcript;
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          text += event.results[i][0].transcript;
+        }
         document.getElementById('assistantTranscript').innerText = text;
         const lower = text.toLowerCase();
         
+        // Comprehensive command mapping to prevent modal locking/freezing
         if (lower.includes('studio') || lower.includes('photo') || lower.includes('फोटो') || lower.includes('ఫోటో')) {
-          setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-studio'); }, 400);
+          toggleVoiceAssistantModal();
+          switchSellerPage('seller-studio');
         } else if (lower.includes('voice') || lower.includes('description') || lower.includes('विवरण') || lower.includes('వివరణ')) {
-          setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-voice'); }, 400);
+          toggleVoiceAssistantModal();
+          switchSellerPage('seller-voice');
+        } else if (lower.includes('bank') || lower.includesन्.includes('qr') || lower.includes('bank details') || lower.includes('बैंक') || lower.includes('ব্যাংক') || lower.includes('ব্যাঙ্ক') || lower.includes('బ్యాంక్')) {
+          toggleVoiceAssistantModal();
+          switchSellerPage('seller-bank');
         } else if (lower.includes('price') || lower.includes('cost') || lower.includes('मूल्य') || lower.includes('ధర')) {
-          setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-pricing'); }, 400);
+          toggleVoiceAssistantModal();
+          switchSellerPage('seller-pricing');
         } else if (lower.includes('catalog') || lower.includes('catalogue') || lower.includes('कैटलॉग')) {
-          setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-inventory'); }, 400);
+          toggleVoiceAssistantModal();
+          switchSellerPage('seller-inventory');
         }
       };
       
-      assistantRecognition.onerror = function(e) { if(e.error === 'not-allowed') document.getElementById('assistantTranscript').innerText = 'Mic blocked.'; };
-      try { assistantRecognition.start(); } catch(e) {}
+      assistantRecognition.onerror = function(e) { 
+        if(e.error === 'not-allowed') {
+          document.getElementById('assistantTranscript').innerText = 'Mic blocked.'; 
+        }
+      };
+
+      assistantRecognition.onend = function() {
+        // Safe auto-restart if modal remains open
+        const modal = document.getElementById('voiceAssistantModal');
+        if (modal && modal.style.display === 'flex') {
+          try { assistantRecognition.start(); } catch(e) {}
+        }
+      };
+
+      try { 
+        assistantRecognition.start(); 
+      } catch(e) {}
     }
 
     // CALCULATOR & PUBLISHING
