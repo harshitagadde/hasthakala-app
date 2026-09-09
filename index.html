@@ -14,6 +14,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- QRCode.js CDN for real dynamic QR generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
     :root {
@@ -475,21 +478,19 @@
           <button class="action-btn" onclick="switchSellerPage('seller-bank')" id="btnNextToBank">Next Page: Bank Details & QR ➔</button>
         </div>
 
-        <!-- PAGE 3: BANK DETAILS & QR PAGE -->
+        <!-- PAGE 3: BANK DETAILS & DYNAMIC QR PAGE -->
         <div id="seller-bank" class="page-section">
           <div class="section-card">
             <div class="section-title" id="lblBankTitle">🏦 3. Seller Bank Details & Payment QR</div>
             <input type="text" id="bankHolderName" class="input-field" placeholder="Account Holder Name" value="Lakshmi Devi (Craft Artisan)" />
             <input type="text" id="bankAccNo" class="input-field" placeholder="Bank Account Number" value="918230048123" />
             <input type="text" id="bankIfsc" class="input-field" placeholder="IFSC Code" value="SBIN0001420" />
-            <input type="text" id="bankUpi" class="input-field" placeholder="UPI ID" value="lakshmidevi@ybl" />
+            <input type="text" id="bankUpi" class="input-field" placeholder="UPI ID" value="lakshmidevi@ybl" oninput="generateSellerQRCode()" />
 
             <div style="margin-top: 14px; background: #FAF6EE; border: 1px dashed #234E35; border-radius: 14px; padding: 14px; text-align: center;">
-              <div style="font-size: 0.8rem; font-weight: 800; color: #234E35; margin-bottom: 8px;">📱 Your Direct Payment QR Code</div>
-              <div style="width: 120px; height: 120px; background: #FFF; margin: 0 auto; border: 1px solid #EBE3D8; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
-                📷
-              </div>
-              <span style="font-size: 0.680rem; color: #787067; display: block; margin-top: 6px;">Scannable by Google Pay, PhonePe & Paytm for direct payouts</span>
+              <div style="font-size: 0.8rem; font-weight: 800; color: #234E35; margin-bottom: 8px;">📱 Your Scannable Payment QR Code</div>
+              <div id="qrcodeContainer" style="display: flex; justify-content: center; align-items: center; background: #FFF; padding: 10px; border-radius: 8px; width: fit-content; margin: 0 auto; border: 1px solid #EBE3D8;"></div>
+              <span style="font-size: 0.68rem; color: #787067; display: block; margin-top: 8px;">Scannable by Google Pay, PhonePe & Paytm for direct payouts</span>
             </div>
           </div>
           <button class="action-btn" onclick="switchSellerPage('seller-pricing')" id="btnNextToPricing">Next Page: Price Calculator ➔</button>
@@ -590,6 +591,7 @@
     let cart = [];
     let selectedModalProduct = null;
     let selectedPaymentMethod = 'upi';
+    let qrInstance = null;
 
     const languages = [
       { code: 'hi-IN', name: 'हिंदी' },
@@ -871,10 +873,10 @@
       }
     }
 
-    // --- SELLER-ONLY VOICE ASSISTANT NAVIGATION ---
+    // --- SELLER-ONLY VOICE ASSISTANT NAVIGATION & COMMANDS ---
     function startAssistantListening() {
       if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-        document.getElementById('assistantTranscript').innerText = 'Speech recognition not supported.';
+        document.getElementById('assistantTranscript').innerText = 'Speech recognition not supported in this browser.';
         return;
       }
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -888,8 +890,8 @@
       assistantRecognition.interimResults = true;
       assistantRecognition.lang = selectedLang;
       
-      document.getElementById('assistantStatusText').innerText = 'Listening for seller command...';
-      document.getElementById('assistantTranscript').innerHTML = '<em>Listening... (Say "Studio", "Description", "Price", or "Catalogue")</em>';
+      document.getElementById('assistantStatusText').innerText = 'Listening for seller voice commands...';
+      document.getElementById('assistantTranscript').innerHTML = '<em>Say "Studio", "Voice", "Price", or "Catalogue"...</em>';
 
       assistantRecognition.onresult = function(event) {
         let text = '';
@@ -901,19 +903,19 @@
         const lower = text.toLowerCase();
 
         if (lower.includes('studio') || lower.includes('photo') || lower.includes('upload') || lower.includes('फोटो') || lower.includes('ఫోటో')) {
-          document.getElementById('assistantStatusText').innerText = 'Opening AI Studio...';
+          document.getElementById('assistantStatusText').innerText = 'Executing: Opening AI Studio...';
           setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-studio'); }, 600);
         }
         else if (lower.includes('description') || lower.includes('voice') || lower.includes('विवरण') || lower.includes('వివరణ')) {
-          document.getElementById('assistantStatusText').innerText = 'Opening Voice Description...';
+          document.getElementById('assistantStatusText').innerText = 'Executing: Opening Voice Description...';
           setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-voice'); }, 600);
         }
         else if (lower.includes('price') || lower.includes('cost') || lower.includes('मूल्य') || lower.includes('ధర')) {
-          document.getElementById('assistantStatusText').innerText = 'Opening Price Calculator...';
+          document.getElementById('assistantStatusText').innerText = 'Executing: Opening Price Calculator...';
           setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-pricing'); }, 600);
         }
         else if (lower.includes('catalogue') || lower.includes('catalog') || lower.includes('कैटलॉग') || lower.includes('క్యాటలాగ్')) {
-          document.getElementById('assistantStatusText').innerText = 'Opening Catalog...';
+          document.getElementById('assistantStatusText').innerText = 'Executing: Opening Catalog...';
           setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-inventory'); }, 600);
         }
       };
@@ -950,11 +952,12 @@
         document.getElementById('buyerPortal').classList.remove('active');
         document.getElementById('btnCartHeader').style.display = 'none';
         
-        // Ensure voice assistant button shows in seller portal if mode is 'voice' or always available as a floating helper
+        // Always show voice assistant in Seller Portal once voice mode or portal is entered
         if (voiceBtn) {
           voiceBtn.style.setProperty('display', 'flex', 'important');
         }
         switchSellerPage('seller-studio');
+        setTimeout(() => generateSellerQRCode(), 200);
       } else {
         document.getElementById('buyerPortal').classList.add('active');
         document.getElementById('sellerPortal').classList.remove('active');
@@ -985,9 +988,35 @@
       document.getElementById(pageId).classList.add('active');
       if(pageId === 'seller-studio') document.getElementById('snav-studio').classList.add('active');
       if(pageId === 'seller-voice') document.getElementById('snav-voice').classList.add('active');
-      if(pageId === 'seller-bank') document.getElementById('snav-bank').classList.add('active');
+      if(pageId === 'seller-bank') {
+        document.getElementById('snav-bank').classList.add('active');
+        setTimeout(() => generateSellerQRCode(), 100);
+      }
       if(pageId === 'seller-pricing') document.getElementById('snav-pricing').classList.add('active');
       if(pageId === 'seller-inventory') document.getElementById('snav-inventory').classList.add('active');
+    }
+
+    // --- DYNAMIC QR GENERATOR ---
+    function generateSellerQRCode() {
+      const container = document.getElementById('qrcodeContainer');
+      if (!container) return;
+      container.innerHTML = '';
+      const upiId = document.getElementById('bankUpi')?.value || 'lakshmidevi@ybl';
+      const payeeName = document.getElementById('bankHolderName')?.value || 'Lakshmi Devi';
+      const upiString = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payeeName)}&cu=INR`;
+      
+      try {
+        new QRCode(container, {
+          text: upiString,
+          width: 110,
+          height: 110,
+          colorDark: "#234E35",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      } catch(e) {
+        container.innerText = 'QR Code generated for ' + upiId;
+      }
     }
 
     // --- ROBUST NATIVE VOICE RECORDER & TRANSLATOR ---
