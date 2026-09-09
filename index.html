@@ -16,9 +16,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* =====================================================
-       HASTHAKALA - PARCHMENT & WARM WOOD THEME STYLES
-    ===================================================== */
     :root {
       --bg-light: #F8F4EE !important;
       --bg-card: #FFFFFF !important;
@@ -63,7 +60,6 @@
       margin: 0 auto !important;
     }
 
-    /* Full screen overlays covering app frame */
     .screen-overlay {
       position: absolute !important;
       inset: 0 !important;
@@ -176,7 +172,12 @@
       font-size: 0.95rem; margin-top: 14px;
       box-shadow: 0 4px 12px rgba(35, 78, 53, 0.2);
     }
-    .action-btn.recording { background: #9B3B2B !important; color: white !important; }
+    .action-btn.recording { background: #9B3B2B !important; color: white !important; animation: pulseRed 1.5s infinite; }
+    @keyframes pulseRed {
+      0% { box-shadow: 0 0 0 0 rgba(155, 59, 43, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(155, 59, 43, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(155, 59, 43, 0); }
+    }
     .secondary-btn { background: #FFF !important; border: 1.5px solid #EBE3D8 !important; color: #201D1A !important; }
 
     .view-container { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: #F8F4EE !important; }
@@ -194,9 +195,7 @@
     }
     .section-title { font-family: 'Cinzel', serif; font-size: 1rem; color: #234E35 !important; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 800; }
 
-    /* =========================================================
-       AI PHOTO STUDIO CSS WIDGET INTEGRATION
-    ========================================================= */
+    /* AI PHOTO STUDIO WIDGET STYLES */
     .ai-photo-editor { width: 100%; margin: 0 auto; color: #fff; }
     .ai-editor-card { background: linear-gradient(145deg, #24160f, #120b07); border: 1px solid rgba(218, 166, 74, .35); border-radius: 18px; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
     .ai-editor-title { font-family: Cinzel, serif; font-size: 1.1rem; color: #e9c46a; margin-bottom: 4px; }
@@ -264,7 +263,7 @@
     .nav-item .nav-icon { font-size: 1.6rem !important; line-height: 1 !important; display: block !important; }
     .nav-item.active { color: #234E35 !important; font-weight: 800 !important; }
 
-    /* DRAGGABLE VOICE ASSISTANT ICON & POPUP */
+    /* FLOATING VOICE ASSISTANT ICON & POPUP */
     #draggableVoiceBtn {
       position: absolute !important; right: 20px !important; bottom: 80px !important; width: 58px !important; height: 58px !important; border-radius: 50% !important; border: 2px solid #FFFFFF !important; background: #234E35 !important; color: #FFFFFF !important; font-size: 26px !important; cursor: grab !important; z-index: 9999 !important; box-shadow: 0 8px 20px rgba(35, 78, 53, 0.35) !important; display: flex !important; align-items: center !important; justify-content: center !important; user-select: none !important; touch-action: none !important;
     }
@@ -410,7 +409,6 @@
                 <div class="ai-editor-title">✨ AI Photo Studio</div>
                 <div class="ai-editor-subtitle">Upload any photo — studio automatically improves it for selling.</div>
 
-                <!-- Upload Zone -->
                 <label class="ai-upload-zone" id="aiUploadZone" for="aiImageInput">
                   <div class="ai-upload-icon">📷</div>
                   <strong>Take or upload a product photo</strong>
@@ -418,7 +416,6 @@
                   <input type="file" id="aiImageInput" accept="image/*" capture="environment">
                 </label>
 
-                <!-- Workspace -->
                 <div class="ai-editor-workspace" id="aiWorkspace">
                   <div class="ai-preview-area">
                     <canvas id="aiPreviewCanvas"></canvas>
@@ -589,6 +586,7 @@
     let appMode = 'manual';
     let isRecording = false;
     let recognition = null;
+    let assistantRecognition = null;
     let accumulatedTranscript = '';
     let publishedProducts = [];
     let cart = [];
@@ -600,7 +598,7 @@
       { code: 'ta-IN', name: 'தமிழ்' },
       { code: 'kn-IN', name: 'ಕನ್ನಡ' },
       { code: 'mr-IN', name: 'मराठी' },
-      { code: 'gu-IN', name: 'ગુજરાતી' },
+      { code: 'gu-IN', name: 'ગુજરાती' },
       { code: 'en-IN', name: 'English' }
     ];
 
@@ -856,7 +854,9 @@
       if (!modal) return;
       if (modal.style.display === 'flex') {
         modal.style.display = 'none';
-        if (recognition && isRecording) recognition.stop();
+        if (assistantRecognition) {
+          try { assistantRecognition.stop(); } catch(e){}
+        }
       } else {
         modal.style.display = 'flex';
         startAssistantListening();
@@ -869,21 +869,53 @@
         return;
       }
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const assistantRec = new SpeechRecognition();
-      assistantRec.continuous = false;
-      assistantRec.interimResults = true;
-      assistantRec.lang = selectedLang;
+      
+      if (assistantRecognition) {
+        try { assistantRecognition.stop(); } catch(e){}
+      }
+
+      assistantRecognition = new SpeechRecognition();
+      assistantRecognition.continuous = true;
+      assistantRecognition.interimResults = true;
+      assistantRecognition.lang = selectedLang;
+      
       document.getElementById('assistantStatusText').innerText = 'Listening for command...';
       document.getElementById('assistantTranscript').innerHTML = '<em>Listening...</em>';
 
-      assistantRec.onresult = function(event) {
-        let text = event.results[0][0].transcript;
+      assistantRecognition.onresult = function(event) {
+        let text = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          text += event.results[i][0].transcript;
+        }
         document.getElementById('assistantTranscript').innerText = text;
+        
+        // Example voice command mapping
+        const lower = text.toLowerCase();
+        if (lower.includes('studio') || lower.includes('photo') || lower.includes('फोटो')) {
+          openRole('seller');
+          switchSellerPage('seller-studio');
+        } else if (lower.includes('buyer') || lower.includes('shop') || lower.includes('खरीद')) {
+          openRole('buyer');
+        }
       };
-      assistantRec.onerror = function() {
-        document.getElementById('assistantTranscript').innerText = 'Microphone permission denied.';
+
+      assistantRecognition.onerror = function(event) {
+        console.warn("Assistant speech error:", event.error);
       };
-      assistantRec.start();
+
+      assistantRecognition.onend = function() {
+        // Auto restart assistant listening if modal is still open
+        const modal = document.getElementById('voiceAssistantModal');
+        if (modal && modal.style.display === 'flex') {
+          try { assistantRecognition.start(); } catch(e){}
+        }
+      };
+
+      try {
+        assistantRecognition.start();
+      } catch(e) {
+        console.error(e);
+      }
     }
 
     function openBuyerLogin() { showScreen('screenBuyerLogin'); }
@@ -923,19 +955,24 @@
       if(pageId === 'seller-inventory') document.getElementById('snav-inventory').classList.add('active');
     }
 
-    // --- CONTINUOUS NATIVE VOICE SPEECH & TRANSLATION ---
+    // --- BULLETPROOF ROBUST NATIVE VOICE RECORDER & TRANSLATOR ---
     function toggleRealVoiceRecording() {
       const btn = document.getElementById('recordBtn');
       const output = document.getElementById('transcriptOutput');
       const engOutput = document.getElementById('englishTranscript');
 
       if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-        alert('Voice recording requires Google Chrome browser with microphone enabled.');
+        alert('Voice recording requires Google Chrome or Edge with microphone enabled.');
         return;
       }
 
       if (!isRecording) {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        if (recognition) {
+          try { recognition.stop(); } catch(e){}
+        }
+
         recognition = new SpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = true;
@@ -946,47 +983,69 @@
           isRecording = true;
           btn.innerText = '🛑 Tap Here When Finished Speaking';
           btn.classList.add('recording');
-          output.innerHTML = '<em>Listening continuously... Speak freely.</em>';
-          engOutput.innerHTML = '<em>Awaiting full speech translation...</em>';
+          output.innerHTML = '<em>Listening... Speak clearly in your selected language.</em>';
+          engOutput.innerHTML = '<em>Translating live...</em>';
         };
 
         recognition.onresult = function(event) {
           let interimTranscript = '';
-          let finalTranscript = '';
+          let finalSegment = '';
           for (let i = event.resultIndex; i < event.results.length; i++) {
             const transcriptPart = event.results[i][0].transcript;
             if (event.results[i].isFinal) {
-              finalTranscript += transcriptPart + ' ';
+              finalSegment += transcriptPart + ' ';
             } else {
               interimTranscript += transcriptPart;
             }
           }
-          if (finalTranscript) accumulatedTranscript += finalTranscript;
-          output.innerText = (accumulatedTranscript + interimTranscript) || 'Listening...';
-          if (accumulatedTranscript.trim()) translateTextToEnglish(accumulatedTranscript, selectedLang);
+          if (finalSegment) {
+            accumulatedTranscript += finalSegment;
+          }
+          const liveText = accumulatedTranscript + interimTranscript;
+          output.innerText = liveText || 'Listening...';
+          
+          if (liveText.trim()) {
+            translateTextToEnglish(liveText, selectedLang);
+          }
         };
 
         recognition.onerror = function(event) {
-          if (event.error !== 'no-speech') {
-            output.innerText = 'Voice capture error. Allow microphone permissions.';
+          console.warn("Speech recognition warning/error:", event.error);
+          if (event.error === 'not-allowed') {
+            output.innerText = 'Microphone permission blocked. Check browser settings.';
             stopRecordingState();
           }
         };
 
         recognition.onend = function() {
+          // Auto-recover session if user didn't intentionally stop
           if (isRecording) {
-            try { recognition.start(); } catch (e) { stopRecordingState(); }
+            try {
+              recognition.start();
+            } catch (e) {
+              stopRecordingState();
+            }
           } else {
             stopRecordingState();
           }
         };
 
-        recognition.start();
+        try {
+          recognition.start();
+        } catch (e) {
+          console.error(e);
+          stopRecordingState();
+        }
+
       } else {
         isRecording = false;
-        if (recognition) recognition.stop();
+        if (recognition) {
+          try { recognition.stop(); } catch(e){}
+        }
         stopRecordingState();
-        if (accumulatedTranscript.trim()) translateTextToEnglish(accumulatedTranscript, selectedLang);
+        if (accumulatedTranscript.trim()) {
+          translateTextToEnglish(accumulatedTranscript, selectedLang);
+        }
       }
     }
 
@@ -1001,23 +1060,18 @@
       }
 
       const langPair = `${cleanLang}|en`;
-      engOutput.innerHTML = '<em>Translating to English...</em>';
 
       try {
         const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.trim())}&langpair=${langPair}`);
         const data = await response.json();
         if (data && data.responseData && data.responseData.translatedText) {
           let translated = data.responseData.translatedText;
-          if (translated.includes("QUERY LENGTH LIMIT") || translated.includes("SELECT TWO DISTINCT")) {
-            engOutput.innerText = text;
-          } else {
+          if (!translated.includes("QUERY LENGTH LIMIT") && !translated.includes("SELECT TWO DISTINCT")) {
             engOutput.innerText = translated;
           }
-        } else {
-          engOutput.innerText = text;
         }
       } catch (err) {
-        engOutput.innerText = text;
+        console.warn("Translation skipped or network limitation", err);
       }
     }
 
@@ -1278,13 +1332,12 @@
       const data = imageData.data;
       const w = imageData.width;
       const h = imageData.height;
-      const threshold = 55;
       for (let y = 0; y < h; y++) {
         for (let x = 0; x < w; x++) {
           const i = (y * w + x) * 4;
           const r = data[i], g = data[i+1], b = data[i+2];
           if (r > 210 && g > 210 && b > 210) {
-            data[i+3] = 0; // Make white/bright studio background transparent
+            data[i+3] = 0; 
           }
         }
       }
@@ -1317,7 +1370,6 @@
     function drawBackground(type) {
       const w = canvas.width, h = canvas.height;
       ctx.save();
-      let gradient;
       if (type === "white") {
         ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,w,h);
       } else if (type === "cream") {
