@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=300.0">
+  <link rel="stylesheet" href="css/main.css?v=400.0">
 
   <style>
     /* ENFORCED PARCHMENT LIGHT THEME PALETTE */
@@ -129,7 +129,7 @@
     }
     .back-arrow-btn:active { transform: scale(0.96); }
 
-    /* App main header (Hidden by default on onboarding screens) */
+    /* App main header */
     .app-header {
       padding: 14px 18px;
       background: #FFFFFF !important;
@@ -594,6 +594,7 @@
     let appMode = 'manual';
     let isRecording = false;
     let recognition = null;
+    let accumulatedTranscript = '';
     let publishedProducts = [];
     let cart = [];
 
@@ -825,8 +826,17 @@
       showScreen('screenModeSelect');
     }
 
+    /* MANAGE MANUAL VS VOICE MODE & VOICE BUTTON VISIBILITY */
     function selectAppMode(mode) {
       appMode = mode;
+      const voiceBtn = document.getElementById('draggableVoiceBtn');
+
+      if (appMode === 'manual') {
+        if (voiceBtn) voiceBtn.style.display = 'none';
+      } else {
+        if (voiceBtn) voiceBtn.style.display = 'flex';
+      }
+
       showScreen('screenPortalSelect');
     }
 
@@ -914,7 +924,7 @@
       }
     }
 
-    // --- NATIVE VOICE SPEECH TRANSLATION WITH API INTEGRATION ---
+    // --- CONTINUOUS NATIVE VOICE SPEECH TRANSLATION ---
     function toggleRealVoiceRecording() {
       const btn = document.getElementById('recordBtn');
       const output = document.getElementById('transcriptOutput');
@@ -928,41 +938,77 @@
       if (!isRecording) {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         recognition = new SpeechRecognition();
-        recognition.continuous = false;
+
+        recognition.continuous = true;
         recognition.interimResults = true;
         recognition.lang = selectedLang;
 
+        accumulatedTranscript = '';
+
         recognition.onstart = function() {
           isRecording = true;
-          btn.innerText = '🛑 Recording... Speak Now';
+          btn.innerText = '🛑 Tap Here When Finished Speaking';
           btn.classList.add('recording');
-          output.innerHTML = '<em>Listening...</em>';
-          engOutput.innerHTML = '<em>Awaiting speech translation...</em>';
+          output.innerHTML = '<em>Listening continuously... Speak freely in your native language.</em>';
+          engOutput.innerHTML = '<em>Awaiting full speech translation...</em>';
         };
 
         recognition.onresult = function(event) {
-          let transcript = '';
+          let interimTranscript = '';
+          let finalTranscript = '';
+
           for (let i = event.resultIndex; i < event.results.length; i++) {
-            transcript += event.results[i][0].transcript;
+            const transcriptPart = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+              finalTranscript += transcriptPart + ' ';
+            } else {
+              interimTranscript += transcriptPart;
+            }
           }
-          output.innerText = transcript;
 
-          if (event.results[0].isFinal) {
-            translateTextToEnglish(transcript, selectedLang);
+          if (finalTranscript) {
+            accumulatedTranscript += finalTranscript;
+          }
+
+          const currentDisplay = accumulatedTranscript + interimTranscript;
+          output.innerText = currentDisplay || 'Listening...';
+
+          if (accumulatedTranscript.trim()) {
+            translateTextToEnglish(accumulatedTranscript, selectedLang);
           }
         };
 
-        recognition.onerror = function() {
-          output.innerText = 'Voice capture error. Try again.';
-          engOutput.innerText = 'Translation unavailable.';
-          stopRecordingState();
+        recognition.onerror = function(event) {
+          console.error('Speech recognition error:', event.error);
+          if (event.error !== 'no-speech') {
+            output.innerText = 'Voice capture error. Try speaking again.';
+            stopRecordingState();
+          }
         };
 
-        recognition.onend = function() { stopRecordingState(); };
+        recognition.onend = function() {
+          if (isRecording) {
+            try {
+              recognition.start();
+            } catch (e) {
+              stopRecordingState();
+            }
+          } else {
+            stopRecordingState();
+          }
+        };
+
         recognition.start();
       } else {
-        if(recognition) recognition.stop();
+        isRecording = false;
+        if (recognition) {
+          recognition.stop();
+        }
         stopRecordingState();
+
+        if (accumulatedTranscript.trim()) {
+          translateTextToEnglish(accumulatedTranscript, selectedLang);
+        }
       }
     }
 
@@ -970,11 +1016,11 @@
       const engOutput = document.getElementById('englishTranscript');
       if (!text || text.trim() === '') return;
 
-      const langPair = `${sourceLangCode.split('-')[0]}|en`;
-      engOutput.innerHTML = '<em>Translating to English...</em>';
+      const cleanLang = sourceLangCode.split('-')[0];
+      const langPair = `${cleanLang}|en`;
 
       try {
-        const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langPair}`);
+        const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.trim())}&langpair=${langPair}`);
         const data = await response.json();
 
         if (data && data.responseData && data.responseData.translatedText) {
@@ -983,7 +1029,7 @@
           engOutput.innerText = text;
         }
       } catch (err) {
-        console.error('Translation error:', err);
+        console.error('Translation network error:', err);
         engOutput.innerText = text;
       }
     }
@@ -1137,12 +1183,14 @@
     let activeDrag = false;
     let currentPosX = 0, currentPosY = 0, initialPosX = 0, initialPosY = 0;
 
-    dragBtn.addEventListener('mousedown', dragStart);
-    dragBtn.addEventListener('touchstart', dragStart, { passive: false });
-    window.addEventListener('mouseup', dragEnd);
-    window.addEventListener('touchend', dragEnd);
-    window.addEventListener('mousemove', dragMove);
-    window.addEventListener('touchmove', dragMove, { passive: false });
+    if (dragBtn) {
+      dragBtn.addEventListener('mousedown', dragStart);
+      dragBtn.addEventListener('touchstart', dragStart, { passive: false });
+      window.addEventListener('mouseup', dragEnd);
+      window.addEventListener('touchend', dragEnd);
+      window.addEventListener('mousemove', dragMove);
+      window.addEventListener('touchmove', dragMove, { passive: false });
+    }
 
     function dragStart(e) {
       const clientX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
