@@ -29,6 +29,7 @@ html, body {
   align-items: center;
   padding: 12px;
   min-height: 100vh;
+  overflow-x: hidden !important;
 }
 
 /* APP CANVAS CONTAINER */
@@ -304,3 +305,60 @@ html, body {
 .buyer-store-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 8px; }
 .buyer-card { background: #FFF; border: 1px solid #EBE3D8; border-radius: 16px; padding: 10px; display: flex; flex-direction: column; gap: 6px; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
 .buyer-card img { width: 100%; height: 110px; border-radius: 12px; object-fit: cover; }
+
+/* =====================================================
+   HIDE UNSTYLED ASSISTANT OVERFLOW (FIXES RIGHT-SIDE TEXT)
+===================================================== */
+body > div:not(.app-container),
+body > section:not(.app-container),
+iframe[src*="assistant"],
+div[class*="assistant"]:not(#draggableVoiceBtn),
+div[id*="assistant"]:not(#draggableVoiceBtn) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* =====================================================
+   FIX CATEGORIES ROW HORIZONTAL ALIGNMENT
+===================================================== */
+.categories-row {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 16px 0 !important;
+  width: 100% !important;
+}
+
+.category-chip-item {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 1 !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+}
+
+.category-circle-icon {
+  width: 54px !important;
+  height: 54px !important;
+  background: #FFFFFF !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.5rem !important;
+  border: 1px solid #EBE3D8 !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04) !important;
+}
+
+.category-label {
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  color: #201D1A !important;
+  text-align: center !important;
+}
