@@ -1,5 +1,5 @@
 /* =====================================================
-   HASHTAKALA - PARCHMENT THEME & LAYOUT STYLES
+   HASTHAKALA - PARCHMENT THEME & CORRECTED LAYOUT
 ===================================================== */
 :root {
   --bg-light: #F8F4EE !important;
@@ -31,6 +31,7 @@ html, body {
   min-height: 100vh;
 }
 
+/* APP CANVAS CONTAINER */
 .app-container {
   width: 100%;
   max-width: 420px;
@@ -46,66 +47,95 @@ html, body {
   overflow: hidden;
 }
 
-/* =====================================================
-   SCREEN OVERLAYS & WELCOME SCREEN (MATCHING MOCKUP)
-===================================================== */
+/* FULL-COVER OVERLAYS (Fixes bleed-through) */
 .screen-overlay {
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
   background: #F8F4EE !important;
-  z-index: 200;
+  z-index: 500 !important;
   display: flex;
   flex-direction: column;
-  padding: 24px 20px;
+  padding: 28px 20px;
   overflow-y: auto;
 }
-.screen-overlay.hidden { display: none !important; }
 
-/* WELCOME SCREEN ILLUSTRATED HERO */
-#screenWelcome {
-  background: #F8F4EE linear-gradient(180deg, #E8DEC8 0%, #F8F4EE 60%) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  padding: 40px 24px 30px 24px !important;
-  text-align: center !important;
-  position: relative !important;
-  overflow: hidden !important;
+.screen-overlay.hidden {
+  display: none !important;
 }
 
-/* Decorative Organic Leaves Background */
-#screenWelcome::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 220px;
-  background: radial-gradient(circle at 10% 100%, #346849 0%, transparent 50%),
-              radial-gradient(circle at 90% 100%, #234E35 0%, transparent 50%);
-  opacity: 0.15;
-  pointer-events: none;
+/* APP HEADER (Hidden by default on Welcome/Login screens) */
+.app-header {
+  padding: 14px 18px;
+  background: #FFFFFF !important;
+  border-bottom: 1px solid #EBE3D8 !important;
+  display: none; /* Controlled dynamically via JS */
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.brand-section { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.app-logo-box { 
+  width: 38px; height: 38px; border-radius: 50% !important; 
+  border: 1px solid #EBE3D8 !important; 
+  overflow: hidden !important; display: flex; align-items: center; justify-content: center; 
+  background: #FFF; flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.app-logo-box img { width: 100%; height: 100%; object-fit: cover; }
+
+.brand-info { display: flex; flex-direction: column; overflow: hidden; }
+.brand-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: #234E35 !important; font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; }
+.brand-tagline { font-size: 0.65rem; color: #787067 !important; font-weight: 500; white-space: nowrap; }
+
+.header-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+
+.signout-btn {
+  background: #FFF !important;
+  border: 1px solid #EBE3D8 !important;
+  color: #9B3B2B !important;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+/* WELCOME SCREEN STYLING & PERFECT CIRCLE LOGO */
+#screenWelcome {
+  background: #F8F4EE linear-gradient(180deg, #E8DEC8 0%, #F8F4EE 65%) !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 45px 24px 35px 24px !important;
+  text-align: center !important;
 }
 
 .welcome-logo-container {
-  width: 140px;
-  height: 140px;
-  margin-top: 20px;
-  border-radius: 50%;
-  background: #FFFFFF;
-  border: 1px solid #EBE3D8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 10px 30px rgba(35, 78, 53, 0.08);
-  padding: 12px;
+  width: 130px !important;
+  height: 130px !important;
+  margin-top: 20px !important;
+  border-radius: 50% !important;
+  background: #FFFFFF !important;
+  border: 2px solid #EBE3D8 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 10px 25px rgba(35, 78, 53, 0.08) !important;
+  padding: 10px !important;
+  overflow: hidden !important; /* Crops image inside circle */
+  flex-shrink: 0 !important;
 }
 
 .welcome-logo-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  border-radius: 50% !important;
 }
 
 .welcome-text-group {
@@ -115,7 +145,7 @@ html, body {
 
 .welcome-tagline-main {
   font-family: 'Cinzel', serif;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   color: #234E35;
   font-weight: 700;
   margin-top: 14px;
@@ -127,9 +157,82 @@ html, body {
   margin-top: 6px;
 }
 
-/* =====================================================
-   PORTAL CARDS & LANGUAGE GRID
-===================================================== */
+/* BUTTONS & INPUTS */
+.input-field {
+  width: 100%; background: #FFF !important; border: 1px solid #EBE3D8 !important;
+  color: #201D1A !important; padding: 12px 14px; border-radius: 12px; font-size: 0.9rem; margin-top: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.action-btn {
+  width: 100%; padding: 14px; 
+  background: #234E35 !important;
+  color: #FFF !important; font-weight: 700; border: none !important; border-radius: 25px; cursor: pointer; 
+  font-size: 0.95rem; margin-top: 14px;
+  box-shadow: 0 4px 12px rgba(35, 78, 53, 0.2);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.action-btn:active { transform: scale(0.98); }
+
+/* NAVIGATION BAR */
+.bottom-nav {
+  display: flex !important;
+  background: #FFFFFF !important;
+  border-top: 1px solid #EBE3D8 !important;
+  padding: 10px 0 8px 0 !important;
+  margin-top: auto !important;
+  width: 100% !important;
+  z-index: 100 !important;
+}
+
+.nav-item {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  background: transparent !important;
+  border: none !important;
+  color: #787067 !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+}
+
+.nav-item .nav-icon {
+  font-size: 1.8rem !important;
+  line-height: 1 !important;
+  display: block !important;
+}
+
+.nav-item.active {
+  color: #234E35 !important;
+  font-weight: 800 !important;
+}
+
+/* BOUNDED DRAGGABLE VOICE BUTTON */
+#draggableVoiceBtn {
+  position: absolute !important;
+  right: 20px !important;
+  bottom: 80px !important;
+  width: 58px !important;
+  height: 58px !important;
+  border-radius: 50% !important;
+  border: 2px solid #FFFFFF !important;
+  background: #234E35 !important;
+  color: #FFFFFF !important;
+  font-size: 26px !important;
+  cursor: grab !important;
+  z-index: 9999 !important;
+  box-shadow: 0 8px 20px rgba(35, 78, 53, 0.35) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  user-select: none !important;
+  touch-action: none !important;
+}
+
 .portal-card-btn {
   display: flex;
   align-items: center;
@@ -140,13 +243,7 @@ html, body {
   margin-bottom: 12px;
   cursor: pointer;
   text-align: left;
-  transition: background-color 0.2s, transform 0.2s;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-}
-
-.portal-card-btn:hover {
-  background: #FAF6EE;
-  transform: translateY(-2px);
 }
 
 .portal-icon {
@@ -189,125 +286,21 @@ html, body {
   border-color: #234E35;
 }
 
-/* =====================================================
-   HERO BANNER & CATEGORY CHIPS
-===================================================== */
-.hero-banner-card {
-  background: linear-gradient(135deg, #FAF4EB 0%, #EFE5D8 100%);
-  border-radius: 20px;
-  padding: 18px;
-  border: 1px solid #EBE3D8;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+.view-container { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: #F8F4EE !important; }
+.portal-view { display: none; flex-direction: column; gap: 16px; flex: 1; }
+.portal-view.active { display: flex !important; }
 
-.categories-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  margin: 12px 0;
-}
+.page-section { display: none; flex-direction: column; gap: 16px; flex: 1; }
+.page-section.active { display: flex !important; }
 
-.category-chip-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
+.section-card { 
+  background: #FFFFFF !important; 
+  border: 1px solid #EBE3D8 !important; border-radius: 18px; 
+  padding: 18px 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  position: relative;
 }
+.section-title { font-family: 'Cinzel', serif; font-size: 1rem; color: #234E35 !important; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 800; }
 
-.category-circle-icon {
-  width: 58px;
-  height: 58px;
-  background: #FFFFFF;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.6rem;
-  border: 1px solid #EBE3D8;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-}
-
-.category-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #201D1A;
-}
-
-/* =====================================================
-   ENLARGED BOTTOM NAVIGATION BAR & ICONS
-===================================================== */
-.bottom-nav {
-  display: flex !important;
-  background: #FFFFFF !important;
-  border-top: 1px solid #EBE3D8 !important;
-  padding: 10px 0 8px 0 !important;
-  margin-top: auto !important;
-  width: 100% !important;
-  z-index: 100 !important;
-}
-
-.nav-item {
-  flex: 1 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 3px !important;
-  background: transparent !important;
-  border: none !important;
-  color: #787067 !important;
-  font-size: 0.75rem !important;
-  font-weight: 700 !important;
-  cursor: pointer !important;
-  transition: color 0.2s ease, transform 0.2s ease !important;
-}
-
-/* ENLARGED ICONS */
-.nav-item .nav-icon {
-  font-size: 1.8rem !important; /* 28px Enlarged Icon Size */
-  line-height: 1 !important;
-  display: block !important;
-  transition: transform 0.2s ease !important;
-}
-
-.nav-item.active {
-  color: #234E35 !important;
-  font-weight: 800 !important;
-}
-
-.nav-item.active .nav-icon {
-  transform: scale(1.2) !important;
-}
-
-/* =====================================================
-   DRAGGABLE FLOATING VOICE ASSISTANT BUTTON
-===================================================== */
-#draggableVoiceBtn {
-  position: absolute !important;
-  bottom: 80px !important;
-  right: 20px !important;
-  width: 58px !important;
-  height: 58px !important;
-  border-radius: 50% !important;
-  border: 2px solid #FFFFFF !important;
-  background: #234E35 !important;
-  color: #FFFFFF !important;
-  font-size: 26px !important;
-  cursor: grab !important;
-  z-index: 9999 !important;
-  box-shadow: 0 10px 25px rgba(35, 78, 53, 0.4) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  user-select: none !important;
-  touch-action: none !important;
-  transition: box-shadow 0.2s ease;
-}
-
-#draggableVoiceBtn:active {
-  cursor: grabbing !important;
-  box-shadow: 0 14px 30px rgba(35, 78, 53, 0.5) !important;
-}
+.buyer-store-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 8px; }
+.buyer-card { background: #FFF; border: 1px solid #EBE3D8; border-radius: 16px; padding: 10px; display: flex; flex-direction: column; gap: 6px; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+.buyer-card img { width: 100%; height: 110px; border-radius: 12px; object-fit: cover; }
