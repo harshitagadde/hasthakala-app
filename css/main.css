@@ -1,5 +1,5 @@
 /* =====================================================
-   PARCHMENT BRAND PALETTE & CANVAS
+   HASHTAKALA - PARCHMENT THEME & LAYOUT STYLES
 ===================================================== */
 :root {
   --bg-light: #F8F4EE !important;
@@ -7,20 +7,128 @@
   --accent-green: #234E35 !important;
   --accent-green-light: #346849 !important;
   --accent-crimson: #9B3B2B !important;
-  --accent-terracotta: #C85A32 !important;
   --text-dark: #201D1A !important;
   --text-muted: #787067 !important;
   --border-light: #EBE3D8 !important;
   --border-radius: 18px !important;
 }
 
-/* Restores rounded card styling for Portal Selection */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+html, body {
+  background-color: #F8F4EE !important;
+  background: #F8F4EE !important;
+  color: #201D1A !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  min-height: 100vh;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 420px;
+  height: 880px;
+  max-height: 94vh;
+  background: #F8F4EE !important;
+  border: 1px solid #EBE3D8 !important;
+  border-radius: 36px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* =====================================================
+   ENLARGED BOTTOM NAVIGATION BAR & ICONS
+===================================================== */
+.bottom-nav {
+  display: flex !important;
+  background: #FFFFFF !important;
+  border-top: 1px solid #EBE3D8 !important;
+  padding: 10px 0 8px 0 !important;
+  margin-top: auto !important;
+  width: 100% !important;
+  z-index: 100 !important;
+}
+
+.nav-item {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  background: transparent !important;
+  border: none !important;
+  color: #787067 !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: color 0.2s ease, transform 0.2s ease !important;
+}
+
+/* ENLARGED ICONS */
+.nav-item .nav-icon {
+  font-size: 1.8rem !important; /* 28px Enlarged Icon Size */
+  line-height: 1 !important;
+  display: block !important;
+  transition: transform 0.2s ease !important;
+}
+
+.nav-item.active {
+  color: #234E35 !important;
+  font-weight: 800 !important;
+}
+
+.nav-item.active .nav-icon {
+  transform: scale(1.2) !important;
+}
+
+/* =====================================================
+   DRAGGABLE FLOATING VOICE ASSISTANT BUTTON (FIXED)
+===================================================== */
+#draggableVoiceBtn {
+  position: fixed !important;
+  right: 20px;
+  bottom: 80px;
+  width: 62px !important;
+  height: 62px !important;
+  border-radius: 50% !important;
+  border: 2px solid #FFFFFF !important;
+  background: #234E35 !important;
+  color: #FFFFFF !important;
+  font-size: 28px !important;
+  cursor: grab !important;
+  z-index: 99999 !important;
+  box-shadow: 0 10px 25px rgba(35, 78, 53, 0.4) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  user-select: none !important;
+  touch-action: none !important;
+  transition: box-shadow 0.2s ease;
+}
+
+#draggableVoiceBtn:active {
+  cursor: grabbing !important;
+  box-shadow: 0 14px 30px rgba(35, 78, 53, 0.5) !important;
+}
+
+/* PORTAL CARD SELECTION */
 .portal-card-btn {
   display: flex;
   align-items: center;
   background: #FFFFFF;
   border: 1px solid #EBE3D8;
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 16px;
   margin-bottom: 12px;
   cursor: pointer;
@@ -35,19 +143,20 @@
 }
 
 .portal-icon {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   background: #FAF6EE;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 24px;
   margin-right: 16px;
   border: 1px solid #EBE3D8;
+  flex-shrink: 0;
 }
 
-/* Restores Language Chips Grid */
+/* LANGUAGE GRID */
 .lang-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -74,7 +183,7 @@
   border-color: #234E35;
 }
 
-/* HERO BANNER STYLING */
+/* HERO BANNER & CATEGORY CHIPS */
 .hero-banner-card {
   background: linear-gradient(135deg, #FAF4EB 0%, #EFE5D8 100%);
   border-radius: 20px;
@@ -85,7 +194,6 @@
   align-items: center;
 }
 
-/* CATEGORY CIRCLE ICONS */
 .categories-row {
   display: flex;
   justify-content: space-between;
@@ -109,7 +217,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   border: 1px solid #EBE3D8;
   box-shadow: 0 4px 10px rgba(0,0,0,0.03);
 }
@@ -118,288 +226,4 @@
   font-size: 0.72rem;
   font-weight: 700;
   color: #201D1A;
-}
-
-/* =====================================================
-   ENLARGED BOTTOM NAVIGATION BAR & ICONS
-===================================================== */
-.bottom-nav {
-  display: flex;
-  background: #FFFFFF !important;
-  border-top: 1px solid #EBE3D8;
-  padding: 12px 0 10px 0;
-  margin-top: auto;
-  z-index: 100;
-}
-
-.nav-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  background: none;
-  border: none;
-  color: #787067;
-  font-size: 0.75rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-/* Enlarged Navigation Icons */
-.nav-item .nav-icon {
-  font-size: 1.6rem !important; /* Scaled up icon size */
-  line-height: 1;
-  display: block;
-}
-
-.nav-item.active {
-  color: #234E35 !important;
-  font-weight: 800;
-}
-
-.nav-item.active .nav-icon {
-  transform: scale(1.15);
-}
-
-/* =====================================================
-   HASHTAKALA VOICE ASSISTANT
-===================================================== */
-
-.voice-assistant-floating {
-  position: fixed;
-  right: 22px;
-  bottom: 22px;
-  width: 62px;
-  height: 62px;
-  border: none;
-  border-radius: 50%;
-  background: #234E35;
-  color: #FFFFFF;
-  font-size: 27px;
-  cursor: pointer;
-  z-index: 9999;
-  box-shadow: 0 8px 25px rgba(35, 78, 53, 0.25);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.voice-assistant-floating:hover {
-  transform: scale(1.1);
-  box-shadow: 0 12px 32px rgba(35, 78, 53, 0.35);
-}
-
-/* =====================================================
-   MODAL
-===================================================== */
-
-.voice-assistant-modal {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: rgba(32, 29, 26, 0.4);
-  backdrop-filter: blur(8px);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.25s ease, visibility 0.25s ease;
-  z-index: 10000;
-}
-
-.voice-assistant-modal.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* =====================================================
-   CARD
-===================================================== */
-
-.voice-assistant-card {
-  position: relative;
-  width: 100%;
-  max-width: 410px;
-  padding: 35px 25px 28px;
-  border: 1px solid #EBE3D8;
-  border-radius: 25px;
-  background: #FFFFFF;
-  text-align: center;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.12);
-  transform: translateY(25px) scale(0.95);
-  transition: transform 0.3s ease;
-}
-
-.voice-assistant-modal.active .voice-assistant-card {
-  transform: translateY(0) scale(1);
-}
-
-/* =====================================================
-   CLOSE
-===================================================== */
-
-.voice-assistant-close {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  width: 35px;
-  height: 35px;
-  border: 1px solid #EBE3D8;
-  border-radius: 50%;
-  background: #FAF7F2;
-  color: #234E35;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.voice-assistant-close:hover {
-  background: #234E35;
-  color: #FFFFFF;
-}
-
-/* =====================================================
-   ICON
-===================================================== */
-
-.voice-assistant-icon {
-  width: 82px;
-  height: 82px;
-  margin: 0 auto 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #234E35, #346849);
-  color: #FFFFFF;
-  font-size: 37px;
-  box-shadow: 0 10px 30px rgba(35, 78, 53, 0.2);
-  animation: assistantFloat 2.5s ease-in-out infinite;
-}
-
-@keyframes assistantFloat {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-7px);
-  }
-}
-
-/* =====================================================
-   TITLE
-===================================================== */
-
-.voice-assistant-card h2 {
-  color: #234E35;
-  font-family: 'Cinzel', serif;
-  font-size: 1.15rem;
-  margin-bottom: 8px;
-}
-
-.voice-assistant-card p {
-  color: #787067;
-  font-size: 0.75rem;
-  line-height: 1.5;
-  min-height: 35px;
-}
-
-/* =====================================================
-   MAIN SPEAK BUTTON
-===================================================== */
-
-.voice-assistant-button {
-  width: 135px;
-  height: 135px;
-  margin: 18px auto 25px;
-  border: none;
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  background: linear-gradient(135deg, #234E35, #346849);
-  color: #FFFFFF;
-  font-size: 21px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 12px 35px rgba(35, 78, 53, 0.25);
-  transition: transform 0.25s ease;
-}
-
-.voice-assistant-button:hover {
-  transform: scale(1.07);
-}
-
-/* =====================================================
-   LISTENING ANIMATION
-===================================================== */
-
-.voice-assistant-button.listening {
-  animation: assistantPulse 1.2s infinite;
-}
-
-@keyframes assistantPulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(35, 78, 53, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 28px rgba(35, 78, 53, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(35, 78, 53, 0);
-  }
-}
-
-/* =====================================================
-   EXAMPLES
-===================================================== */
-
-.voice-assistant-examples {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px;
-}
-
-.voice-assistant-examples strong {
-  width: 100%;
-  margin-bottom: 5px;
-  color: #787067;
-  font-size: 0.7rem;
-}
-
-.voice-assistant-examples span {
-  padding: 6px 10px;
-  border: 1px solid #EBE3D8;
-  border-radius: 20px;
-  background: #FAF7F2;
-  color: #234E35;
-  font-size: 0.58rem;
-  font-weight: 600;
-}
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 600px) {
-  .voice-assistant-floating {
-    width: 56px;
-    height: 56px;
-    right: 16px;
-    bottom: 16px;
-    font-size: 24px;
-  }
-
-  .voice-assistant-card {
-    padding: 32px 18px 22px;
-  }
-
-  .voice-assistant-button {
-    width: 115px;
-    height: 115px;
-    font-size: 18px;
-  }
 }
