@@ -14,7 +14,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=500.0">
 
   <style>
     /* ENFORCED PARCHMENT LIGHT THEME PALETTE */
@@ -42,13 +41,16 @@
       align-items: center;
       padding: 12px;
       min-height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
     }
 
     .app-container {
-      width: 100%;
-      max-width: 420px;
-      height: 880px;
-      max-height: 94vh;
+      width: 400px !important;
+      min-width: 360px !important;
+      max-width: 420px !important;
+      height: 840px !important;
+      max-height: 94vh !important;
       background: #F8F4EE !important;
       border: 1px solid #EBE3D8 !important;
       border-radius: 36px;
@@ -57,6 +59,7 @@
       flex-direction: column;
       position: relative;
       overflow: hidden;
+      margin: 0 auto !important;
     }
 
     /* Full screen overlays covering app frame */
@@ -230,6 +233,134 @@
     .pay-tabs { display: flex; gap: 6px; margin: 12px 0; }
     .pay-tab { flex: 1; padding: 8px 4px; font-size: 0.75rem; background: #FFF; border: 1px solid #EBE3D8; color: #787067; border-radius: 10px; cursor: pointer; text-align: center; font-weight: 700; }
     .pay-tab.active { background: #234E35 !important; color: #FFF !important; font-weight: 800; border-color: #234E35 !important; }
+
+    .portal-card-btn {
+      display: flex;
+      align-items: center;
+      background: #FFFFFF;
+      border: 1px solid #EBE3D8;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      text-align: left;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .portal-icon {
+      width: 52px;
+      height: 52px;
+      background: #FAF6EE;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-right: 16px;
+      border: 1px solid #EBE3D8;
+      flex-shrink: 0;
+    }
+
+    .lang-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin: 16px 0;
+      width: 100%;
+    }
+
+    .lang-chip {
+      background: #FFFFFF;
+      border: 1px solid #EBE3D8;
+      color: #201D1A;
+      padding: 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    }
+
+    .lang-chip.active {
+      background: #234E35;
+      color: #FFFFFF;
+      font-weight: bold;
+      border-color: #234E35;
+    }
+
+    .bottom-nav {
+      display: flex !important;
+      background: #FFFFFF !important;
+      border-top: 1px solid #EBE3D8 !important;
+      padding: 10px 0 8px 0 !important;
+      margin-top: auto !important;
+      width: 100% !important;
+      z-index: 100 !important;
+    }
+
+    .nav-item {
+      flex: 1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 3px !important;
+      background: transparent !important;
+      border: none !important;
+      color: #787067 !important;
+      font-size: 0.75rem !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+    }
+
+    .nav-item .nav-icon {
+      font-size: 1.8rem !important;
+      line-height: 1 !important;
+      display: block !important;
+    }
+
+    .nav-item.active {
+      color: #234E35 !important;
+      font-weight: 800 !important;
+    }
+
+    /* DRAGGABLE VOICE ASSISTANT ICON */
+    #draggableVoiceBtn {
+      position: absolute !important;
+      right: 20px !important;
+      bottom: 80px !important;
+      width: 58px !important;
+      height: 58px !important;
+      border-radius: 50% !important;
+      border: 2px solid #FFFFFF !important;
+      background: #234E35 !important;
+      color: #FFFFFF !important;
+      font-size: 26px !important;
+      cursor: grab !important;
+      z-index: 9999 !important;
+      box-shadow: 0 8px 20px rgba(35, 78, 53, 0.35) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      user-select: none !important;
+      touch-action: none !important;
+    }
+
+    /* VOICE ASSISTANT POPUP MODAL */
+    #voiceAssistantModal {
+      position: absolute;
+      bottom: 150px;
+      right: 20px;
+      width: 280px;
+      background: #FFFFFF;
+      border: 1px solid #EBE3D8;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      z-index: 10000;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
   </style>
 </head>
 <body>
@@ -239,7 +370,7 @@
     <!-- OVERLAY 0: WELCOME SCREEN -->
     <div id="screenWelcome" class="screen-overlay">
       <div class="welcome-logo-container">
-        <img src="logo.jpeg" alt="Hasthakala Logo" />
+        <img src="logo.jpeg" alt="Hasthakala Logo" onerror="this.style.display='none'" />
       </div>
 
       <div class="welcome-text-group">
@@ -347,50 +478,14 @@
         </div>
       </div>
 
-      <div class="section-card" style="margin-top:12px;">
-        <div class="section-title" id="lblPayMethodTitle">💳 Select Payment Method</div>
-
-        <div class="pay-tabs">
-          <div class="pay-tab active" id="ptab-upi" onclick="switchPayTab('upi')">UPI / Seller QR</div>
-          <div class="pay-tab" id="ptab-bank" onclick="switchPayTab('bank')">Bank Transfer</div>
-          <div class="pay-tab" id="ptab-card" onclick="switchPayTab('card')">Card / NetBanking</div>
-        </div>
-
-        <div id="paySectionUPI">
-          <p style="font-size:0.8rem; color:#787067;" id="lblUpiInstruction">Scan Artisan UPI QR Code to Transfer Directly:</p>
-          <div style="text-align:center; margin:12px 0;">
-            <img id="buyerCheckoutQR" src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=lakshmidevi@ybl" style="border:1px solid #EBE3D8; border-radius:12px; padding:6px; background:#fff;" />
-            <p style="font-size:0.8rem; color:#234E35; margin-top:6px; font-weight:800;" id="lblCheckoutUpi">UPI ID: lakshmidevi@ybl</p>
-          </div>
-        </div>
-
-        <div id="paySectionBank" style="display:none; font-size:0.8rem; line-height:1.5;">
-          <p style="color:#787067; margin-bottom:8px;" id="lblBankInstruction">Transfer funds directly to the verified artisan account:</p>
-          <div style="background:#FAF6EE; padding:10px; border-radius:12px; border:1px solid #EBE3D8;">
-            <div><strong id="lblAccName">Account Name:</strong> <span id="checkoutBankHolder">Lakshmi Devi</span></div>
-            <div><strong id="lblAccNo">Account No:</strong> <span id="checkoutBankAcc">918230048123</span></div>
-            <div><strong id="lblIfscCode">IFSC Code:</strong> <span id="checkoutBankIfsc">SBIN0001420</span></div>
-          </div>
-        </div>
-
-        <div id="paySectionCard" style="display:none;">
-          <input type="text" placeholder="Card Number (16 Digits)" class="input-field" id="inputCardNo" />
-          <div style="display:flex; gap:8px;">
-            <input type="text" placeholder="MM/YY" class="input-field" id="inputCardExpiry" />
-            <input type="password" placeholder="CVV" class="input-field" id="inputCardCvv" />
-          </div>
-        </div>
-      </div>
-
       <button class="action-btn" onclick="completePaymentAndOrder()" style="margin-top:14px;" id="btnCompletePayment">Confirm & Complete Payment ➔</button>
-      <button class="action-btn secondary-btn" onclick="document.getElementById('screenCartModal').classList.add('hidden')" id="btnBackToStore" style="margin-top:8px;">Back to Store</button>
     </div>
 
     <!-- MAIN APP HEADER -->
     <header class="app-header" id="mainHeader">
       <div class="brand-section">
         <div class="app-logo-box">
-          <img src="logo.jpeg" alt="Logo" />
+          <img src="logo.jpeg" alt="Logo" onerror="this.style.display='none'" />
         </div>
         <div class="brand-info">
           <h1 class="brand-title">HASTHAKALA</h1>
@@ -560,32 +655,23 @@
           <input type="text" placeholder="Search for products or categories..." style="border:none; outline:none; background:transparent; width:100%; font-size:0.8rem;" />
         </div>
 
-        <div class="categories-row">
-          <div class="category-chip-item">
-            <div class="category-circle-icon">🏺</div>
-            <span class="category-label">Pottery</span>
-          </div>
-          <div class="category-chip-item">
-            <div class="category-circle-icon">🧵</div>
-            <span class="category-label">Textiles</span>
-          </div>
-          <div class="category-chip-item">
-            <div class="category-circle-icon">🧺</div>
-            <span class="category-label">Baskets</span>
-          </div>
-          <div class="category-chip-item">
-            <div class="category-circle-icon">🐘</div>
-            <span class="category-label">Wooden</span>
-          </div>
-        </div>
-
         <div class="buyer-store-grid" id="buyerStoreGrid"></div>
       </div>
 
     </main>
 
+    <!-- BUILT-IN VOICE ASSISTANT POPUP MODAL -->
+    <div id="voiceAssistantModal">
+      <div style="display:flex; justify-content:space-between; align-items:center; font-weight:800; color:#234E35; font-size:0.9rem;">
+        <span>🎙️ Voice Assistant Active</span>
+        <button onclick="toggleVoiceAssistantModal()" style="background:none; border:none; font-size:1rem; cursor:pointer;">✕</button>
+      </div>
+      <p id="assistantStatusText" style="font-size:0.78rem; color:#787067;">Listening for instructions...</p>
+      <div id="assistantTranscript" style="background:#FAF7F2; padding:8px; border-radius:8px; font-size:0.8rem; color:#201D1A; min-height:30px;">...</div>
+    </div>
+
     <!-- SINGLE DRAGGABLE FLOATING VOICE ASSISTANT BUTTON -->
-    <div id="draggableVoiceBtn" title="Drag to re-position | Tap for Voice Assistant">🎙️</div>
+    <div id="draggableVoiceBtn" onclick="toggleVoiceAssistantModal()" title="Tap for Voice Assistant">🎙️</div>
 
   </div>
 
@@ -605,7 +691,7 @@
       { code: 'ta-IN', name: 'தமிழ்' },
       { code: 'kn-IN', name: 'ಕನ್ನಡ' },
       { code: 'mr-IN', name: 'मराठी' },
-      { code: 'gu-IN', name: 'ગુજરાતી' },
+      { code: 'gu-IN', name: 'ગુજરાती' },
       { code: 'en-IN', name: 'English' }
     ];
 
@@ -746,7 +832,7 @@
         btnBuyerGuest: "అతిథిగా కొనసాగండి",
         studioTitle: "✨ 1. 8K AI ఫోటో స్టూడియో",
         rawPhotoText: "అసలు ఫోటో",
-        tapUploadText: "అప్‌लोड చేయడానికి నొక్కండి",
+        tapUploadText: "అప్‌లోడ్ చేయడానికి నొక్కండి",
         outputPhotoText: "8K స్టూడియో అవుట్‌పుట్",
         studioDesc: "హ్యాండ్‌హోల్డింగ్ వేళ్లు & గందరగోళాన్ని తొలగించి హై-ప్రొఫైల్ స్టూడియో లైటింగ్ ఇస్తుంది.",
         btnNextToVoice: "తదుపరి పేజీ: స్థానిక వాయిస్ వివరణ ➔",
@@ -887,16 +973,61 @@
     function selectAppMode(mode) {
       appMode = mode;
       const voiceBtn = document.getElementById('draggableVoiceBtn');
+      const voiceModal = document.getElementById('voiceAssistantModal');
 
       if (voiceBtn) {
         if (appMode === 'manual') {
           voiceBtn.style.setProperty('display', 'none', 'important');
+          if (voiceModal) voiceModal.style.display = 'none';
         } else {
           voiceBtn.style.setProperty('display', 'flex', 'important');
         }
       }
 
       showScreen('screenPortalSelect');
+    }
+
+    function toggleVoiceAssistantModal() {
+      const modal = document.getElementById('voiceAssistantModal');
+      if (!modal) return;
+      
+      if (modal.style.display === 'flex') {
+        modal.style.display = 'none';
+        if (recognition && isRecording) recognition.stop();
+      } else {
+        modal.style.display = 'flex';
+        startAssistantListening();
+      }
+    }
+
+    function startAssistantListening() {
+      if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+        document.getElementById('assistantTranscript').innerText = 'Speech recognition not supported in this browser.';
+        return;
+      }
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const assistantRec = new SpeechRecognition();
+      assistantRec.continuous = false;
+      assistantRec.interimResults = true;
+      assistantRec.lang = selectedLang;
+
+      document.getElementById('assistantStatusText').innerText = 'Listening for command...';
+      document.getElementById('assistantTranscript').innerHTML = '<em>Listening...</em>';
+
+      assistantRec.onresult = function(event) {
+        let text = event.results[0][0].transcript;
+        document.getElementById('assistantTranscript').innerText = text;
+        if (event.results[0].isFinal) {
+          document.getElementById('assistantStatusText').innerText = 'Command processed: ' + text;
+        }
+      };
+
+      assistantRec.onerror = function() {
+        document.getElementById('assistantTranscript').innerText = 'Microphone error or permission denied.';
+      };
+
+      assistantRec.start();
     }
 
     function openBuyerLogin() {
@@ -951,11 +1082,6 @@
 
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent(holder)}`;
       document.getElementById('artisanQRImage').src = qrUrl;
-      document.getElementById('buyerCheckoutQR').src = qrUrl;
-      document.getElementById('lblCheckoutUpi').innerText = `UPI ID: ${upi}`;
-      document.getElementById('checkoutBankHolder').innerText = holder;
-      document.getElementById('checkoutBankAcc').innerText = document.getElementById('bankAccNo').value;
-      document.getElementById('checkoutBankIfsc').innerText = document.getElementById('bankIfsc').value;
     }
 
     // --- AI PHOTO ENHANCER ---
@@ -990,7 +1116,7 @@
       const engOutput = document.getElementById('englishTranscript');
 
       if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-        alert('Voice recording requires Google Chrome browser.');
+        alert('Voice recording requires Google Chrome browser with microphone enabled.');
         return;
       }
 
@@ -1040,7 +1166,7 @@
         recognition.onerror = function(event) {
           console.error('Speech recognition error:', event.error);
           if (event.error !== 'no-speech') {
-            output.innerText = 'Voice capture error. Try speaking again.';
+            output.innerText = 'Voice capture error. Ensure microphone permissions are allowed.';
             stopRecordingState();
           }
         };
@@ -1077,7 +1203,6 @@
 
       const cleanLang = sourceLangCode.split('-')[0];
 
-      // If already English, skip translation API and display text directly
       if (cleanLang === 'en') {
         engOutput.innerText = text;
         return;
@@ -1092,7 +1217,6 @@
 
         if (data && data.responseData && data.responseData.translatedText) {
           let translated = data.responseData.translatedText;
-          // Check if MyMemory returned error string
           if (translated.includes("QUERY LENGTH LIMIT") || translated.includes("SELECT TWO DISTINCT")) {
             engOutput.innerText = text;
           } else {
@@ -1205,39 +1329,15 @@
       const list = document.getElementById('cartItemsList');
       if (cart.length === 0) {
         list.innerHTML = '<p style="font-size:0.85rem; color:#787067;">Your cart is empty.</p>';
-        document.getElementById('cartTotal').innerText = '₹0';
       } else {
-        let total = 0;
-        list.innerHTML = cart.map((item) => {
-          total += item.price;
-          return `
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#FFF; padding:8px 10px; border-radius:10px; font-size:0.8rem; border:1px solid #EBE3D8;">
-              <span>${item.title}</span>
-              <span style="color:#234E35; font-weight:800;">₹${item.price}</span>
-            </div>
-          `;
-        }).join('');
-        document.getElementById('cartTotal').innerText = '₹' + total.toLocaleString('en-IN');
+        list.innerHTML = cart.map((item) => `
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#FFF; padding:8px 10px; border-radius:10px; font-size:0.8rem; border:1px solid #EBE3D8;">
+            <span>${item.title}</span>
+            <span style="color:#234E35; font-weight:800;">₹${item.price}</span>
+          </div>
+        `).join('');
       }
       document.getElementById('screenCartModal').classList.remove('hidden');
-    }
-
-    function switchPayTab(tab) {
-      document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
-      document.getElementById('paySectionUPI').style.display = 'none';
-      document.getElementById('paySectionBank').style.display = 'none';
-      document.getElementById('paySectionCard').style.display = 'none';
-
-      if (tab === 'upi') {
-        document.getElementById('ptab-upi').classList.add('active');
-        document.getElementById('paySectionUPI').style.display = 'block';
-      } else if (tab === 'bank') {
-        document.getElementById('ptab-bank').classList.add('active');
-        document.getElementById('paySectionBank').style.display = 'block';
-      } else {
-        document.getElementById('ptab-card').classList.add('active');
-        document.getElementById('paySectionCard').style.display = 'block';
-      }
     }
 
     function completePaymentAndOrder() {
@@ -1250,50 +1350,7 @@
       document.getElementById('cartCount').innerText = '0';
       document.getElementById('screenCartModal').classList.add('hidden');
     }
-
-    // --- DRAGGABLE VOICE ASSISTANT ICON LOGIC ---
-    const dragBtn = document.getElementById('draggableVoiceBtn');
-    let activeDrag = false;
-    let currentPosX = 0, currentPosY = 0, initialPosX = 0, initialPosY = 0;
-
-    if (dragBtn) {
-      dragBtn.addEventListener('mousedown', dragStart);
-      dragBtn.addEventListener('touchstart', dragStart, { passive: false });
-      window.addEventListener('mouseup', dragEnd);
-      window.addEventListener('touchend', dragEnd);
-      window.addEventListener('mousemove', dragMove);
-      window.addEventListener('touchmove', dragMove, { passive: false });
-    }
-
-    function dragStart(e) {
-      const clientX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
-      const clientY = e.type === "touchstart" ? e.touches[0].clientY : e.clientY;
-      initialPosX = clientX - currentPosX;
-      initialPosY = clientY - currentPosY;
-      if (e.target === dragBtn) {
-        activeDrag = true;
-      }
-    }
-
-    function dragEnd() {
-      initialPosX = currentPosX;
-      initialPosY = currentPosY;
-      activeDrag = false;
-    }
-
-    function dragMove(e) {
-      if (activeDrag) {
-        e.preventDefault();
-        const clientX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
-        const clientY = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
-        currentPosX = clientX - initialPosX;
-        currentPosY = clientY - initialPosY;
-        dragBtn.style.transform = `translate3d(${currentPosX}px, ${currentPosY}px, 0)`;
-      }
-    }
   </script>
-
-  <script src="js/assistant.js"></script>
 
 </body>
 </html>
