@@ -47,6 +47,196 @@ html, body {
 }
 
 /* =====================================================
+   SCREEN OVERLAYS & WELCOME SCREEN (MATCHING MOCKUP)
+===================================================== */
+.screen-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: #F8F4EE !important;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px;
+  overflow-y: auto;
+}
+.screen-overlay.hidden { display: none !important; }
+
+/* WELCOME SCREEN ILLUSTRATED HERO */
+#screenWelcome {
+  background: #F8F4EE linear-gradient(180deg, #E8DEC8 0%, #F8F4EE 60%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 40px 24px 30px 24px !important;
+  text-align: center !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Decorative Organic Leaves Background */
+#screenWelcome::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 220px;
+  background: radial-gradient(circle at 10% 100%, #346849 0%, transparent 50%),
+              radial-gradient(circle at 90% 100%, #234E35 0%, transparent 50%);
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.welcome-logo-container {
+  width: 140px;
+  height: 140px;
+  margin-top: 20px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1px solid #EBE3D8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(35, 78, 53, 0.08);
+  padding: 12px;
+}
+
+.welcome-logo-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.welcome-text-group {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.welcome-tagline-main {
+  font-family: 'Cinzel', serif;
+  font-size: 1.15rem;
+  color: #234E35;
+  font-weight: 700;
+  margin-top: 14px;
+}
+
+.welcome-tagline-sub {
+  font-size: 0.8rem;
+  color: #787067;
+  margin-top: 6px;
+}
+
+/* =====================================================
+   PORTAL CARDS & LANGUAGE GRID
+===================================================== */
+.portal-card-btn {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1px solid #EBE3D8;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s, transform 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.portal-card-btn:hover {
+  background: #FAF6EE;
+  transform: translateY(-2px);
+}
+
+.portal-icon {
+  width: 52px;
+  height: 52px;
+  background: #FAF6EE;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-right: 16px;
+  border: 1px solid #EBE3D8;
+  flex-shrink: 0;
+}
+
+.lang-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 16px 0;
+  width: 100%;
+}
+
+.lang-chip {
+  background: #FFFFFF;
+  border: 1px solid #EBE3D8;
+  color: #201D1A;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.lang-chip.active {
+  background: #234E35;
+  color: #FFFFFF;
+  font-weight: bold;
+  border-color: #234E35;
+}
+
+/* =====================================================
+   HERO BANNER & CATEGORY CHIPS
+===================================================== */
+.hero-banner-card {
+  background: linear-gradient(135deg, #FAF4EB 0%, #EFE5D8 100%);
+  border-radius: 20px;
+  padding: 18px;
+  border: 1px solid #EBE3D8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.categories-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.category-chip-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.category-circle-icon {
+  width: 58px;
+  height: 58px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  border: 1px solid #EBE3D8;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.category-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #201D1A;
+}
+
+/* =====================================================
    ENLARGED BOTTOM NAVIGATION BAR & ICONS
 ===================================================== */
 .bottom-nav {
@@ -93,21 +283,21 @@ html, body {
 }
 
 /* =====================================================
-   DRAGGABLE FLOATING VOICE ASSISTANT BUTTON (FIXED)
+   DRAGGABLE FLOATING VOICE ASSISTANT BUTTON
 ===================================================== */
 #draggableVoiceBtn {
-  position: fixed !important;
-  right: 20px;
-  bottom: 80px;
-  width: 62px !important;
-  height: 62px !important;
+  position: absolute !important;
+  bottom: 80px !important;
+  right: 20px !important;
+  width: 58px !important;
+  height: 58px !important;
   border-radius: 50% !important;
   border: 2px solid #FFFFFF !important;
   background: #234E35 !important;
   color: #FFFFFF !important;
-  font-size: 28px !important;
+  font-size: 26px !important;
   cursor: grab !important;
-  z-index: 99999 !important;
+  z-index: 9999 !important;
   box-shadow: 0 10px 25px rgba(35, 78, 53, 0.4) !important;
   display: flex !important;
   align-items: center !important;
@@ -120,110 +310,4 @@ html, body {
 #draggableVoiceBtn:active {
   cursor: grabbing !important;
   box-shadow: 0 14px 30px rgba(35, 78, 53, 0.5) !important;
-}
-
-/* PORTAL CARD SELECTION */
-.portal-card-btn {
-  display: flex;
-  align-items: center;
-  background: #FFFFFF;
-  border: 1px solid #EBE3D8;
-  border-radius: 18px;
-  padding: 16px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  text-align: left;
-  transition: background-color 0.2s, transform 0.2s;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-}
-
-.portal-card-btn:hover {
-  background: #FAF6EE;
-  transform: translateY(-2px);
-}
-
-.portal-icon {
-  width: 52px;
-  height: 52px;
-  background: #FAF6EE;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  margin-right: 16px;
-  border: 1px solid #EBE3D8;
-  flex-shrink: 0;
-}
-
-/* LANGUAGE GRID */
-.lang-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin: 16px 0;
-  width: 100%;
-}
-
-.lang-chip {
-  background: #FFFFFF;
-  border: 1px solid #EBE3D8;
-  color: #201D1A;
-  padding: 12px;
-  border-radius: 12px;
-  cursor: pointer;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-}
-
-.lang-chip.active {
-  background: #234E35;
-  color: #FFFFFF;
-  font-weight: bold;
-  border-color: #234E35;
-}
-
-/* HERO BANNER & CATEGORY CHIPS */
-.hero-banner-card {
-  background: linear-gradient(135deg, #FAF4EB 0%, #EFE5D8 100%);
-  border-radius: 20px;
-  padding: 18px;
-  border: 1px solid #EBE3D8;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.categories-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  margin: 12px 0;
-}
-
-.category-chip-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-}
-
-.category-circle-icon {
-  width: 58px;
-  height: 58px;
-  background: #FFFFFF;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.6rem;
-  border: 1px solid #EBE3D8;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-}
-
-.category-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #201D1A;
 }
