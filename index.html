@@ -207,9 +207,9 @@
     .nav-item .nav-icon { font-size: 1.6rem !important; line-height: 1 !important; display: block !important; }
     .nav-item.active { color: #234E35 !important; font-weight: 800 !important; }
 
-    /* SELLER ONLY VOICE ASSISTANT ICON & POPUP */
+    /* SELLER ONLY FLOATING VOICE ASSISTANT ICON & POPUP */
     #draggableVoiceBtn {
-      position: absolute !important; right: 20px !important; bottom: 80px !important; width: 58px !important; height: 58px !important; border-radius: 50% !important; border: 2px solid #FFFFFF !important; background: #234E35 !important; color: #FFFFFF !important; font-size: 26px !important; cursor: grab !important; z-index: 9999 !important; box-shadow: 0 8px 20px rgba(35, 78, 53, 0.35) !important; display: none !important; align-items: center !important; justify-content: center !important; user-select: none !important; touch-action: none !important;
+      position: absolute !important; right: 20px !important; bottom: 80px !important; width: 58px !important; height: 58px !important; border-radius: 50% !important; border: 2px solid #FFFFFF !important; background: #234E35 !important; color: #FFFFFF !important; font-size: 26px !important; cursor: pointer !important; z-index: 9999 !important; box-shadow: 0 8px 20px rgba(35, 78, 53, 0.35) !important; display: none; align-items: center !important; justify-content: center !important; user-select: none !important;
     }
     #voiceAssistantModal {
       position: absolute; bottom: 150px; right: 20px; width: 280px; background: #FFFFFF; border: 1px solid #EBE3D8; border-radius: 16px; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 10000; display: none; flex-direction: column; gap: 10px;
@@ -475,7 +475,7 @@
           <button class="action-btn" onclick="switchSellerPage('seller-bank')" id="btnNextToBank">Next Page: Bank Details & QR ➔</button>
         </div>
 
-        <!-- PAGE 3: BANK DETAILS PAGE -->
+        <!-- PAGE 3: BANK DETAILS & QR PAGE -->
         <div id="seller-bank" class="page-section">
           <div class="section-card">
             <div class="section-title" id="lblBankTitle">🏦 3. Seller Bank Details & Payment QR</div>
@@ -483,6 +483,15 @@
             <input type="text" id="bankAccNo" class="input-field" placeholder="Bank Account Number" value="918230048123" />
             <input type="text" id="bankIfsc" class="input-field" placeholder="IFSC Code" value="SBIN0001420" />
             <input type="text" id="bankUpi" class="input-field" placeholder="UPI ID" value="lakshmidevi@ybl" />
+
+            <!-- Restored Payment QR Section -->
+            <div style="margin-top: 14px; background: #FAF6EE; border: 1px dashed #234E35; border-radius: 14px; padding: 14px; text-align: center;">
+              <div style="font-size: 0.8rem; font-weight: 800; color: #234E35; margin-bottom: 8px;">📱 Your Direct Payment QR Code</div>
+              <div style="width: 120px; height: 120px; background: #FFF; margin: 0 auto; border: 1px solid #EBE3D8; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
+                📷
+              </div>
+              <span style="font-size: 0.680rem; color: #787067; display: block; margin-top: 6px;">Scannable by Google Pay, PhonePe & Paytm for direct payouts</span>
+            </div>
           </div>
           <button class="action-btn" onclick="switchSellerPage('seller-pricing')" id="btnNextToPricing">Next Page: Price Calculator ➔</button>
         </div>
@@ -758,7 +767,7 @@
         storefrontTitle: "🛍️ హస్తకళ హ్యాండ్‌క్రాఫ్ట్ స్టోర్‌ఫ్రంట్",
         storefrontDesc: "భారతదేశంలోని గ్రామీణ చేతివృత్తిదారులకు ప్రత్యక్ష మద్దతు.",
         noItemsText: "స్టోర్‌లో ఇంకా హస్తకళలు లేవు. విక్రేతల ద్వారా ప్రచురించబడిన అంశాలు ఇక్కడ కనిపిస్తాయి.",
-        btnSignOut: "సైನ್ అవుట్"
+        btnSignOut: "సైన్ అవుట్"
       }
     };
 
@@ -892,7 +901,6 @@
         
         const lower = text.toLowerCase();
 
-        // Artisan/Seller navigation actions
         if (lower.includes('studio') || lower.includes('photo') || lower.includes('upload') || lower.includes('फोटो') || lower.includes('ఫోటో')) {
           document.getElementById('assistantStatusText').innerText = 'Opening AI Studio...';
           setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-studio'); }, 600);
@@ -1108,7 +1116,7 @@
       document.getElementById('pricePremium').innerText = '₹' + premiumPrice.toLocaleString('en-IN');
     }
 
-    // --- PUBLISH PRODUCT (PASSES TITLE, ENGLISH DESCRIPTION & PRICE TO BUYER STORE) ---
+    // --- PUBLISH PRODUCT ---
     function publishProduct() {
       const title = document.getElementById('draftTitleInput').value || 'Handcrafted Heritage Craft';
       const rawPrice = document.getElementById('priceTarget').innerText.replace(/[^0-9]/g, '');
