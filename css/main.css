@@ -1,0 +1,528 @@
+/* Restores rounded card styling for Portal Selection */
+.portal-card-btn {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-gold);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.portal-card-btn:hover {
+  background: rgba(197, 168, 128, 0.1);
+  transform: translateY(-2px);
+}
+
+.portal-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(197, 168, 128, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-right: 16px;
+  border: 1px solid var(--border-gold);
+}
+
+/* Restores Language Chips Grid */
+.lang-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 16px 0;
+  width: 100%;
+}
+
+.lang-chip {
+  background: rgba(197, 168, 128, 0.08);
+  border: 1px solid var(--border-gold);
+  color: var(--text-light);
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.lang-chip.active {
+  background: var(--accent-gold);
+  color: #12100E;
+  font-weight: bold;
+}
+/* =====================================================
+   HASHTAKALA VOICE ASSISTANT
+===================================================== */
+
+.voice-assistant-floating {
+    position: fixed;
+
+    right: 22px;
+    bottom: 22px;
+
+    width: 62px;
+    height: 62px;
+
+    border: none;
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #c5a880,
+            #8e6f47
+        );
+
+    color: #12100e;
+
+    font-size: 27px;
+
+    cursor: pointer;
+
+    z-index: 9999;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.45);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+.voice-assistant-floating:hover {
+
+    transform: scale(1.1);
+
+    box-shadow:
+        0 12px 32px rgba(197, 168, 128, 0.45);
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.voice-assistant-modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0, 0, 0, 0.72);
+
+    backdrop-filter: blur(8px);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition:
+        opacity 0.25s ease,
+        visibility 0.25s ease;
+
+    z-index: 10000;
+}
+
+
+.voice-assistant-modal.active {
+
+    opacity: 1;
+
+    visibility: visible;
+}
+
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.voice-assistant-card {
+
+    position: relative;
+
+    width: 100%;
+
+    max-width: 410px;
+
+    padding: 35px 25px 28px;
+
+    border:
+        1px solid var(--border-gold);
+
+    border-radius: 25px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #26211c,
+            #1c1917
+        );
+
+    text-align: center;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.65);
+
+    transform:
+        translateY(25px)
+        scale(0.95);
+
+    transition:
+        transform 0.3s ease;
+}
+
+
+.voice-assistant-modal.active
+.voice-assistant-card {
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+
+/* =====================================================
+   CLOSE
+===================================================== */
+
+.voice-assistant-close {
+
+    position: absolute;
+
+    top: 12px;
+    right: 14px;
+
+    width: 35px;
+    height: 35px;
+
+    border:
+        1px solid var(--border-gold);
+
+    border-radius: 50%;
+
+    background:
+        rgba(197, 168, 128, 0.08);
+
+    color:
+        var(--accent-gold);
+
+    font-size: 24px;
+
+    cursor: pointer;
+}
+
+
+.voice-assistant-close:hover {
+
+    background:
+        var(--accent-gold);
+
+    color:
+        #12100e;
+}
+
+
+/* =====================================================
+   ICON
+===================================================== */
+
+.voice-assistant-icon {
+
+    width: 82px;
+    height: 82px;
+
+    margin:
+        0 auto 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #c5a880,
+            #8e6f47
+        );
+
+    font-size: 37px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(197, 168, 128, 0.25);
+
+    animation:
+        assistantFloat 2.5s
+        ease-in-out infinite;
+}
+
+
+@keyframes assistantFloat {
+
+    0%,
+    100% {
+
+        transform:
+            translateY(0);
+
+    }
+
+    50% {
+
+        transform:
+            translateY(-7px);
+
+    }
+}
+
+
+/* =====================================================
+   TITLE
+===================================================== */
+
+.voice-assistant-card h2 {
+
+    color:
+        var(--accent-gold);
+
+    font-family:
+        'Cinzel',
+        serif;
+
+    font-size:
+        1.15rem;
+
+    margin-bottom:
+        8px;
+}
+
+
+.voice-assistant-card p {
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        0.75rem;
+
+    line-height:
+        1.5;
+
+    min-height:
+        35px;
+}
+
+
+/* =====================================================
+   MAIN SPEAK BUTTON
+===================================================== */
+
+.voice-assistant-button {
+
+    width: 135px;
+    height: 135px;
+
+    margin:
+        18px auto 25px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #c5a880,
+            #a38458
+        );
+
+    color:
+        #12100e;
+
+    font-size:
+        21px;
+
+    font-weight:
+        700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 12px 35px
+        rgba(197, 168, 128, 0.3);
+
+    transition:
+        transform 0.25s ease;
+}
+
+
+.voice-assistant-button:hover {
+
+    transform:
+        scale(1.07);
+}
+
+
+/* =====================================================
+   LISTENING ANIMATION
+===================================================== */
+
+.voice-assistant-button.listening {
+
+    animation:
+        assistantPulse 1.2s
+        infinite;
+
+}
+
+
+@keyframes assistantPulse {
+
+    0% {
+
+        box-shadow:
+            0 0 0 0
+            rgba(197, 168, 128, 0.65);
+
+    }
+
+    70% {
+
+        box-shadow:
+            0 0 0 28px
+            rgba(197, 168, 128, 0);
+
+    }
+
+    100% {
+
+        box-shadow:
+            0 0 0 0
+            rgba(197, 168, 128, 0);
+
+    }
+}
+
+
+/* =====================================================
+   EXAMPLES
+===================================================== */
+
+.voice-assistant-examples {
+
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    justify-content:
+        center;
+
+    gap:
+        6px;
+}
+
+
+.voice-assistant-examples strong {
+
+    width:
+        100%;
+
+    margin-bottom:
+        5px;
+
+    color:
+        var(--text-muted);
+
+    font-size:
+        0.7rem;
+}
+
+
+.voice-assistant-examples span {
+
+    padding:
+        6px 10px;
+
+    border:
+        1px solid
+        var(--border-gold);
+
+    border-radius:
+        20px;
+
+    background:
+        rgba(197, 168, 128, 0.07);
+
+    color:
+        var(--accent-gold-light);
+
+    font-size:
+        0.58rem;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .voice-assistant-floating {
+
+        width: 56px;
+        height: 56px;
+
+        right: 16px;
+        bottom: 16px;
+
+        font-size: 24px;
+    }
+
+
+    .voice-assistant-card {
+
+        padding:
+            32px 18px 22px;
+    }
+
+
+    .voice-assistant-button {
+
+        width: 115px;
+        height: 115px;
+
+        font-size:
+            18px;
+    }
+
+}

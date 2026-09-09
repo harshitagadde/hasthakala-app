@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hasthakala - Rural Hands, Global Reach</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Vibrant Indian Heritage Theme */
+      --bg-dark: #120907;
+      --bg-card: #1D0F0A;
+      --accent-saffron: #FF8C00;
+      --accent-saffron-light: #FFA033;
+      --accent-gold: #FFD700;
+      --accent-emerald: #00A86B;
+      --accent-ruby: #E63946;
+      --accent-maroon: #800020;
+      --text-light: #FFF8F0;
+      --text-muted: #D1C7BD;
+      --border-gold: rgba(255, 215, 0, 0.4);
+      --border-radius: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(255, 140, 0, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(0, 168, 107, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(128, 0, 32, 0.2) 0%, transparent 60%);
+      color: var(--text-light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      height: 92vh;
+      max-height: 900px;
+      background: var(--bg-card);
+      border: 2px solid var(--border-gold);
+      border-radius: 28px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 140, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Overlays & Container Layout */
+    .screen-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(180deg, #1D0F0A 0%, #120907 100%);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 20px;
+      overflow-y: auto;
+    }
+    .screen-overlay.hidden { display: none !important; }
+
+    /* Vibrant Header */
+    .app-header {
+      padding: 14px 18px;
+      background: linear-gradient(135deg, #2A1208 0%, #1D0F0A 100%);
+      border-bottom: 2px solid var(--border-gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-section { display: flex; align-items: center; gap: 12px; }
+    .app-logo-box { 
+      width: 50px; height: 50px; border-radius: 50%; 
+      border: 2px solid var(--accent-gold); 
+      overflow: hidden; display: flex; align-items: center; justify-content: center; 
+      background: #FFFDF9;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+    .app-logo-box img { width: 100%; height: 100%; object-fit: cover; }
+    .brand-title { font-family: 'Cinzel', serif; font-size: 1.15rem; color: var(--accent-gold); font-weight: 800; letter-spacing: 0.5px; }
+    .brand-tagline { font-size: 0.75rem; color: var(--accent-saffron-light); font-style: italic; font-weight: 600; }
+
+    .signout-btn {
+      background: rgba(230, 57, 70, 0.2);
+      border: 1.5px solid var(--accent-ruby);
+      color: #FF8080;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Improved Inputs & Interactive Elements */
+    .input-field {
+      width: 100%; background: rgba(0,0,0,0.5); border: 1.5px solid var(--border-gold);
+      color: var(--text-light); padding: 14px; border-radius: 12px; font-size: 1rem; margin-top: 8px;
+    }
+    .input-field:focus { outline: none; border-color: var(--accent-saffron); }
+
+    .action-btn {
+      width: 100%; padding: 16px; 
+      background: linear-gradient(135deg, var(--accent-saffron) 0%, var(--accent-ruby) 100%);
+      color: #FFF; font-weight: 800; border: none; border-radius: 35px; cursor: pointer; 
+      font-size: 1.05rem; margin-top: 12px;
+      box-shadow: 0 6px 20px rgba(255, 140, 0, 0.35);
+      transition: transform 0.2s;
+    }
+    .action-btn:active { transform: scale(0.98); }
+    .action-btn.recording { background: linear-gradient(135deg, #E63946 0%, #800020 100%); color: white; }
+    .secondary-btn { background: transparent; border: 2px solid var(--accent-gold); color: var(--accent-gold); }
+
+    /* Language Grid with Increased Font Sizes */
+    .lang-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
+    .lang-chip { 
+      background: rgba(255, 140, 0, 0.1); border: 1.5px solid var(--border-gold); 
+      color: var(--text-light); padding: 14px; border-radius: 14px; cursor: pointer; 
+      font-size: 1.05rem; font-weight: 700; text-align: center; transition: all 0.2s;
+    }
+    .lang-chip.active { 
+      background: linear-gradient(135deg, var(--accent-saffron), var(--accent-gold)); 
+      color: #120907; font-weight: 800; border-color: var(--accent-gold);
+    }
+
+    /* Portal Selection Cards */
+    .portal-card-btn {
+      display: flex; align-items: center; background: linear-gradient(135deg, rgba(255, 140, 0, 0.15), rgba(128, 0, 32, 0.25)); 
+      border: 1.5px solid var(--border-gold);
+      border-radius: 18px; padding: 20px; cursor: pointer; text-align: left; margin-bottom: 16px; transition: transform 0.2s;
+    }
+    .portal-card-btn:hover { transform: translateY(-3px); background: rgba(255,140,0,0.25); }
+
+    /* Main Container Structure */
+    .view-container { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+    .portal-view { display: none; flex-direction: column; gap: 16px; flex: 1; }
+    .portal-view.active { display: flex !important; }
+
+    .page-section { display: none; flex-direction: column; gap: 16px; flex: 1; }
+    .page-section.active { display: flex !important; }
+
+    .section-card { 
+      background: linear-gradient(145deg, #24130D, #1A0D09); 
+      border: 1.5px solid var(--border-gold); border-radius: var(--border-radius); 
+      padding: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+    .section-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--accent-gold); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
+
+    /* Visual Studio Viewfinders */
+    .arch-viewfinder {
+      width: 100%; height: 150px; 
+      border-top-left-radius: 60px; border-top-right-radius: 60px;
+      border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;
+      border: 2px dashed var(--accent-saffron); background: #0A0503;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; 
+      cursor: pointer; overflow: hidden; position: relative;
+    }
+    .arch-viewfinder img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+    .ai-badge { position: absolute; bottom: 8px; right: 8px; background: var(--accent-emerald); color: #FFF; font-size: 0.7rem; font-weight: 800; padding: 4px 8px; border-radius: 12px; }
+
+    /* Pricing & Calculator Cards */
+    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .calc-field label { font-size: 0.8rem; color: var(--accent-saffron-light); font-weight: 700; display: block; margin-bottom: 2px; }
+    .calc-field input { width: 100%; background: rgba(0,0,0,0.5); border: 1.5px solid var(--border-gold); color: #fff; padding: 10px; border-radius: 10px; font-size: 0.95rem; }
+
+    .price-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+    .price-card { background: rgba(0,0,0,0.4); border: 1.5px solid var(--border-gold); padding: 10px 6px; border-radius: 12px; text-align: center; }
+    .price-card label { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; display: block; }
+    .price-card span { font-family: 'Cinzel', serif; color: var(--accent-gold); font-size: 1.05rem; font-weight: 800; }
+
+    /* E-Commerce Storefront Grid */
+    .buyer-store-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 10px; }
+    .buyer-card { background: linear-gradient(145deg, #2A140B, #1B0C07); border: 1.5px solid var(--border-gold); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 8px; position: relative; }
+    .buyer-card img { width: 100%; height: 120px; border-radius: 10px; object-fit: cover; }
+
+    /* Payment Tabs */
+    .pay-tabs { display: flex; gap: 6px; margin: 12px 0; }
+    .pay-tab { flex: 1; padding: 10px 6px; font-size: 0.8rem; background: rgba(0,0,0,0.4); border: 1.5px solid var(--border-gold); color: var(--text-muted); border-radius: 10px; cursor: pointer; text-align: center; font-weight: 700; }
+    .pay-tab.active { background: linear-gradient(135deg, var(--accent-saffron), var(--accent-gold)); color: #120907; font-weight: 800; }
+
+    /* Navigation Bar */
+    .bottom-nav { display: flex; background: #0A0503; border-top: 2px solid var(--border-gold); padding: 10px 0; margin-top: auto; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; color: var(--text-muted); font-size: 0.75rem; font-weight: 700; cursor: pointer; }
+    .nav-item.active { color: var(--accent-gold); font-weight: 800; }
+
+    /* Floating Voice Button */
+    .voice-assistant-floating {
+      position: fixed; right: 25px; bottom: 25px; width: 70px; height: 70px; border-radius: 50%;
+      border: 3px solid var(--accent-gold); background: linear-gradient(135deg, var(--accent-saffron), var(--accent-ruby));
+      color: white; font-size: 32px; cursor: pointer; z-index: 9998; box-shadow: 0 8px 25px rgba(255, 140, 0, 0.5); transition: 0.3s ease;
+    }
+    .voice-assistant-floating:hover { transform: scale(1.1); }
+    
+    .voice-assistant-modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px;
+    }
+    .voice-assistant-modal.active { display: flex; }
+    .voice-assistant-card {
+      width: min(500px, 95%); background: linear-gradient(145deg, #2A1208, #120907); border: 2px solid var(--accent-gold);
+      border-radius: 28px; padding: 35px 25px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(255, 140, 0, 0.2); position: relative; animation: assistantPopup 0.3s ease;
+    }
+    @keyframes assistantPopup { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .voice-assistant-close { position: absolute; top: 14px; right: 16px; width: 38px; height: 38px; border: none; border-radius: 50%; background: rgba(255,255,255,0.1); color: #fff; font-size: 26px; cursor: pointer; }
+    .voice-assistant-close:hover { background: var(--accent-ruby); }
+    .voice-assistant-icon { width: 95px; height: 95px; margin: 5px auto 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 46px; background: linear-gradient(135deg, var(--accent-saffron), var(--accent-gold)); box-shadow: 0 10px 30px rgba(255, 140, 0, 0.4); }
+    .voice-assistant-card h2 { margin: 0 0 10px; color: var(--accent-gold); font-size: 26px; font-family: 'Cinzel', serif; }
+    .voice-assistant-card p { color: var(--text-light); font-size: 1.05rem; margin-bottom: 25px; }
+    .voice-assistant-button { width: 200px; height: 60px; border: none; border-radius: 30px; background: linear-gradient(135deg, var(--accent-saffron), var(--accent-ruby)); color: #fff; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 25px rgba(0,0,0,0.5); transition: 0.3s ease; }
+    .voice-assistant-button.listening { background: var(--accent-ruby); animation: listeningPulse 1.2s infinite; }
+    @keyframes listeningPulse { 0% { box-shadow: 0 0 0 0 rgba(230,57,70,0.7); } 70% { box-shadow: 0 0 0 20px rgba(230,57,70,0); } 100% { box-shadow: 0 0 0 0 rgba(230,57,70,0); } }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- OVERLAY 0: WELCOME SCREEN -->
+    <div id="screenWelcome" class="screen-overlay" style="align-items:center; justify-content:center; text-align:center;">
+      <div style="background:#FFFDF9; border-radius:50%; width:150px; height:150px; display:flex; align-items:center; justify-content:center; border:3px solid var(--accent-gold); margin-bottom:16px; box-shadow: 0 10px 30px rgba(255,140,0,0.4); overflow:hidden;">
+        <img src="logo.jpeg" alt="Hasthakala Logo" style="width:100%; height:100%; object-fit:cover;" />
+      </div>
+      <h1 style="font-family:'Cinzel',serif; color:var(--accent-gold); font-size:1.8rem; font-weight:800;" id="lblWelcomeTitle">WELCOME TO HASTHAKALA</h1>
+      <p style="font-size:1rem; color:var(--accent-saffron-light); font-style:italic; margin-top:6px; font-weight:600;" id="lblWelcomeSubtitle">Rural Hands • Global Reach</p>
+      <button class="action-btn" onclick="startAppFromWelcome()" style="margin-top:28px; width:90%; font-size:1.15rem;" id="btnGetStarted">Get Started ➔</button>
+    </div>
+
+    <!-- OVERLAY 1: LANGUAGE SELECTION -->
+    <div id="screenLanguage" class="screen-overlay hidden">
+      <h2 style="font-family:'Cinzel',serif; color:var(--accent-gold); text-align:center; font-size:1.5rem;" id="lblSelectLangTitle">Select Language</h2>
+      <div class="lang-grid" id="languageGrid"></div>
+      <button class="action-btn" onclick="confirmLanguageSelection()" id="btnConfirmLang">Continue to Interaction Mode ➔</button>
+    </div>
+
+    <!-- OVERLAY 1.5: INTERACTION MODE SELECTION (MANUAL VS VOICE) -->
+    <div id="screenModeSelect" class="screen-overlay hidden" style="justify-content:center;">
+      <h2 style="font-family:'Cinzel',serif; color:var(--accent-gold); text-align:center; margin-bottom:24px; font-size:1.4rem;" id="lblChooseModeTitle">CHOOSE NAVIGATION MODE</h2>
+      
+      <div class="portal-card-btn" onclick="selectAppMode('manual')">
+        <div style="font-size:36px; margin-right:18px;">👆</div>
+        <div>
+          <div style="font-weight:800; font-size:1.15rem; color:var(--text-light);" id="lblManualModeTitle">Manual / Touch Mode</div>
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;" id="lblManualModeDesc">Navigate using visual buttons, touch & controls</div>
+        </div>
+      </div>
+
+      <div class="portal-card-btn" onclick="selectAppMode('voice')">
+        <div style="font-size:36px; margin-right:18px;">🎙️</div>
+        <div>
+          <div style="font-weight:800; font-size:1.15rem; color:var(--accent-gold);" id="lblVoiceModeTitle">Voice Assistant Mode</div>
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;" id="lblVoiceModeDesc">Hands-free app guidance via spoken native voice commands</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OVERLAY 2: PORTAL SELECTION -->
+    <div id="screenPortalSelect" class="screen-overlay hidden" style="justify-content:center;">
+      <h2 style="font-family:'Cinzel',serif; color:var(--accent-gold); text-align:center; margin-bottom:24px; font-size:1.4rem;" id="lblChoosePortalTitle">CHOOSE PORTAL</h2>
+      <div class="portal-card-btn" onclick="openBuyerLogin()">
+        <div style="font-size:32px; margin-right:18px;">🛍️</div>
+        <div>
+          <div style="font-weight:800; font-size:1.15rem; color:var(--text-light);" id="lblBuyerPortalTitle">Buyer Portal</div>
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;" id="lblBuyerPortalDesc">Sign In, Shop & Direct Pay</div>
+        </div>
+      </div>
+      <div class="portal-card-btn" onclick="openRole('seller')">
+        <div style="font-size:32px; margin-right:18px;">🏺</div>
+        <div>
+          <div style="font-weight:800; font-size:1.15rem; color:var(--text-light);" id="lblSellerPortalTitle">Artisan / Seller Portal</div>
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;" id="lblSellerPortalDesc">AI Studio, QR Code & Pricing</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OVERLAY 3: BUYER LOGIN PAGE -->
+    <div id="screenBuyerLogin" class="screen-overlay hidden" style="justify-content:center;">
+      <div style="text-align:center; margin-bottom:20px;">
+        <h2 style="font-family:'Cinzel',serif; color:var(--accent-gold); font-size:1.5rem;" id="lblBuyerSignInTitle">BUYER SIGN IN</h2>
+        <p style="font-size:0.9rem; color:var(--text-muted);" id="lblBuyerSignInDesc">Access Hasthakala E-Commerce Store</p>
+      </div>
+      <form onsubmit="handleBuyerLogin(event)" style="display:flex; flex-direction:column; gap:12px;">
+        <input type="text" id="inputBuyerPhone" placeholder="Phone Number / Email Address" class="input-field" required />
+        <input type="password" id="inputBuyerPassword" placeholder="Password" class="input-field" required />
+        <button type="submit" class="action-btn" style="margin-top:14px;" id="btnBuyerSignIn">Sign In to Shop ➔</button>
+      </form>
+      <button class="action-btn secondary-btn" onclick="openRole('buyer')" style="margin-top:12px;" id="btnBuyerGuest">Continue as Guest</button>
+    </div>
+
+    <!-- OVERLAY 4: BUYER CART & CHECKOUT MODAL -->
+    <div id="screenCartModal" class="screen-overlay hidden">
+      <div class="section-card">
+        <div class="section-title" id="lblCartTitle">🛒 Shopping Cart & Direct Checkout</div>
+        <div id="cartItemsList" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+          <p style="font-size:0.9rem; color:var(--text-muted);" id="lblCartEmpty">Your cart is empty.</p>
+        </div>
+        <div style="margin-top:14px; font-size:1.1rem; font-weight:800; color:var(--accent-gold); text-align:right;">
+          <span id="lblTotalText">Total:</span> <span id="cartTotal">₹0</span>
+        </div>
+      </div>
+
+      <div class="section-card" style="margin-top:12px;">
+        <div class="section-title" id="lblPayMethodTitle">💳 Select Payment Method</div>
+        
+        <div class="pay-tabs">
+          <div class="pay-tab active" id="ptab-upi" onclick="switchPayTab('upi')">UPI / Seller QR</div>
+          <div class="pay-tab" id="ptab-bank" onclick="switchPayTab('bank')">Bank Transfer</div>
+          <div class="pay-tab" id="ptab-card" onclick="switchPayTab('card')">Card / NetBanking</div>
+        </div>
+
+        <div id="paySectionUPI">
+          <p style="font-size:0.85rem; color:var(--text-muted);" id="lblUpiInstruction">Scan Artisan UPI QR Code to Transfer Directly:</p>
+          <div style="text-align:center; margin:14px 0;">
+            <img id="buyerCheckoutQR" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=lakshmidevi@ybl" style="border:3px solid var(--accent-gold); border-radius:12px; padding:6px; background:#fff;" />
+            <p style="font-size:0.85rem; color:var(--accent-gold); margin-top:6px; font-weight:700;" id="lblCheckoutUpi">UPI ID: lakshmidevi@ybl</p>
+          </div>
+        </div>
+
+        <div id="paySectionBank" style="display:none; font-size:0.85rem; line-height:1.5;">
+          <p style="color:var(--text-muted); margin-bottom:8px;" id="lblBankInstruction">Transfer funds directly to the verified artisan account:</p>
+          <div style="background:rgba(0,0,0,0.5); padding:12px; border-radius:12px; border:1px solid var(--border-gold);">
+            <div><strong id="lblAccName">Account Name:</strong> <span id="checkoutBankHolder">Lakshmi Devi</span></div>
+            <div><strong id="lblAccNo">Account No:</strong> <span id="checkoutBankAcc">918230048123</span></div>
+            <div><strong id="lblIfscCode">IFSC Code:</strong> <span id="checkoutBankIfsc">SBIN0001420</span></div>
+          </div>
+        </div>
+
+        <div id="paySectionCard" style="display:none;">
+          <input type="text" placeholder="Card Number (16 Digits)" class="input-field" id="inputCardNo" />
+          <div style="display:flex; gap:8px;">
+            <input type="text" placeholder="MM/YY" class="input-field" id="inputCardExpiry" />
+            <input type="password" placeholder="CVV" class="input-field" id="inputCardCvv" />
+          </div>
+        </div>
+      </div>
+
+      <button class="action-btn" onclick="completePaymentAndOrder()" style="margin-top:14px;" id="btnCompletePayment">Confirm & Complete Payment ➔</button>
+      <button class="action-btn secondary-btn" onclick="document.getElementById('screenCartModal').classList.add('hidden')" id="btnBackToStore">Back to Store</button>
+    </div>
+
+    <!-- APP HEADER -->
+    <header class="app-header">
+      <div class="brand-section">
+        <div class="app-logo-box">
+          <img src="logo.jpeg" alt="Logo" />
+        </div>
+        <div>
+          <h1 class="brand-title">HASTHAKALA</h1>
+          <p class="brand-tagline" id="hdrTagline">Rural Hands • Global Reach</p>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button id="btnCartHeader" class="signout-btn" style="background:rgba(255, 215, 0, 0.2); border-color:var(--accent-gold); color:var(--accent-gold); display:none;" onclick="openCartModal()">🛒 Cart (<span id="cartCount">0</span>)</button>
+        <button class="signout-btn" onclick="signOut()" id="btnSignOut">🚪 Sign Out</button>
+      </div>
+    </header>
+
+    <main class="view-container">
+
+      <!-- ================= SELLER PORTAL ================= -->
+      <div id="sellerPortal" class="portal-view">
+        
+        <!-- PAGE 1: AI STUDIO PAGE -->
+        <div id="seller-studio" class="page-section active">
+          <div class="section-card">
+            <div class="section-title" id="lblStudioTitle">✨ 1. 8K AI Photo Studio & Hand Remover</div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px;">
+              <div style="text-align: center;">
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; font-weight: 700;" id="lblRawPhotoText">Raw Photo</p>
+                <div class="arch-viewfinder" onclick="document.getElementById('photoInput').click()">
+                  <img id="rawPhotoPreview" style="display:none;" />
+                  <div id="photoPlaceholder" style="text-align:center;">
+                    <p style="font-size:1.5rem; margin-bottom:4px;">📸</p>
+                    <p style="font-size:0.8rem; color:var(--accent-saffron-light); font-weight:700;" id="lblTapUploadText">Tap Upload</p>
+                  </div>
+                </div>
+              </div>
+
+              <div style="text-align: center;">
+                <p style="font-size: 0.8rem; color: var(--accent-gold); margin-bottom: 4px; font-weight: 700;" id="lblOutputPhotoText">8K Studio Output</p>
+                <div class="arch-viewfinder">
+                  <img id="photoPreview" style="display:none;" />
+                  <span id="processedPlaceholder" style="font-size:0.8rem; color:var(--text-muted);">Awaiting...</span>
+                  <div class="ai-badge" id="aiStatusBadge" style="display:none;">Studio 8K</div>
+                </div>
+              </div>
+            </div>
+
+            <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(this)" />
+            <p style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin-top:8px; line-height:1.4;" id="lblStudioDesc">
+              Auto-detects central craft, removes holding fingers & clutter, and outputs high-resolution studio lighting.
+            </p>
+          </div>
+          <button class="action-btn" onclick="switchSellerPage('seller-voice')" id="btnNextToVoice">Next Page: Native Voice Description ➔</button>
+        </div>
+
+        <!-- PAGE 2: NATIVE VOICE PAGE -->
+        <div id="seller-voice" class="page-section">
+          <div class="section-card">
+            <div class="section-title" id="lblVoiceTitle">🎙️ 2. Native Voice Description</div>
+            <button id="recordBtn" class="action-btn" onclick="toggleRealVoiceRecording()">Describe Craft in Native Language</button>
+            
+            <div style="margin-top:12px;">
+              <label style="font-size:0.8rem; color:var(--text-muted); display:block; font-weight:700;" id="lblSpokenTranscriptText">Spoken Speech Transcript:</label>
+              <div id="transcriptOutput" style="font-size:0.9rem; color:var(--text-light); background:rgba(0,0,0,0.4); padding:10px; border-radius:10px; border:1px solid var(--border-gold); min-height:40px; margin-top:4px;">
+                <em id="lblVoicePlaceholder">Tap above to record voice in your native language...</em>
+              </div>
+            </div>
+
+            <div style="margin-top:12px;">
+              <label style="font-size:0.8rem; color:var(--accent-gold); display:block; font-weight:700;" id="lblTranslatedDescText">Auto-Translated English Description:</label>
+              <p id="englishTranscript" style="font-size:0.9rem; color:var(--accent-saffron-light); background:rgba(0,0,0,0.5); padding:10px; border-radius:10px; border:1px solid var(--border-gold); line-height:1.4; min-height:40px; margin-top:4px;">
+                Handcrafted authentic rural craft creation.
+              </p>
+            </div>
+          </div>
+          <button class="action-btn" onclick="switchSellerPage('seller-bank')" id="btnNextToBank">Next Page: Bank Details & QR ➔</button>
+        </div>
+
+        <!-- PAGE 3: BANK DETAILS PAGE & QR GENERATOR -->
+        <div id="seller-bank" class="page-section">
+          <div class="section-card">
+            <div class="section-title" id="lblBankTitle">🏦 3. Seller Bank Details & Payment QR</div>
+            <input type="text" id="bankHolderName" class="input-field" placeholder="Account Holder Name" value="Lakshmi Devi (Craft Artisan)" oninput="updateArtisanQR()" />
+            <input type="text" id="bankAccNo" class="input-field" placeholder="Bank Account Number" value="918230048123" />
+            <input type="text" id="bankIfsc" class="input-field" placeholder="IFSC Code" value="SBIN0001420" />
+            <input type="text" id="bankUpi" class="input-field" placeholder="PhonePe / Google Pay / UPI ID" value="lakshmidevi@ybl" oninput="updateArtisanQR()" />
+
+            <div style="margin-top:14px; text-align:center;">
+              <label style="font-size:0.85rem; color:var(--accent-gold); display:block; margin-bottom:6px; font-weight:700;" id="lblQrText">Your Generated Payment QR Code:</label>
+              <img id="artisanQRImage" src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=lakshmidevi@ybl" style="border:3px solid var(--accent-gold); border-radius:12px; padding:6px; background:#fff;" />
+              <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;" id="lblQrDesc">Buyers scan this to pay directly into your account.</p>
+            </div>
+          </div>
+          <button class="action-btn" onclick="switchSellerPage('seller-pricing')" id="btnNextToPricing">Next Page: Price Calculator ➔</button>
+        </div>
+
+        <!-- PAGE 4: MARKET PRICE CALCULATOR PAGE -->
+        <div id="seller-pricing" class="page-section">
+          <div class="section-card">
+            <div class="section-title" id="lblCalcTitle">🧮 4. Market Price Calculator</div>
+            <div style="margin-bottom:8px;">
+              <label style="font-size:0.8rem; color:var(--accent-gold); font-weight:700;" id="lblProductTitleText">Product Title:</label>
+              <input type="text" id="draftTitleInput" class="input-field" value="Handcrafted Heritage Plush Craft" style="margin-top:4px;" />
+            </div>
+
+            <div class="calc-grid">
+              <div class="calc-field"><label id="lblCostRawText">Raw Material Cost (₹)</label><input type="number" id="costRaw" value="450" oninput="calculateFairPricing()" /></div>
+              <div class="calc-field"><label id="lblCostHoursText">Making Time (Hours)</label><input type="number" id="costHours" value="6" oninput="calculateFairPricing()" /></div>
+              <div class="calc-field"><label id="lblCostRateText">Artisan Rate (₹/Hr)</label><input type="number" id="costRate" value="120" oninput="calculateFairPricing()" /></div>
+              <div class="calc-field"><label id="lblCostBenchmarkText">Market Benchmark (₹)</label><input type="number" id="costBenchmark" value="1600" oninput="calculateFairPricing()" /></div>
+            </div>
+
+            <div class="price-tiers">
+              <div class="price-card"><label id="lblFloorText">Floor</label><span id="priceFloor">₹1,170</span></div>
+              <div class="price-card" style="border-color:var(--accent-gold); background:rgba(255,215,0,0.15);"><label style="color:var(--accent-gold);" id="lblTargetText">Target Fair</label><span id="priceTarget" style="font-size:1.15rem;">₹1,520</span></div>
+              <div class="price-card"><label id="lblPremiumText">Premium</label><span id="pricePremium">₹1,980</span></div>
+            </div>
+          </div>
+
+          <button class="action-btn" onclick="publishProduct()" id="btnPublishStore">🚀 Publish to Public Storefront</button>
+        </div>
+
+        <!-- PAGE 5: CATALOGUE PAGE -->
+        <div id="seller-inventory" class="page-section">
+          <div class="section-card">
+            <div class="section-title" id="lblCatalogTitle">📊 5. Your Published Catalog</div>
+            <div id="sellerInventoryList" style="font-size:0.9rem; color:var(--text-muted);">No products published yet.</div>
+          </div>
+        </div>
+
+        <!-- BOTTOM NAVIGATION BAR -->
+        <nav class="bottom-nav">
+          <button class="nav-item active" id="snav-studio" onclick="switchSellerPage('seller-studio')"><span>📸</span> <span id="navTxtStudio">Studio</span></button>
+          <button class="nav-item" id="snav-voice" onclick="switchSellerPage('seller-voice')"><span>🎙️</span> <span id="navTxtVoice">Voice</span></button>
+          <button class="nav-item" id="snav-bank" onclick="switchSellerPage('seller-bank')"><span>🏦</span> <span id="navTxtBank">Bank/QR</span></button>
+          <button class="nav-item" id="snav-pricing" onclick="switchSellerPage('seller-pricing')"><span>🧮</span> <span id="navTxtPricing">Pricing</span></button>
+          <button class="nav-item" id="snav-inventory" onclick="switchSellerPage('seller-inventory')"><span>📊</span> <span id="navTxtCatalog">Catalog</span></button>
+        </nav>
+
+      </div>
+
+      <!-- ================= BUYER PORTAL ================= -->
+      <div id="buyerPortal" class="portal-view">
+        <div class="section-card">
+          <div class="section-title" id="lblStorefrontTitle">🛍️ Hasthakala Handicraft Storefront</div>
+          <p style="font-size:0.85rem; color:var(--text-muted);" id="lblStorefrontDesc">Directly supporting rural artisans across India.</p>
+        </div>
+        <div class="buyer-store-grid" id="buyerStoreGrid"></div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script>
+    let selectedLang = 'hi-IN';
+    let appMode = 'manual';
+    let isRecording = false;
+    let recognition = null;
+    let publishedProducts = [];
+    let cart = [];
+
+    const languages = [
+      { code: 'hi-IN', name: 'हिंदी' },
+      { code: 'bn-IN', name: 'বাংলা' },
+      { code: 'te-IN', name: 'తెలుగు' },
+      { code: 'ta-IN', name: 'தமிழ்' },
+      { code: 'kn-IN', name: 'ಕನ್ನಡ' },
+      { code: 'mr-IN', name: 'मराठी' },
+      { code: 'gu-IN', name: 'ગુજરાતી' },
+      { code: 'en-IN', name: 'English' }
+    ];
+
+    const i18n = {
+      'en-IN': {
+        welcomeTitle: "WELCOME TO HASTHAKALA",
+        welcomeSubtitle: "Rural Hands • Global Reach",
+        getStarted: "Get Started ➔",
+        selectLangTitle: "Select Language",
+        confirmLang: "Continue to Interaction Mode ➔",
+        chooseModeTitle: "CHOOSE NAVIGATION MODE",
+        manualModeTitle: "Manual / Touch Mode",
+        manualModeDesc: "Navigate using visual buttons, touch & controls",
+        voiceModeTitle: "Voice Assistant Mode",
+        voiceModeDesc: "Hands-free app guidance via spoken native voice commands",
+        choosePortal: "CHOOSE PORTAL",
+        buyerPortalTitle: "Buyer Portal",
+        buyerPortalDesc: "Sign In, Shop & Direct Pay",
+        sellerPortalTitle: "Artisan / Seller Portal",
+        sellerPortalDesc: "AI Studio, QR Code & Pricing",
+        buyerSignInTitle: "BUYER SIGN IN",
+        buyerSignInDesc: "Access Hasthakala E-Commerce Store",
+        btnBuyerSignIn: "Sign In to Shop ➔",
+        btnBuyerGuest: "Continue as Guest",
+        studioTitle: "✨ 1. 8K AI Photo Studio & Hand Remover",
+        rawPhotoText: "Raw Photo",
+        tapUploadText: "Tap Upload",
+        outputPhotoText: "8K Studio Output",
+        studioDesc: "Auto-detects central craft, removes holding fingers & clutter, and outputs high-resolution studio lighting.",
+        btnNextToVoice: "Next Page: Native Voice Description ➔",
+        voiceTitle: "🎙️ 2. Native Voice Description",
+        btnVoiceRecord: "Describe Craft in Native Language",
+        spokenTranscriptText: "Spoken Speech Transcript:",
+        translatedDescText: "Auto-Translated English Description:",
+        voicePlaceholder: "Tap above to record voice in your native language...",
+        btnNextToBank: "Next Page: Bank Details & QR ➔",
+        bankTitle: "🏦 3. Seller Bank Details & Payment QR",
+        qrText: "Your Generated Payment QR Code:",
+        qrDesc: "Buyers scan this to pay directly into your account.",
+        btnNextToPricing: "Next Page: Price Calculator ➔",
+        calcTitle: "🧮 4. Market Price Calculator",
+        productTitleText: "Product Title:",
+        costRawText: "Raw Material Cost (₹)",
+        costHoursText: "Making Time (Hours)",
+        costRateText: "Artisan Rate (₹/Hr)",
+        costBenchmarkText: "Market Benchmark (₹)",
+        floorText: "Floor",
+        targetText: "Target Fair",
+        premiumText: "Premium",
+        btnPublishStore: "🚀 Publish to Public Storefront",
+        catalogTitle: "📊 5. Your Published Catalog",
+        navStudio: "Studio",
+        navVoice: "Voice",
+        navBank: "Bank/QR",
+        navPricing: "Pricing",
+        navCatalog: "Catalog",
+        storefrontTitle: "🛍️ Hasthakala Handicraft Storefront",
+        storefrontDesc: "Directly supporting rural artisans across India.",
+        noItemsText: "No artisan crafts in store yet.<br>Published items from sellers will appear here.",
+        btnSignOut: "🚪 Sign Out"
+      },
+      'hi-IN': {
+        welcomeTitle: "हस्तकला में आपका स्वागत है",
+        welcomeSubtitle: "ग्रामीण हाथ • वैश्विक पहुँच",
+        getStarted: "शुरू करें ➔",
+        selectLangTitle: "भाषा चुनें",
+        confirmLang: "नेविगेशन मोड चुनें ➔",
+        chooseModeTitle: "नेविगेशन मोड चुनें",
+        manualModeTitle: "मैनुअल / टच मोड",
+        manualModeDesc: "स्क्रीन और बटन द्वारा आसानी से चलाएं",
+        voiceModeTitle: "वॉइस असिस्टेंट मोड",
+        voiceModeDesc: "मातृभाषा में बोलकर पूरी ऐप चलाएं",
+        choosePortal: "पोर्टल चुनें",
+        buyerPortalTitle: "खरीदार पोर्टल",
+        buyerPortalDesc: "साइन इन करें, खरीदारी करें और सीधा भुगतान करें",
+        sellerPortalTitle: "कारीगर / विक्रेता पोर्टल",
+        sellerPortalDesc: "एआई स्टूडियो, क्यूआर कोड और मूल्य निर्धारण",
+        buyerSignInTitle: "खरीदार साइन इन",
+        buyerSignInDesc: "हस्तकला ई-कॉमर्स स्टोर में प्रवेश करें",
+        btnBuyerSignIn: "खरीदारी के लिए साइन इन करें ➔",
+        btnBuyerGuest: "अतिथि के रूप में जारी रखें",
+        studioTitle: "✨ 1. 8K एआई फोटो स्टूडियो",
+        rawPhotoText: "मूल फोटो",
+        tapUploadText: "अपलोड करें",
+        outputPhotoText: "8K स्टूडियो आउटपुट",
+        studioDesc: "हैंडहोल्डिंग उंगलियों और अव्यवस्था को हटाकर उच्च गुणवत्ता वाली स्टूडियो लाइटिंग देता है।",
+        btnNextToVoice: "अगला पेज: अपनी भाषा में विवरण दें ➔",
+        voiceTitle: "🎙️ 2. अपनी भाषा में विवरण दें",
+        btnVoiceRecord: "अपनी मातृभाषा में बोलकर बताएं",
+        spokenTranscriptText: "बोला गया विवरण:",
+        translatedDescText: "स्वचालित अंग्रेजी अनुवाद:",
+        voicePlaceholder: "अपनी भाषा में रिकॉर्ड करने के लिए ऊपर टैप करें...",
+        btnNextToBank: "अगला पेज: बैंक विवरण और क्यूआर ➔",
+        bankTitle: "🏦 3. विक्रेता बैंक विवरण और भुगतान क्यूआर",
+        qrText: "आपका उत्पन्न भुगतान क्यूआर कोड:",
+        qrDesc: "खरीदार आपके खाते में सीधे भुगतान करने के लिए इसे स्कैन करते हैं।",
+        btnNextToPricing: "अगला पेज: मूल्य कैलकुलेटर ➔",
+        calcTitle: "🧮 4. बाजार मूल्य कैलकुलेटर",
+        productTitleText: "उत्पाद का शीर्षक:",
+        costRawText: "कच्ची सामग्री लागत (₹)",
+        costHoursText: "बनाने का समय (घंटे)",
+        costRateText: "कारीगर दर (₹/घंटा)",
+        costBenchmarkText: "बाजार मानक मूल्य (₹)",
+        floorText: "न्यूनतम",
+        targetText: "उचित मूल्य",
+        premiumText: "प्रीमियम",
+        btnPublishStore: "🚀 स्टोरफ्रंट पर प्रकाशित करें",
+        catalogTitle: "📊 5. आपके प्रकाशित उत्पाद",
+        navStudio: "स्टूडियो",
+        navVoice: "आवाज",
+        navBank: "बैंक/क्यूआर",
+        navPricing: "मूल्य निर्धारण",
+        navCatalog: "कैटलॉग",
+        storefrontTitle: "🛍️ हस्तकला हस्तशिल्प स्टोरफ्रंट",
+        storefrontDesc: "भारत भर के ग्रामीण कारीगरों का सीधा समर्थन।",
+        noItemsText: "दुकान में अभी कोई उत्पाद नहीं है।<br>विक्रेताओं द्वारा प्रकाशित वस्तुएं यहां दिखाई देंगी।",
+        btnSignOut: "🚪 साइन आउट"
+      },
+      'te-IN': {
+        welcomeTitle: "హస్తకళకి స్వాగతం",
+        welcomeSubtitle: "గ్రామీణ చేతులు • ప్రపంచ వ్యాప్తి",
+        getStarted: "ప్రారంభించండి ➔",
+        selectLangTitle: "భాషను ఎంచుకోండి",
+        confirmLang: "మోడ్‌ని ఎంచుకోండి ➔",
+        chooseModeTitle: "నావిగేషన్ మోడ్‌ను ఎంచుకోండి",
+        manualModeTitle: "మ్యాన్యువల్ / టచ్ మోడ్",
+        manualModeDesc: "బటన్‌లు మరియు టచ్ ద్వారా అనువర్తనాన్ని ఉపయోగించండి",
+        voiceModeTitle: "వాయిస్ అసిస్టెంట్ మోడ్",
+        voiceModeDesc: "మీ మాతృభాషలో మాట్లాడి యాప్‌ని నడపండి",
+        choosePortal: "పోర్టల్‌ని ఎంచుకోండి",
+        buyerPortalTitle: "కొనుగోలుదారుల పోర్టల్",
+        buyerPortalDesc: "సైన్ ఇన్ చేయండి, షాపింగ్ చేయండి, చెల్లించండి",
+        sellerPortalTitle: "చేతివృత్తుల / విక్రేతల పోర్టల్",
+        sellerPortalDesc: "AI స్టూడియో, QR కోడ్ & ధర లెక్కింపు",
+        buyerSignInTitle: "కొనుగోలుదారు సైన్ ఇన్",
+        buyerSignInDesc: "హస్తకళ ఇ-కామర్స్ స్టోర్‌ను యాక్సెస్ చేయండి",
+        btnBuyerSignIn: "షాపింగ్ చేయడానికి సైన్ ఇన్ చేయండి ➔",
+        btnBuyerGuest: "గెస్ట్‌గా కొనసాగండి",
+        studioTitle: "✨ 1. 8K AI ఫోటో స్టూడియో",
+        rawPhotoText: "అసలు ఫోటో",
+        tapUploadText: "అప్‌లోడ్ చేయండి",
+        outputPhotoText: "8K స్టూడియో అవుట్‌పుట్",
+        studioDesc: "చేతి వేళ్లను మరియు బ్యాక్‌గ్రౌండ్‌ని తొలగించి, అధిక నాణ్యత గల లైటింగ్‌ని ఇస్తుంది.",
+        btnNextToVoice: "తరువాతి పేజీ: వాయిస్ వివరణ ➔",
+        voiceTitle: "🎙️ 2. మీ భాషలో వివరణ",
+        btnVoiceRecord: "మీ మాతృభాషలో మాట్లాడి చెప్పండి",
+        spokenTranscriptText: "మీరు చెప్పిన మాటలు:",
+        translatedDescText: "ఆంగ్ల అనువాదం:",
+        voicePlaceholder: "రికార్డ్ చేయడానికి పైన నొక్కండి...",
+        btnNextToBank: "తరువాతి పేజీ: బ్యాంక్ వివరాలు ➔",
+        bankTitle: "🏦 3. బ్యాంక్ వివరాలు & చెల్లింపు QR",
+        qrText: "మీ చెల్లింపు QR కోడ్:",
+        qrDesc: "కొనుగోలుదారులు మీ ఖాతాకి నేరుగా చెల్లించడానికి దీనిని స్కాన్ చేస్తారు.",
+        btnNextToPricing: "తరువాతి పేజీ: ధర క్యాలిక్యులేటర్ ➔",
+        calcTitle: "🧮 4. మార్కెట్ ధర క్యాలిక్యులేటర్",
+        productTitleText: "వస్తువు పేరు:",
+        costRawText: "ముడి సరుకు ఖర్చు (₹)",
+        costHoursText: "పట్టిన సమయం (గంటలు)",
+        costRateText: "కూలి రేటు (₹/గంట)",
+        costBenchmarkText: "మార్కెట్ రేటు (₹)",
+        floorText: "కనిష్టం",
+        targetText: "సరియైన ధర",
+        premiumText: "ప్రీమియం",
+        btnPublishStore: "🚀 షాప్‌లో ప్రచురించండి",
+        catalogTitle: "📊 5. మీ ఉత్పత్తులు",
+        navStudio: "స్టూడియో",
+        navVoice: "వాయిస్",
+        navBank: "బ్యాంక్/QR",
+        navPricing: "ధరలు",
+        navCatalog: "కెటలాగ్",
+        storefrontTitle: "🛍️ హస్తకళ చేతివృత్తుల స్టోర్",
+        storefrontDesc: "భారతీయ గ్రామీణ కళాకారులకు ప్రత్యక్ష మద్దతు.",
+        noItemsText: "ఇంకా ఏ వస్తువులు లేవు.<br>విక్రేతలు ప్రచురించిన వస్తువులు ఇక్కడ కనిపిస్తాయి.",
+        btnSignOut: "🚪 సైన్ అవుట్"
+      },
+      'bn-IN': {
+        welcomeTitle: "হস্তশিল্পে স্বাগতম",
+        welcomeSubtitle: "গ্রামীণ হাত • বিশ্বব্যাপী পৌঁছানো",
+        getStarted: "শুরু করুন ➔",
+        selectLangTitle: "ভাষা নির্বাচন করুন",
+        confirmLang: "মোড নির্বাচন করুন ➔",
+        chooseModeTitle: "ন্যাভিগেশন মোড বেছে নিন",
+        manualModeTitle: "ম্যানুয়াল / টাচ মোড",
+        manualModeDesc: "বোতাম এবং টাচ ব্যবহার করে অ্যাপ চালান",
+        voiceModeTitle: "ভয়েস অ্যাসিস্ট্যান্ট মোড",
+        voiceModeDesc: "নিজের ভাষায় কথা বলে পুরো অ্যাপ চালান",
+        choosePortal: "পোর্টাল নির্বাচন করুন",
+        buyerPortalTitle: "ক্রেতা পোর্টাল",
+        buyerPortalDesc: "সাইন ইন করুন, কেনাকাটা ও সরাসরি পেমেন্ট করুন",
+        sellerPortalTitle: "শিল্পী / বিক্রেতা পোর্টাল",
+        sellerPortalDesc: "এআই স্টুডিও, কিউআর কোড এবং মূল্য নির্ধারণ",
+        buyerSignInTitle: "ক্রেতা সাইন ইন",
+        buyerSignInDesc: "হস্তশিল্প স্টোরে প্রবেশ করুন",
+        btnBuyerSignIn: "কেনাকাটার জন্য সাইন ইন করুন ➔",
+        btnBuyerGuest: "গেস্ট হিসেবে চালিয়ে যান",
+        studioTitle: "✨ ১. ৮কে এআই ফটো স্টুডিও",
+        rawPhotoText: "মূল ছবি",
+        tapUploadText: "আপলোড করুন",
+        outputPhotoText: "৮কে স্টুডিও আউটপুট",
+        studioDesc: "হাত এবং ব্যাকগ্রাউন্ড সরিয়ে পেশাদার স্টুডিও লাইটিং তৈরি করে।",
+        btnNextToVoice: "পরবর্তী পৃষ্ঠা: ভয়েস বিবরণ ➔",
+        voiceTitle: "🎙️ ২. নিজের ভাষায় বিবরণ দিন",
+        btnVoiceRecord: "নিজের ভাষায় কথা বলে বর্ণনা করুন",
+        spokenTranscriptText: "বলা কথা:",
+        translatedDescText: "স্বয়ংক্রিয় ইংরেজি অনুবাদ:",
+        voicePlaceholder: "রেকর্ড করতে উপরে ট্যাপ করুন...",
+        btnNextToBank: "পরবর্তী পৃষ্ঠা: ব্যাংক বিবরণ ➔",
+        bankTitle: "🏦 ৩. ব্যাংক বিবরণ এবং কিউআর",
+        qrText: "আপনার তৈরি পেমেন্ট কিউআর কোড:",
+        qrDesc: "ক্রেতারা এটি স্ক্যান করে সরাসরি আপনার অ্যাকাউন্টে টাকা পাঠাবে।",
+        btnNextToPricing: "পরবর্তী পৃষ্ঠা: মূল্য ক্যালকুলেটর ➔",
+        calcTitle: "🧮 ৪. বাজার মূল্য ক্যালকুলেটর",
+        productTitleText: "পণ্যের নাম:",
+        costRawText: "কাঁচামাল খরচ (₹)",
+        costHoursText: "তৈরির সময় (ঘণ্টা)",
+        costRateText: "মজুরি হার (₹/ঘণ্টা)",
+        costBenchmarkText: "বাজার দর (₹)",
+        floorText: "সর্বনিম্ন",
+        targetText: "ন্যায্য মূল্য",
+        premiumText: "প্রিমিয়াম",
+        btnPublishStore: "🚀 স্টোরে প্রকাশ করুন",
+        catalogTitle: "📊 ৫. প্রকাশিত তালিকা",
+        navStudio: "স্টুডিও",
+        navVoice: "ভয়েস",
+        navBank: "ব্যাংক/QR",
+        navPricing: "মূল্য নির্ধারণ",
+        navCatalog: "ক্যাটালগ",
+        storefrontTitle: "🛍️ হস্তশিল্প দোকান",
+        storefrontDesc: "গ্রামীণ কারিগরদের সরাসরি সহায়তা।",
+        noItemsText: "এখনও কোনও পণ্য নেই।<br>প্রকাশিত পণ্য এখানে দেখা যাবে।",
+        btnSignOut: "🚪 সাইন আউট"
+      },
+      'ta-IN': {
+        welcomeTitle: "ஹஸ்தகலாவிற்கு வரவேற்கிறோம்",
+        welcomeSubtitle: "கிராமப்புற கரங்கள் • உலகளாவிய தொடர்பு",
+        getStarted: "தொடங்குங்கள் ➔",
+        selectLangTitle: "மொழியைத் தேர்ந்தெடுக்கவும்",
+        confirmLang: "முறையைத் தேர்ந்தெடுக்கவும் ➔",
+        chooseModeTitle: "பயன்பாட்டு முறையைத் தேர்ந்தெடுக்கவும்",
+        manualModeTitle: "மெனு / தொடுதல் முறை",
+        manualModeDesc: "பொத்தான்கள் மூலம் எளிதாகப் பயன்படுத்துங்கள்",
+        voiceModeTitle: "குரல் உதவி முறை",
+        voiceModeDesc: "உங்கள் தாய்மொழியில் பேசி பயன்பாட்டை இயக்குங்கள்",
+        choosePortal: "போர்ட்டலைத் தேர்ந்தெடுக்கவும்",
+        buyerPortalTitle: "வாங்குபவர் போர்ட்டல்",
+        buyerPortalDesc: "லாகின் செய்யுங்கள், பொருட்கள் வாங்குங்கள்",
+        sellerPortalTitle: "கைவினைஞர் / விற்பனையாளர் போர்ட்டல்",
+        sellerPortalDesc: "AI ஸ்டுடியோ, QR கோட் மற்றும் விலை கணக்கீடு",
+        buyerSignInTitle: "வாங்குபவர் உள்நுழைவு",
+        buyerSignInDesc: "ஹஸ்தகலா கடையில் நுழையுங்கள்",
+        btnBuyerSignIn: "வாங்குவதற்கு உள்நுழையவும் ➔",
+        btnBuyerGuest: "விருந்தினராகத் தொடரவும்",
+        studioTitle: "✨ 1. 8K AI போட்டோ ஸ்டுடியோ",
+        rawPhotoText: "அசல் படம்",
+        tapUploadText: "பதிவேற்றவும்",
+        outputPhotoText: "8K ஸ்டுடியோ வெளியீடு",
+        studioDesc: "கைகளை அகற்றி உயர் தர ஸ்டுடியோ வெளிச்சத்தை வழங்குகிறது.",
+        btnNextToVoice: "அடுத்த பக்கம்: குரல் விளக்கம் ➔",
+        voiceTitle: "🎙️ 2. உங்கள் மொழியில் விளக்கம்",
+        btnVoiceRecord: "உங்கள் தாய்மொழியில் பேசுங்கள்",
+        spokenTranscriptText: "பேசிய உரை:",
+        translatedDescText: "ஆங்கில மொழிபெயர்ப்பு:",
+        voicePlaceholder: "பதிவு செய்ய மேலே தட்டவும்...",
+        btnNextToBank: "அடுத்த பக்கம்: வங்கி விவரங்கள் ➔",
+        bankTitle: "🏦 3. வங்கி விவரங்கள் & QR",
+        qrText: "உங்களின் பணம் செலுத்தும் QR கோட்:",
+        qrDesc: "வாங்குபவர்கள் நேரடியாக உங்கள் கணக்கிற்கு பணம் செலுத்த இதை ஸ்கேன் செய்வர்.",
+        btnNextToPricing: "அடுத்த பக்கம்: விலை கணக்கீட்டாளர் ➔",
+        calcTitle: "🧮 4. சந்தை விலை கணக்கீட்டாளர்",
+        productTitleText: "பொருளின் பெயர்:",
+        costRawText: "மூலப்பொருட்கள் செலவு (₹)",
+        costHoursText: "செய்த நேரம் (மணிநேரம்)",
+        costRateText: "கூலி விகிதம் (₹/மணி)",
+        costBenchmarkText: "சந்தை விலை (₹)",
+        floorText: "குறைந்தபட்சம்",
+        targetText: "நியாயமான விலை",
+        premiumText: "உயர்ந்த விலை",
+        btnPublishStore: "🚀 கடையில் வெளியிடவும்",
+        catalogTitle: "📊 5. உங்கள் பொருட்கள்",
+        navStudio: "ஸ்டுடியோ",
+        navVoice: "குரல்",
+        navBank: "வங்கி/QR",
+        navPricing: "விலை",
+        navCatalog: "பட்டியல்",
+        storefrontTitle: "🛍️ கைவினைப் பொருட்கள் கடை",
+        storefrontDesc: "கிராமப்புற கைவினைஞர்களுக்கு நேரடி ஆதரவு.",
+        noItemsText: "இன்னும் பொருட்கள் இல்லை.<br>விற்பனையாளர்களின் பொருட்கள் இங்கு தோன்றும்.",
+        btnSignOut: "🚪 வெளியேறு"
+      },
+      'kn-IN': {
+        welcomeTitle: "ಹಸ್ತ ಕಲಾಗೆ ಸ್ವಾಗತ",
+        welcomeSubtitle: "ಗ್ರಾಮೀಣ ಕರಗಳು • ಜಾಗತಿಕ ತಲುಪುವಿಕೆ",
+        getStarted: "ಪ್ರಾರಂಭಿಸಿ ➔",
+        selectLangTitle: "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+        confirmLang: "ಮೋಡ್ ಆಯ್ಕೆಮಾಡಿ ➔",
+        chooseModeTitle: "ನ್ಯಾವಿಗೇಷನ್ ಮೋಡ್ ಆಯ್ಕೆಮಾಡಿ",
+        manualModeTitle: "ಮ್ಯಾನುಯಲ್ / ಟಚ್ ಮೋಡ್",
+        manualModeDesc: "ಬಟನ್‌ಗಳು ಮತ್ತು ಸ್ಪರ್ಶದ ಮೂಲಕ ಬಳಸಿ",
+        voiceModeTitle: "ವಾಯ್ಸ್ ಅಸಿಸ್ಟೆಂಟ್ ಮೋಡ್",
+        voiceModeDesc: "ನಿಮ್ಮ ಮಾತೃಭಾಷೆಯಲ್ಲಿ ಮಾತನಾಡಿ ಅಪ್ಲಿಕೇಶನ್ ಬಳಸಿ",
+        choosePortal: "ಪೋರ್ಟಲ್ ಆಯ್ಕೆಮಾಡಿ",
+        buyerPortalTitle: "ಖರೀದಿದಾರರ ಪೋರ್ಟಲ್",
+        buyerPortalDesc: "ಸೈನ್ ಇನ್ ಮಾಡಿ, ખરીದಿಸಿ, ಪಾವತಿಸಿ",
+        sellerPortalTitle: "ಕುಶಲಕರ್ಮಿ / ಮಾರಾಟಗಾರರ ಪೋರ್ಟಲ್",
+        sellerPortalDesc: "AI ಸ್ಟುಡಿಯೋ, QR ಕೋಡ್ ಮತ್ತು ಬೆಲೆ ಲೆಕ್ಕಾಚಾರ",
+        buyerSignInTitle: "ಖರೀದಿದಾರರ ಸೈನ್ ಇನ್",
+        buyerSignInDesc: "ಹಸ್ತ ಕಲಾ ಸ್ಟೋರ್ ಪ್ರವೇಶಿಸಿ",
+        btnBuyerSignIn: "ಖರೀದಿಸಲು ಸೈನ್ ಇನ್ ಮಾಡಿ ➔",
+        btnBuyerGuest: "ಅತಿಥಿಯಾಗಿ ಮುಂದುವರಿಯಿರಿ",
+        studioTitle: "✨ 1. 8K AI ಫೋಟೋ ಸ್ಟುಡಿಯೋ",
+        rawPhotoText: "ಮೂಲ ಫೋಟೋ",
+        tapUploadText: "ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
+        outputPhotoText: "8K ಸ್ಟುಡಿಯೋ ಔಟ್‌ಪುಟ್",
+        studioDesc: "ಕೈ ಬೆರಳುಗಳನ್ನು ತೆಗೆದುಹಾಕಿ ಉತ್ತಮ ಸ್ಟುಡಿಯೋ ಲೈಟಿಂಗ್ ನೀಡುತ್ತದೆ.",
+        btnNextToVoice: "ಮುಂದಿನ ಪುಟ: ಧ್ವನಿ ವಿವರಣೆ ➔",
+        voiceTitle: "🎙️ 2. ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ವಿವರಣೆ",
+        btnVoiceRecord: "ನಿಮ್ಮ ಮಾತೃಭಾಷೆಯಲ್ಲಿ ಮಾತನಾಡಿ",
+        spokenTranscriptText: "ನೋಂದಾಯಿತ ಮಾತು:",
+        translatedDescText: "ಇಂಗ್ಲಿಷ್ ಅನುವಾದ:",
+        voicePlaceholder: "ರೆಕಾರ್ಡ್ ಮಾಡಲು ಮೇಲೆ ಟ್ಯಾಪ್ ಮಾಡಿ...",
+        btnNextToBank: "ಮುಂದಿನ ಪುಟ: ಬ್ಯಾಂಕ್ ವಿವರಗಳು ➔",
+        bankTitle: "🏦 3. ಬ್ಯಾಂಕ್ ವಿವರಗಳು & QR",
+        qrText: "ನಿಮ್ಮ ಪಾವತಿ QR ಕೋಡ್:",
+        qrDesc: "ಖರೀದಿದಾರರು ನೇರವಾಗಿ ಹಣ ಪಾವತಿಸಲು ಇದನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡುತ್ತಾರೆ.",
+        btnNextToPricing: "ಮುಂದಿನ ಪುಟ: ಬೆಲೆ ಕ್ಯಾಲ್ಕುಲೇಟರ್ ➔",
+        calcTitle: "🧮 4. ಮಾರುಕಟ್ಟೆ ಬೆಲೆ ಕ್ಯಾಲ್ಕುಲೇಟರ್",
+        productTitleText: "ಉತ್ಪನ್ನದ ಹೆಸರು:",
+        costRawText: "ಕಚ್ಚಾ ವಸ್ತುವಿನ ವೆಚ್ಚ (₹)",
+        costHoursText: "ತಯಾರಿಕೆಯ ಸಮಯ (ಗಂಟೆಗಳು)",
+        costRateText: "ಕೂಲಿ ದರ (₹/ಗಂಟೆ)",
+        costBenchmarkText: "ಮಾರುಕಟ್ಟೆ ಬೆಲೆ (₹)",
+        floorText: "ಕನಿಷ್ಠ",
+        targetText: "ಸರಿಯಾದ ಬೆಲೆ",
+        premiumText: "ಪ್ರೀಮಿಯಂ",
+        btnPublishStore: "🚀 ಅಂಗಡಿಯಲ್ಲಿ ಪ್ರಕಟಿಸಿ",
+        catalogTitle: "📊 5. ಪ್ರಕಟಿತ ಪಟ್ಟಿ",
+        navStudio: "ಸ್ಟುಡಿಯೋ",
+        navVoice: "ಧ್ವನಿ",
+        navBank: "ಬ್ಯಾಂಕ್/QR",
+        navPricing: "ಬೆಲೆ",
+        navCatalog: "ಪಟ್ಟಿ",
+        storefrontTitle: "🛍️ ಹಸ್ತ ಕಲಾ ಕರಕುಶಲ ಅಂಗಡಿ",
+        storefrontDesc: "ಗ್ರಾಮೀಣ ಕಲಾವಿದರಿಗೆ ನೇರ ಬೆಂಬಲ.",
+        noItemsText: "ಇನ್ನೂ ಯಾವುದೇ ವಸ್ತುಗಳಿಲ್ಲ.<br>ಮಾರಾಟಗಾರರು ಪ್ರಕಟಿಸಿದ ವಸ್ತುಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.",
+        btnSignOut: "🚪 ಸೈನ್ ಔಟ್"
+      },
+      'mr-IN': {
+        welcomeTitle: "हस्तकला मध्ये आपले स्वागत आहे",
+        welcomeSubtitle: "ग्रामीण हात • जागतिक पोहोच",
+        getStarted: "शुरू करा ➔",
+        selectLangTitle: "भाषा निवडा",
+        confirmLang: "मोड निवडा ➔",
+        chooseModeTitle: "नेव्हिगेशन मोड निवडा",
+        manualModeTitle: "मॅन्युअल / टच मोड",
+        manualModeDesc: "स्क्रीन आणि बटणांद्वारे सोप्या पद्धतीने वापरा",
+        voiceModeTitle: "व्हॉइस असिस्टंट मोड",
+        voiceModeDesc: "मातृभाषेत बोलून पूर्ण ॲप चालवा",
+        choosePortal: "पोर्टल निवडा",
+        buyerPortalTitle: "ग्राहक पोर्टल",
+        buyerPortalDesc: "साइन इन करा, खरेदी करा आणि थेट पेमेंट करा",
+        sellerPortalTitle: "कारागीर / विक्रेता पोर्टल",
+        sellerPortalDesc: "एआय स्टुडिओ, क्यूआर कोड आणि किंमत निर्धारण",
+        buyerSignInTitle: "ग्राहक साइन इन",
+        buyerSignInDesc: "हस्तकला ई-कॉमर्स स्टोअरमध्ये प्रवेश करा",
+        btnBuyerSignIn: "खरेदीसाठी साइन इन करा ➔",
+        btnBuyerGuest: "पाहुणे म्हणून पुढे जा",
+        studioTitle: "✨ १. ८के एआय फोटो स्टुडिओ",
+        rawPhotoText: "मूळ फोटो",
+        tapUploadText: "अपलोड करा",
+        outputPhotoText: "८के स्टुडिओ आउटपुट",
+        studioDesc: "हाताची बोटे काढून उच्च दर्जाचे स्टुडिओ लाईटिंग प्रदान करते.",
+        btnNextToVoice: "पुढील पृष्ठ: आवाजात वर्णन द्या ➔",
+        voiceTitle: "🎙️ २. आपल्या भाषेत वर्णन करा",
+        btnVoiceRecord: "आपल्या मातृभाषेत बोलून सांगा",
+        spokenTranscriptText: "बोललेले वर्णन:",
+        translatedDescText: "स्वयंचलित इंग्रजी भाषांतर:",
+        voicePlaceholder: "रेकॉर्ड करण्यासाठी वर टॅप करा...",
+        btnNextToBank: "पुढील पृष्ठ: बँक तपशील आणि क्यूआर ➔",
+        bankTitle: "🏦 ३. विक्रेता बँक तपशील आणि क्यूआर",
+        qrText: "तुमचा पेमेंट क्यूआर कोड:",
+        qrDesc: "ग्राहक थेट तुमच्या खात्यात पैसे भरण्यासाठी हे स्कॅन करतील.",
+        btnNextToPricing: "पुढील पृष्ठ: किंमत कॅल्क्युलेटर ➔",
+        calcTitle: "🧮 ४. बाजार मूल्य कॅल्क्युलेटर",
+        productTitleText: "उत्पादनाचे नाव:",
+        costRawText: "काच्चा माल खर्च (₹)",
+        costHoursText: "बनवण्याचा वेळ (तास)",
+        costRateText: "कारागीर दर (₹/तास)",
+        costBenchmarkText: "बाजार मूल्य (₹)",
+        floorText: "किमान",
+        targetText: "योग्य किंमत",
+        premiumText: "प्रीमियम",
+        btnPublishStore: "🚀 स्टोअरफ्रंटवर प्रकाशित करा",
+        catalogTitle: "📊 ५. तुमची उत्पादने",
+        navStudio: "स्टुडिओ",
+        navVoice: "आवाज",
+        navBank: "बँक/QR",
+        navPricing: "किंमत",
+        navCatalog: "कॅटलॉग",
+        storefrontTitle: "🛍️ हस्तकला हस्तशिल्प स्टोअर",
+        storefrontDesc: "ग्रामीण कारागिरांना थेट पाठिंबा.",
+        noItemsText: "दुकान सध्या रिकामे आहे.<br>विक्रेत्यांची उत्पादने येथे दिसतील.",
+        btnSignOut: "🚪 साइन आउट"
+      },
+      'gu-IN': {
+        welcomeTitle: "હસ્તકલામાં આપનું સ્વાગત છે",
+        welcomeSubtitle: "ગ્રામીણ હાથ • વૈશ્વિક પહોંચ",
+        getStarted: "શરૂ કરો ➔",
+        selectLangTitle: "ભાષા પસંદ કરો",
+        confirmLang: "મોડ પસંદ કરો ➔",
+        chooseModeTitle: "નેવિગેશન મોડ પસંદ કરો",
+        manualModeTitle: "મેન્યુઅલ / ટચ મોડ",
+        manualModeDesc: "બટનો અને ટચ દ્વારા સરળતાથી વાપરો",
+        voiceModeTitle: "વોઇસ આસિસ્ટન્ટ મોડ",
+        voiceModeDesc: "પોતાની ભાષામાં બોલીને આખી એપ ચલાવો",
+        choosePortal: "પોર્ટલ પસંદ કરો",
+        buyerPortalTitle: "ખરીદનાર પોર્ટલ",
+        buyerPortalDesc: "સાઇન ઇન કરો, ખરીદી કરો અને સીધું ચુકવણું કરો",
+        sellerPortalTitle: "કારીગર / વિક્રેતા પોર્ટલ",
+        sellerPortalDesc: "એઆઈ સ્ટુડિયો, ક્યુઆર કોડ અને કિંમત નિરધારણ",
+        buyerSignInTitle: "ખરીદનાર સાઇન ઇન",
+        buyerSignInDesc: "હસ્તકલા સ્ટોરમાં પ્રવેશ કરો",
+        btnBuyerSignIn: "ખરીદી માટે સાઇન ઇન કરો ➔",
+        btnBuyerGuest: "મહેમાન તરીકે આગળ વધો",
+        studioTitle: "✨ ૧. ૮K એઆઈ ફોટો સ્ટુડિયો",
+        rawPhotoText: "મૂળ ફોટો",
+        tapUploadText: "અપલોડ કરો",
+        outputPhotoText: "૮K સ્ટુડિયો આઉટપુટ",
+        studioDesc: "હાથની આંગળીઓ હટાવીને ઉત્તમ સ્ટુડિયો લાઇટિંગ આપે છે.",
+        btnNextToVoice: "આગળનું પેજ: અવાજમાં વર્ણન આપો ➔",
+        voiceTitle: "🎙️ ૨. તમારી ભાષામાં વર્ણન કરો",
+        btnVoiceRecord: "તમારી માતૃભાષામાં બોલીને જણાવો",
+        spokenTranscriptText: "બોલાયેલું વર્ણન:",
+        translatedDescText: "અંગ્રેજી અનુવાદ:",
+        voicePlaceholder: "રેકોર્ડ કરવા માટે ઉપર ટેપ કરો...",
+        btnNextToBank: "આગળનું પેજ: બેંક વિગત અને QR ➔",
+        bankTitle: "🏦 ૩. વિક્રેતા બેંક વિગત અને QR",
+        qrText: "તમારો પેમેન્ટ ક્યુઆર કોડ:",
+        qrDesc: "ખરીદદારો તમારા ખાતામાં સીધા પૈસા ચૂકવવા આ સ્કેન કરશે.",
+        btnNextToPricing: "આગળનું પેજ: કિંમત કેલ્ક્યુલેટર ➔",
+        calcTitle: "🧮 ૪. બજાર કિંમત કેલ્ક્યુલેટર",
+        productTitleText: "વસ્તુનું નામ:",
+        costRawText: "કાચો માલ ખર્ચ (₹)",
+        costHoursText: "બનાવવાનો સમય (કલાક)",
+        costRateText: "મજૂરી દર (₹/કલાક)",
+        costBenchmarkText: "બજાર ભાવ (₹)",
+        floorText: "ન્યૂનતમ",
+        targetText: "વાજબી ભાવ",
+        premiumText: "પ્રીમિયમ",
+        btnPublishStore: "🚀 સ્ટોરમાં પ્રકાશિત કરો",
+        catalogTitle: "📊 ૫. તમારી વસ્તુઓ",
+        navStudio: "સ્ટુડિયો",
+        navVoice: "અવાજ",
+        navBank: "બેંક/QR",
+        navPricing: "કિંમત",
+        navCatalog: "કેટલોગ",
+        storefrontTitle: "🛍️ હસ્તકલા હસ્તકળા સ્ટોર",
+        storefrontDesc: "ગ્રામીણ કારીગરોને સીધો ટેકો.",
+        noItemsText: "હજુ સુધી કોઈ વસ્તુઓ નથી.<br>વેચનારની વસ્તુઓ અહીં દેખાશે.",
+        btnSignOut: "🚪 સાઇન આઉટ"
+      }
+    };
+
+    function startAppFromWelcome() {
+      document.getElementById('screenWelcome').classList.add('hidden');
+      document.getElementById('screenLanguage').classList.remove('hidden');
+      document.getElementById('languageGrid').innerHTML = languages.map(l => 
+        `<div class="lang-chip ${l.code === selectedLang ? 'active' : ''}" onclick="selectLanguage('${l.code}', this)">${l.name}</div>`
+      ).join('');
+    }
+
+    function selectLanguage(code, element) {
+      selectedLang = code;
+      document.querySelectorAll('.lang-chip').forEach(c => c.classList.remove('active'));
+      element.classList.add('active');
+      applyLanguageTranslation(code);
+    }
+
+    function applyLanguageTranslation(langCode) {
+      const dict = i18n[langCode] || i18n['en-IN'];
+      
+      document.getElementById('lblWelcomeTitle').innerText = dict.welcomeTitle;
+      document.getElementById('lblWelcomeSubtitle').innerText = dict.welcomeSubtitle;
+      document.getElementById('btnGetStarted').innerText = dict.getStarted;
+      document.getElementById('lblSelectLangTitle').innerText = dict.selectLangTitle;
+      document.getElementById('btnConfirmLang').innerText = dict.confirmLang;
+
+      document.getElementById('lblChooseModeTitle').innerText = dict.chooseModeTitle;
+      document.getElementById('lblManualModeTitle').innerText = dict.manualModeTitle;
+      document.getElementById('lblManualModeDesc').innerText = dict.manualModeDesc;
+      document.getElementById('lblVoiceModeTitle').innerText = dict.voiceModeTitle;
+      document.getElementById('lblVoiceModeDesc').innerText = dict.voiceModeDesc;
+
+      document.getElementById('lblChoosePortalTitle').innerText = dict.choosePortal;
+      document.getElementById('lblBuyerPortalTitle').innerText = dict.buyerPortalTitle;
+      document.getElementById('lblBuyerPortalDesc').innerText = dict.buyerPortalDesc;
+      document.getElementById('lblSellerPortalTitle').innerText = dict.sellerPortalTitle;
+      document.getElementById('lblSellerPortalDesc').innerText = dict.sellerPortalDesc;
+      document.getElementById('lblBuyerSignInTitle').innerText = dict.buyerSignInTitle;
+      document.getElementById('lblBuyerSignInDesc').innerText = dict.buyerSignInDesc;
+      document.getElementById('btnBuyerSignIn').innerText = dict.btnBuyerSignIn;
+      document.getElementById('btnBuyerGuest').innerText = dict.btnBuyerGuest;
+
+      document.getElementById('lblStudioTitle').innerText = dict.studioTitle;
+      document.getElementById('lblRawPhotoText').innerText = dict.rawPhotoText;
+      document.getElementById('lblTapUploadText').innerText = dict.tapUploadText;
+      document.getElementById('lblOutputPhotoText').innerText = dict.outputPhotoText;
+      document.getElementById('lblStudioDesc').innerText = dict.studioDesc;
+      document.getElementById('btnNextToVoice').innerText = dict.btnNextToVoice;
+
+      document.getElementById('lblVoiceTitle').innerText = dict.voiceTitle;
+      document.getElementById('recordBtn').innerText = dict.btnVoiceRecord;
+      document.getElementById('lblSpokenTranscriptText').innerText = dict.spokenTranscriptText;
+      document.getElementById('lblTranslatedDescText').innerText = dict.translatedDescText;
+      if (document.getElementById('lblVoicePlaceholder')) {
+        document.getElementById('lblVoicePlaceholder').innerText = dict.voicePlaceholder;
+      }
+      document.getElementById('btnNextToBank').innerText = dict.btnNextToBank;
+
+      document.getElementById('lblBankTitle').innerText = dict.bankTitle;
+      document.getElementById('lblQrText').innerText = dict.qrText;
+      document.getElementById('lblQrDesc').innerText = dict.qrDesc;
+      document.getElementById('btnNextToPricing').innerText = dict.btnNextToPricing;
+
+      document.getElementById('lblCalcTitle').innerText = dict.calcTitle;
+      document.getElementById('lblProductTitleText').innerText = dict.productTitleText;
+      document.getElementById('lblCostRawText').innerText = dict.costRawText;
+      document.getElementById('lblCostHoursText').innerText = dict.costHoursText;
+      document.getElementById('lblCostRateText').innerText = dict.costRateText;
+      document.getElementById('lblCostBenchmarkText').innerText = dict.costBenchmarkText;
+      document.getElementById('lblFloorText').innerText = dict.floorText;
+      document.getElementById('lblTargetText').innerText = dict.targetText;
+      document.getElementById('lblPremiumText').innerText = dict.premiumText;
+      document.getElementById('btnPublishStore').innerText = dict.btnPublishStore;
+      document.getElementById('lblCatalogTitle').innerText = dict.catalogTitle;
+
+      document.getElementById('navTxtStudio').innerText = dict.navStudio;
+      document.getElementById('navTxtVoice').innerText = dict.navVoice;
+      document.getElementById('navTxtBank').innerText = dict.navBank;
+      document.getElementById('navTxtPricing').innerText = dict.navPricing;
+      document.getElementById('navTxtCatalog').innerText = dict.navCatalog;
+
+      document.getElementById('lblStorefrontTitle').innerText = dict.storefrontTitle;
+      document.getElementById('lblStorefrontDesc').innerText = dict.storefrontDesc;
+      document.getElementById('btnSignOut').innerText = dict.btnSignOut;
+    }
+
+    function confirmLanguageSelection() {
+      applyLanguageTranslation(selectedLang);
+      document.getElementById('screenLanguage').classList.add('hidden');
+      document.getElementById('screenModeSelect').classList.remove('hidden');
+    }
+
+    function selectAppMode(mode) {
+      appMode = mode;
+      document.getElementById('screenModeSelect').classList.add('hidden');
+      document.getElementById('screenPortalSelect').classList.remove('hidden');
+
+      if (mode === 'voice') {
+        const floatingBtn = document.querySelector('.voice-assistant-floating');
+        if (floatingBtn) floatingBtn.click();
+      }
+    }
+
+    function openBuyerLogin() {
+      document.getElementById('screenPortalSelect').classList.add('hidden');
+      document.getElementById('screenBuyerLogin').classList.remove('hidden');
+    }
+
+    function handleBuyerLogin(e) {
+      e.preventDefault();
+      document.getElementById('screenBuyerLogin').classList.add('hidden');
+      openRole('buyer');
+    }
+
+    function openRole(role) {
+      document.querySelectorAll('.screen-overlay').forEach(o => o.classList.add('hidden'));
+
+      if (role === 'seller') {
+        document.getElementById('sellerPortal').classList.add('active');
+        document.getElementById('buyerPortal').classList.remove('active');
+        document.getElementById('btnCartHeader').style.display = 'none';
+        switchSellerPage('seller-studio');
+      } else {
+        document.getElementById('buyerPortal').classList.add('active');
+        document.getElementById('sellerPortal').classList.remove('active');
+        document.getElementById('btnCartHeader').style.display = 'block';
+        renderBuyerStore();
+      }
+    }
+
+    function signOut() {
+      document.getElementById('sellerPortal').classList.remove('active');
+      document.getElementById('buyerPortal').classList.remove('active');
+      document.getElementById('btnCartHeader').style.display = 'none';
+      document.querySelectorAll('.screen-overlay').forEach(o => o.classList.add('hidden'));
+      document.getElementById('screenWelcome').classList.remove('hidden');
+    }
+
+    function switchSellerPage(pageId) {
+      document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.bottom-nav .nav-item').forEach(i => i.classList.remove('active'));
+      
+      document.getElementById(pageId).classList.add('active');
+      if(pageId === 'seller-studio') document.getElementById('snav-studio').classList.add('active');
+      if(pageId === 'seller-voice') document.getElementById('snav-voice').classList.add('active');
+      if(pageId === 'seller-bank') document.getElementById('snav-bank').classList.add('active');
+      if(pageId === 'seller-pricing') document.getElementById('snav-pricing').classList.add('active');
+      if(pageId === 'seller-inventory') document.getElementById('snav-inventory').classList.add('active');
+    }
+
+    // --- SELLER QR CODE GENERATOR ---
+    function updateArtisanQR() {
+      const upi = document.getElementById('bankUpi').value || 'lakshmidevi@ybl';
+      const holder = document.getElementById('bankHolderName').value || 'Lakshmi Devi';
+      
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent(holder)}`;
+      document.getElementById('artisanQRImage').src = qrUrl;
+      document.getElementById('buyerCheckoutQR').src = qrUrl;
+      document.getElementById('lblCheckoutUpi').innerText = `UPI ID: ${upi}`;
+      document.getElementById('checkoutBankHolder').innerText = holder;
+      document.getElementById('checkoutBankAcc').innerText = document.getElementById('bankAccNo').value;
+      document.getElementById('checkoutBankIfsc').innerText = document.getElementById('bankIfsc').value;
+    }
+
+    // --- AI PHOTO ENHANCER ---
+    function handlePhotoUpload(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const rawImg = document.getElementById('rawPhotoPreview');
+          const procImg = document.getElementById('photoPreview');
+          
+          rawImg.src = e.target.result;
+          rawImg.style.display = 'block';
+          document.getElementById('photoPlaceholder').style.display = 'none';
+          document.getElementById('processedPlaceholder').innerText = 'Processing 8K AI Studio...';
+          
+          setTimeout(() => {
+            procImg.src = e.target.result;
+            procImg.style.display = 'block';
+            procImg.style.filter = 'contrast(108%) brightness(105%) saturate(110%)';
+            document.getElementById('processedPlaceholder').style.display = 'none';
+            document.getElementById('aiStatusBadge').style.display = 'block';
+          }, 1000);
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    // --- NATIVE VOICE SPEECH TRANSLATION ---
+    function toggleRealVoiceRecording() {
+      const btn = document.getElementById('recordBtn');
+      const output = document.getElementById('transcriptOutput');
+      const engOutput = document.getElementById('englishTranscript');
+
+      if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+        alert('Voice recording requires Google Chrome browser.');
+        return;
+      }
+
+      if (!isRecording) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = true;
+        recognition.lang = selectedLang;
+
+        recognition.onstart = function() {
+          isRecording = true;
+          btn.innerText = '🛑 Recording... Speak Now';
+          btn.classList.add('recording');
+          output.innerHTML = '<em>Listening...</em>';
+        };
+
+        recognition.onresult = function(event) {
+          let transcript = '';
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+          }
+          output.innerText = transcript;
+          engOutput.innerText = "Translated (English): " + transcript;
+        };
+
+        recognition.onerror = function() {
+          output.innerText = 'Voice capture error. Try again.';
+          stopRecordingState();
+        };
+
+        recognition.onend = function() { stopRecordingState(); };
+        recognition.start();
+      } else {
+        if(recognition) recognition.stop();
+        stopRecordingState();
+      }
+    }
+
+    function stopRecordingState() {
+      isRecording = false;
+      const btn = document.getElementById('recordBtn');
+      btn.innerText = i18n[selectedLang]?.btnVoiceRecord || i18n['en-IN'].btnVoiceRecord;
+      btn.classList.remove('recording');
+    }
+
+    // --- MARKET PRICE CALCULATOR ---
+    function calculateFairPricing() {
+      const raw = parseFloat(document.getElementById('costRaw').value) || 0;
+      const hours = parseFloat(document.getElementById('costHours').value) || 0;
+      const rate = parseFloat(document.getElementById('costRate').value) || 0;
+      const benchmark = parseFloat(document.getElementById('costBenchmark').value) || 0;
+
+      const laborCost = hours * rate;
+      const floorPrice = Math.round((raw + laborCost) * 1.15);
+      const targetPrice = Math.round((raw + laborCost) * 1.50);
+      const premiumPrice = Math.max(targetPrice, Math.round(benchmark * 1.10));
+
+      document.getElementById('priceFloor').innerText = '₹' + floorPrice.toLocaleString('en-IN');
+      document.getElementById('priceTarget').innerText = '₹' + targetPrice.toLocaleString('en-IN');
+      document.getElementById('pricePremium').innerText = '₹' + premiumPrice.toLocaleString('en-IN');
+    }
+
+    // --- PUBLISH & BUYER STORE ---
+    function publishProduct() {
+      const title = document.getElementById('draftTitleInput').value || 'Handcrafted Heritage Craft';
+      const rawPrice = document.getElementById('priceTarget').innerText.replace(/[^0-9]/g, '');
+      const price = parseInt(rawPrice) || 1520;
+      const imageSrc = document.getElementById('photoPreview').src || document.getElementById('rawPhotoPreview').src;
+
+      if (!imageSrc || imageSrc === '') {
+        alert('Please upload a product photo in the 8K AI Photo Studio page before publishing.');
+        switchSellerPage('seller-studio');
+        return;
+      }
+
+      publishedProducts.push({
+        id: Date.now(),
+        title: title,
+        price: price,
+        imageSrc: imageSrc,
+        artisan: document.getElementById('bankHolderName').value || 'Lakshmi Devi'
+      });
+
+      alert('Product published to Public Storefront!');
+      renderCatalog();
+      switchSellerPage('seller-inventory');
+    }
+
+    function renderCatalog() {
+      const container = document.getElementById('sellerInventoryList');
+      if (publishedProducts.length === 0) {
+        container.innerHTML = 'No products published yet.';
+        return;
+      }
+      container.innerHTML = publishedProducts.map(p => `
+        <div style="display:flex; gap:12px; background:rgba(0,0,0,0.4); border:1px solid var(--border-gold); padding:10px; border-radius:12px; align-items:center; margin-bottom:8px;">
+          <img src="${p.imageSrc}" style="width:50px; height:50px; border-radius:8px; object-fit:cover;" />
+          <div style="flex:1;">
+            <div style="font-weight:800; color:var(--accent-gold); font-size:0.95rem;">${p.title}</div>
+            <div style="font-size:0.85rem; color:var(--text-light);">₹${p.price.toLocaleString('en-IN')}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderBuyerStore() {
+      const grid = document.getElementById('buyerStoreGrid');
+      const dict = i18n[selectedLang] || i18n['en-IN'];
+      if (publishedProducts.length === 0) {
+        grid.innerHTML = `<p style="grid-column: span 2; font-size:0.9rem; color:var(--text-muted); text-align:center; padding: 30px 0;">${dict.noItemsText}</p>`;
+        return;
+      }
+      grid.innerHTML = publishedProducts.map(p => `
+        <div class="buyer-card">
+          <img src="${p.imageSrc}" />
+          <div style="font-size:0.85rem; font-weight:800; color:var(--accent-gold); line-height:1.2;">${p.title}</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">By ${p.artisan}</div>
+          <div style="font-size:0.95rem; font-weight:800; color:#fff;">₹${p.price.toLocaleString('en-IN')}</div>
+          <button class="action-btn" style="padding:8px; font-size:0.8rem; margin-top:auto;" onclick="addToCart(${p.id})">🛒 Add to Cart</button>
+        </div>
+      `).join('');
+    }
+
+    // --- BUYER CART & CHECKOUT LOGIC ---
+    function addToCart(productId) {
+      const item = publishedProducts.find(p => p.id === productId);
+      if (item) {
+        cart.push(item);
+        document.getElementById('cartCount').innerText = cart.length;
+        alert(`${item.title} added to your cart!`);
+      }
+    }
+
+    function openCartModal() {
+      const list = document.getElementById('cartItemsList');
+      if (cart.length === 0) {
+        list.innerHTML = '<p style="font-size:0.9rem; color:var(--text-muted);">Your cart is empty.</p>';
+        document.getElementById('cartTotal').innerText = '₹0';
+      } else {
+        let total = 0;
+        list.innerHTML = cart.map((item) => {
+          total += item.price;
+          return `
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.4); padding:10px; border-radius:10px; font-size:0.85rem;">
+              <span>${item.title}</span>
+              <span style="color:var(--accent-gold); font-weight:800;">₹${item.price}</span>
+            </div>
+          `;
+        }).join('');
+        document.getElementById('cartTotal').innerText = '₹' + total.toLocaleString('en-IN');
+      }
+      document.getElementById('screenCartModal').classList.remove('hidden');
+    }
+
+    function switchPayTab(tab) {
+      document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('paySectionUPI').style.display = 'none';
+      document.getElementById('paySectionBank').style.display = 'none';
+      document.getElementById('paySectionCard').style.display = 'none';
+
+      if (tab === 'upi') {
+        document.getElementById('ptab-upi').classList.add('active');
+        document.getElementById('paySectionUPI').style.display = 'block';
+      } else if (tab === 'bank') {
+        document.getElementById('ptab-bank').classList.add('active');
+        document.getElementById('paySectionBank').style.display = 'block';
+      } else {
+        document.getElementById('ptab-card').classList.add('active');
+        document.getElementById('paySectionCard').style.display = 'block';
+      }
+    }
+
+    function completePaymentAndOrder() {
+      if(cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+      }
+      alert('Payment Successful! Funds transferred directly to artisan account.');
+      cart = [];
+      document.getElementById('cartCount').innerText = '0';
+      document.getElementById('screenCartModal').classList.add('hidden');
+    }
+  </script>
+
+  <!-- Hashtakala AI Voice Assistant -->
+  <script src="js/assistant.js"></script>
+
+</body>
+</html>
