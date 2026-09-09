@@ -215,7 +215,7 @@
       position: absolute; bottom: 150px; right: 20px; width: 280px; background: #FFFFFF; border: 1px solid #EBE3D8; border-radius: 16px; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 10000; display: none; flex-direction: column; gap: 10px;
     }
 
-    /* PRODUCT DETAILS MODAL FOR BUYER */
+    /* BUYER PRODUCT INSPECTION MODAL */
     #buyerProductModal {
       position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 600; display: none; align-items: center; justify-content: center; padding: 20px;
     }
@@ -330,7 +330,7 @@
       <button class="action-btn" onclick="completePaymentAndOrder()" style="margin-top:14px;" id="btnCompletePayment">Confirm & Complete Payment ➔</button>
     </div>
 
-    <!-- BUYER PRODUCT INSPECTION MODAL (SHOWS TRANSLATED TITLE & DESCRIPTION) -->
+    <!-- BUYER PRODUCT INSPECTION MODAL -->
     <div id="buyerProductModal">
       <div class="modal-content-card">
         <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -372,7 +372,7 @@
       <!-- ================= SELLER PORTAL ================= -->
       <div id="sellerPortal" class="portal-view">
 
-        <!-- PAGE 1: AI PHOTO STUDIO & BACKGROUND EDITOR WIDGET -->
+        <!-- PAGE 1: AI PHOTO STUDIO -->
         <div id="seller-studio" class="page-section active">
           <div class="section-card" style="padding: 12px;">
             <div class="ai-photo-editor">
@@ -570,7 +570,7 @@
       { code: 'ta-IN', name: 'தமிழ்' },
       { code: 'kn-IN', name: 'ಕನ್ನಡ' },
       { code: 'mr-IN', name: 'मराठी' },
-      { code: 'gu-IN', name: 'ગુજરાती' },
+      { code: 'gu-IN', name: 'ગુજરાતી' },
       { code: 'en-IN', name: 'English' }
     ];
 
@@ -853,7 +853,7 @@
       }
     }
 
-    // --- SMART MULTILINGUAL VOICE ASSISTANT ROUTING ---
+    // --- SMART MULTILINGUAL VOICE ASSISTANT ROUTING FIX ---
     function startAssistantListening() {
       if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
         document.getElementById('assistantTranscript').innerText = 'Speech recognition not supported.';
@@ -890,7 +890,7 @@
             openRole('buyer');
           }, 800);
         }
-        // 2. SELLING / UPLOAD / STUDIO COMMANDS
+        // 2. SELLING / UPLOAD COMMANDS
         else if (lower.includes('sell') || lower.includes('upload') || lower.includes('work') || lower.includes('बेच') || lower.includes('అమ్మకం') || lower.includes('अपलोड')) {
           document.getElementById('assistantStatusText').innerText = 'Opening AI Photo Studio...';
           setTimeout(() => {
@@ -983,7 +983,7 @@
       if(pageId === 'seller-inventory') document.getElementById('snav-inventory').classList.add('active');
     }
 
-    // --- ROBUST NATIVE VOICE RECORDER & TRANSLATOR ---
+    // --- ROBUST NATIVE VOICE RECORDER & TRANSLATOR FIX ---
     function toggleRealVoiceRecording() {
       const btn = document.getElementById('recordBtn');
       const output = document.getElementById('transcriptOutput');
