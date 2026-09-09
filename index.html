@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <!-- FORCE BROWSER & VERCEL CACHE PURGE -->
+  <!-- FORCE CACHE PURGE -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -13,8 +13,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=12.0">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css?v=99.0">
 
   <style>
     /* ENFORCED PARCHMENT LIGHT THEME PALETTE */
@@ -203,27 +203,12 @@
     .pay-tab { flex: 1; padding: 8px 4px; font-size: 0.75rem; background: #FFF; border: 1px solid #EBE3D8; color: #787067; border-radius: 10px; cursor: pointer; text-align: center; font-weight: 700; }
     .pay-tab.active { background: #234E35 !important; color: #FFF !important; font-weight: 800; border-color: #234E35 !important; }
 
-    /* SINGLE DRAGGABLE FLOATING VOICE ASSISTANT BUTTON */
-    #draggableVoiceBtn {
-      position: absolute;
-      left: 330px;
-      top: 760px;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      border: 2px solid #FFF;
-      background: #234E35 !important;
-      color: white;
-      font-size: 24px;
-      cursor: move;
-      z-index: 999;
-      box-shadow: 0 8px 20px rgba(35, 78, 53, 0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      user-select: none;
-      touch-action: none;
-    }
+    /* INCREASED NAVIGATION BAR & ENLARGED ICON STYLES */
+    .bottom-nav { display: flex !important; background: #FFFFFF !important; border-top: 1px solid #EBE3D8 !important; padding: 12px 0 10px 0 !important; margin-top: auto !important; z-index: 100 !important; }
+    .nav-item { flex: 1 !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 3px !important; background: none !important; border: none !important; color: #787067 !important; font-size: 0.75rem !important; font-weight: 700 !important; cursor: pointer !important; }
+    .nav-item .nav-icon { font-size: 1.8rem !important; line-height: 1 !important; display: block !important; }
+    .nav-item.active { color: #234E35 !important; font-weight: 800 !important; }
+    .nav-item.active .nav-icon { transform: scale(1.15) !important; }
   </style>
 </head>
 <body>
@@ -500,7 +485,7 @@
           </div>
         </div>
 
-        <!-- BOTTOM NAVIGATION BAR WITH ENLARGED ICONS -->
+        <!-- ENLARGED BOTTOM NAVIGATION BAR -->
         <nav class="bottom-nav">
           <button class="nav-item active" id="snav-studio" onclick="switchSellerPage('seller-studio')">
             <span class="nav-icon">📸</span>
@@ -528,7 +513,6 @@
 
       <!-- ================= BUYER PORTAL ================= -->
       <div id="buyerPortal" class="portal-view">
-        <!-- HERO BANNER -->
         <div class="hero-banner-card">
           <div>
             <div class="section-title" id="lblStorefrontTitle" style="font-size: 1.1rem; color: #234E35; margin-bottom:2px;">Timeless Crafts from Rural India</div>
@@ -537,13 +521,11 @@
           <span style="font-size:2.2rem;">🏺</span>
         </div>
 
-        <!-- SEARCH BAR -->
         <div style="background:#FFF; border-radius:20px; padding:10px 14px; display:flex; align-items:center; gap:8px; border:1px solid #EBE3D8; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
           <span style="font-size:0.85rem; color:#787067;">🔍</span>
           <input type="text" placeholder="Search for products or categories..." style="border:none; outline:none; background:transparent; width:100%; font-size:0.8rem;" />
         </div>
 
-        <!-- CATEGORIES ROW -->
         <div class="categories-row">
           <div class="category-chip-item">
             <div class="category-circle-icon">🏺</div>
@@ -706,348 +688,6 @@
         storefrontDesc: "भारत भर के ग्रामीण कारीगरों का सीधा समर्थन।",
         noItemsText: "दुकान में अभी कोई उत्पाद नहीं है।<br>विक्रेताओं द्वारा प्रकाशित वस्तुएं यहां दिखाई देंगी।",
         btnSignOut: "साइन आउट"
-      },
-      'te-IN': {
-        welcomeTitle: "హస్తకళకి స్వాగతం",
-        welcomeSubtitle: "గ్రామీణ చేతులు • ప్రపంచ వ్యాప్తి",
-        getStarted: "ప్రారంభించండి ➔",
-        selectLangTitle: "భాషను ఎంచుకోండి",
-        confirmLang: "మోడ్‌ని ఎంచుకోండి ➔",
-        chooseModeTitle: "నావిగేషన్ మోడ్‌ను ఎంచుకోండి",
-        manualModeTitle: "మ్యాన్యువల్ / టచ్ మోడ్",
-        manualModeDesc: "బటన్‌లు మరియు టచ్ ద్వారా అనువర్తనాన్ని ఉపయోగించండి",
-        voiceModeTitle: "వాయిస్ అసిస్టెంట్ మోడ్",
-        voiceModeDesc: "మీ మాతృభాషలో మాట్లాడి యాప్‌ని నడపండి",
-        choosePortal: "పోర్టల్‌ని ఎంచుకోండి",
-        buyerPortalTitle: "కొనుగోలుదారుల పోర్టల్",
-        buyerPortalDesc: "సైన్ ఇన్ చేయండి, షాపింగ్ చేయండి, చెల్లించండి",
-        sellerPortalTitle: "చేతివృత్తుల / విక్రేతల పోర్టల్",
-        sellerPortalDesc: "AI స్టూడియో, QR కోడ్ & ధర లెక్కింపు",
-        buyerSignInTitle: "కొనుగోలుదారు సైన్ ఇన్",
-        buyerSignInDesc: "హస్తకళ ఇ-కామర్స్ స్టోర్‌ను యాక్సెస్ చేయండి",
-        btnBuyerSignIn: "షాపింగ్ చేయడానికి సైన్ ఇన్ చేయండి ➔",
-        btnBuyerGuest: "గెస్ట్‌గా కొనసాగండి",
-        studioTitle: "✨ 1. 8K AI ఫోటో స్టూడియో",
-        rawPhotoText: "అసలు ఫోటో",
-        tapUploadText: "అప్‌లోడ్ చేయండి",
-        outputPhotoText: "8K స్టూడియో అవుట్‌పుట్",
-        studioDesc: "చేతి వేళ్లను మరియు బ్యాక్‌గ్రౌండ్‌ని తొలగించి, అధిక నాణ్యత గల లైటింగ్‌ని ఇస్తుంది.",
-        btnNextToVoice: "తరువాతి పేజీ: వాయిస్ వివరణ ➔",
-        voiceTitle: "🎙️ 2. మీ భాషలో వివరణ",
-        btnVoiceRecord: "మీ మాతృభాషలో మాట్లాడి చెప్పండి",
-        spokenTranscriptText: "మీరు చెప్పిన మాటలు:",
-        translatedDescText: "ఆంగ్ల అనువాదం:",
-        voicePlaceholder: "రికార్డ్ చేయడానికి పైన నొక్కండి...",
-        btnNextToBank: "తరువాతి పేజీ: బ్యాంక్ వివరాలు ➔",
-        bankTitle: "🏦 3. బ్యాంక్ వివరాలు & చెల్లింపు QR",
-        qrText: "మీ చెల్లింపు QR కోడ్:",
-        qrDesc: "కొనుగోలుదారులు మీ ఖాతాకి నేరుగా చెల్లించడానికి దీనిని స్కాన్ చేస్తారు.",
-        btnNextToPricing: "తరువాతి పేజీ: ధర క్యాలిక్యులేటర్ ➔",
-        calcTitle: "🧮 4. మార్కెట్ ధర క్యాలిక్యులేటర్",
-        productTitleText: "వస్తువు పేరు:",
-        costRawText: "ముడి సరుకు ఖర్చు (₹)",
-        costHoursText: "పట్టిన సమయం (గంటలు)",
-        costRateText: "కూలి రేటు (₹/గంట)",
-        costBenchmarkText: "మార్కెట్ రేటు (₹)",
-        floorText: "కనిష్టం",
-        targetText: "సరియైన ధర",
-        premiumText: "ప్రీమియం",
-        btnPublishStore: "🚀 షాప్‌లో ప్రచురించండి",
-        catalogTitle: "📊 5. మీ ఉత్పత్తులు",
-        navStudio: "స్టూడియో",
-        navVoice: "వాయిస్",
-        navBank: "బ్యాంక్/QR",
-        navPricing: "ధరలు",
-        navCatalog: "కెటలాగ్",
-        storefrontTitle: "🛍️ హస్తకళ చేతివృత్తుల స్టోర్",
-        storefrontDesc: "భారతీయ గ్రామీణ కళాకారులకు ప్రత్యక్ష మద్దతు.",
-        noItemsText: "ఇంకా ఏ వస్తువులు లేవు.<br>విక్రేతలు ప్రచురించిన వస్తువులు ఇక్కడ కనిపిస్తాయి.",
-        btnSignOut: "సైన్ అవుట్"
-      },
-      'bn-IN': {
-        welcomeTitle: "হস্তশিল্পে স্বাগতম",
-        welcomeSubtitle: "গ্রামীণ হাত • বিশ্বব্যাপী পৌঁছানো",
-        getStarted: "শুরু করুন ➔",
-        selectLangTitle: "ভাষা নির্বাচন করুন",
-        confirmLang: "মোড নির্বাচন করুন ➔",
-        chooseModeTitle: "ন্যাভিগেশন মোড বেছে নিন",
-        manualModeTitle: "ম্যানুয়াল / টাচ মোড",
-        manualModeDesc: "বোতাম এবং টাচ ব্যবহার করে অ্যাপ চালান",
-        voiceModeTitle: "ভয়েস অ্যাসিস্ট্যান্ট মোড",
-        voiceModeDesc: "নিজের ভাষায় কথা বলে পুরো অ্যাপ চালান",
-        choosePortal: "পোর্টাল নির্বাচন করুন",
-        buyerPortalTitle: "ক্রেতা পোর্টাল",
-        buyerPortalDesc: "সাইন ইন করুন, কেনাকাটা ও সরাসরি পেমেন্ট করুন",
-        sellerPortalTitle: "শিল্পী / বিক্রেতা পোর্টাল",
-        sellerPortalDesc: "এআই স্টুডিও, কিউআর কোড এবং মূল্য নির্ধারণ",
-        buyerSignInTitle: "ক্রেতা সাইন ইন",
-        buyerSignInDesc: "হস্তশিল্প স্টোরে প্রবেশ করুন",
-        btnBuyerSignIn: "কেনাকাটার জন্য সাইন ইন করুন ➔",
-        btnBuyerGuest: "গেস্ট হিসেবে চালিয়ে যান",
-        studioTitle: "✨ ১. ৮কে এআই ফটো স্টুডিও",
-        rawPhotoText: "মূল ছবি",
-        tapUploadText: "আপলোড করুন",
-        outputPhotoText: "৮কে স্টুডিও আউটপুট",
-        studioDesc: "হাত এবং ব্যাকগ্রাউন্ড সরিয়ে পেশাদার স্টুডিও লাইটিং তৈরি করে।",
-        btnNextToVoice: "পরবর্তী পৃষ্ঠা: ভয়েস বিবরণ ➔",
-        voiceTitle: "🎙️ ২. নিজের ভাষায় বিবরণ দিন",
-        btnVoiceRecord: "নিজের ভাষায় কথা বলে বর্ণনা করুন",
-        spokenTranscriptText: "বলা কথা:",
-        translatedDescText: "স্বয়ংক্রিয় ইংরেজি অনুবাদ:",
-        voicePlaceholder: "রেকর্ড করতে উপরে ট্যাপ করুন...",
-        btnNextToBank: "পরবর্তী পৃষ্ঠা: ব্যাংক বিবরণ ➔",
-        bankTitle: "🏦 ৩. ব্যাংক বিবরণ এবং কিউআর",
-        qrText: "আপনার তৈরি পেমেন্ট কিউআর কোড:",
-        qrDesc: "ক্রেতারা এটি স্ক্যান করে সরাসরি আপনার অ্যাকাউন্টে টাকা পাঠাবে।",
-        btnNextToPricing: "পরবর্তী পৃষ্ঠা: মূল্য ক্যালকুলেটর ➔",
-        calcTitle: "🧮 ৪. বাজার মূল্য ক্যালকুলেটর",
-        productTitleText: "পণ্যের নাম:",
-        costRawText: "কাঁচামাল খরচ (₹)",
-        costHoursText: "তৈরির সময় (ঘণ্টা)",
-        costRateText: "মজুরি হার (₹/ঘণ্টা)",
-        costBenchmarkText: "বাজার দর (₹)",
-        floorText: "সর্বনিম্ন",
-        targetText: "ন্যায্য মূল্য",
-        premiumText: "প্রিমিয়াম",
-        btnPublishStore: "🚀 স্টোরে প্রকাশ করুন",
-        catalogTitle: "📊 ৫. প্রকাশিত তালিকা",
-        navStudio: "স্টুডিও",
-        navVoice: "ভয়েস",
-        navBank: "ব্যাংক/QR",
-        navPricing: "মূল্য নির্ধারণ",
-        navCatalog: "ক্যাটালগ",
-        storefrontTitle: "🛍️ হস্তশিল্প দোকান",
-        storefrontDesc: "গ্রামীণ কারিগরদের সরাসরি সহায়তা।",
-        noItemsText: "এখনও কোনও পণ্য নেই।<br>প্রকাশিত পণ্য এখানে দেখা যাবে।",
-        btnSignOut: "সাইন আউট"
-      },
-      'ta-IN': {
-        welcomeTitle: "ஹஸ்தகலாவிற்கு வரவேற்கிறோம்",
-        welcomeSubtitle: "கிராமப்புற கரங்கள் • உலகளாவிய தொடர்பு",
-        getStarted: "தொடங்குங்கள் ➔",
-        selectLangTitle: "மொழியைத் தேர்ந்தெடுக்கவும்",
-        confirmLang: "முறையைத் தேர்ந்தெடுக்கவும் ➔",
-        chooseModeTitle: "பயன்பாட்டு முறையைத் தேர்ந்தெடுக்கவும்",
-        manualModeTitle: "மெனு / தொடுதல் முறை",
-        manualModeDesc: "பொத்தான்கள் மூலம் எளிதாகப் பயன்படுத்துங்கள்",
-        voiceModeTitle: "குரல் உதவி முறை",
-        voiceModeDesc: "உங்கள் தாய்மொழியில் பேசி பயன்பாட்டை இயக்குங்கள்",
-        choosePortal: "போர்ட்டலைத் தேர்ந்தெடுக்கவும்",
-        buyerPortalTitle: "வாங்குபவர் போர்ட்டல்",
-        buyerPortalDesc: "லாகின் செய்யுங்கள், பொருட்கள் வாங்குங்கள்",
-        sellerPortalTitle: "கைவினைஞர் / விற்பனையாளர் போர்ட்டல்",
-        sellerPortalDesc: "AI ஸ்டுடியோ, QR கோட் மற்றும் விலை கணக்கீடு",
-        buyerSignInTitle: "வாங்குபவர் உள்நுழைவு",
-        buyerSignInDesc: "ஹஸ்தகலா கடையில் நுழையுங்கள்",
-        btnBuyerSignIn: "வாங்குவதற்கு உள்நுழையவும் ➔",
-        btnBuyerGuest: "விருந்தினராகத் தொடரவும்",
-        studioTitle: "✨ 1. 8K AI போட்டோ ஸ்டுடியோ",
-        rawPhotoText: "அசல் படம்",
-        tapUploadText: "பதிவேற்றவும்",
-        outputPhotoText: "8K ஸ்டுடியோ வெளியீடு",
-        studioDesc: "கைகளை அகற்றி உயர் தர ஸ்டுடியோ வெளிச்சத்தை வழங்குகிறது.",
-        btnNextToVoice: "அடுத்த பக்கம்: குரல் விளக்கம் ➔",
-        voiceTitle: "🎙️ 2. உங்கள் மொழியில் விளக்கம்",
-        btnVoiceRecord: "உங்கள் தாய்மொழியில் பேசுங்கள்",
-        spokenTranscriptText: "பேசிய உரை:",
-        translatedDescText: "ஆங்கில மொழிபெயர்ப்பு:",
-        voicePlaceholder: "பதிவு செய்ய மேலே தட்டவும்...",
-        btnNextToBank: "அடுத்த பக்கம்: வங்கி விவரங்கள் ➔",
-        bankTitle: "🏦 3. வங்கி விவரங்கள் & QR",
-        qrText: "உங்களின் பணம் செலுத்தும் QR கோட்:",
-        qrDesc: "வாங்குபவர்கள் நேரடியாக உங்கள் கணக்கிற்கு பணம் செலுத்த இதை ஸ்கேன் செய்வர்.",
-        btnNextToPricing: "அடுத்த பக்கம்: விலை கணக்கீட்டாளர் ➔",
-        calcTitle: "🧮 4. சந்தை விலை கணக்கீட்டாளர்",
-        productTitleText: "பொருளின் பெயர்:",
-        costRawText: "மூலப்பொருட்கள் செலவு (₹)",
-        costHoursText: "செய்த நேரம் (மணிநேரம்)",
-        costRateText: "கூலி விகிதம் (₹/மணி)",
-        costBenchmarkText: "சந்தை விலை (₹)",
-        floorText: "குறைந்தபட்சம்",
-        targetText: "நியாயமான விலை",
-        premiumText: "உயர்ந்த விலை",
-        btnPublishStore: "🚀 கடையில் வெளியிடவும்",
-        catalogTitle: "📊 5. உங்கள் பொருட்கள்",
-        navStudio: "ஸ்டுடியோ",
-        navVoice: "குரல்",
-        navBank: "வங்கி/QR",
-        navPricing: "விலை",
-        navCatalog: "பட்டியல்",
-        storefrontTitle: "🛍️ கைவினைப் பொருட்கள் கடை",
-        storefrontDesc: "கிராமப்புற கைவினைஞர்களுக்கு நேரடி ஆதரவு.",
-        noItemsText: "இன்னும் பொருட்கள் இல்லை.<br>விற்பனையாளர்களின் பொருட்கள் இங்கு தோன்றும்.",
-        btnSignOut: "வெளியேறு"
-      },
-      'kn-IN': {
-        welcomeTitle: "ಹಸ್ತ ಕಲಾಗೆ ಸ್ವಾಗತ",
-        welcomeSubtitle: "ಗ್ರಾಮೀಣ ಕರಗಳು • ಜಾಗತಿಕ ತಲುಪುವಿಕೆ",
-        getStarted: "ಪ್ರಾರಂಭಿಸಿ ➔",
-        selectLangTitle: "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
-        confirmLang: "ಮೋಡ್ ಆಯ್ಕೆಮಾಡಿ ➔",
-        chooseModeTitle: "ನ್ಯಾವಿಗೇಷನ್ ಮೋಡ್ ಆಯ್ಕೆಮಾಡಿ",
-        manualModeTitle: "ಮ್ಯಾನುಯಲ್ / ಟಚ್ ಮೋಡ್",
-        manualModeDesc: "ಬಟನ್‌ಗಳು ಮತ್ತು ಸ್ಪರ್ಶದ ಮೂಲಕ ಬಳಸಿ",
-        voiceModeTitle: "ವಾಯ್ಸ್ ಅಸಿಸ್ಟೆಂಟ್ ಮೋಡ್",
-        voiceModeDesc: "ನಿಮ್ಮ ಮಾತೃಭಾಷೆಯಲ್ಲಿ ಮಾತನಾಡಿ ಅಪ್ಲಿಕೇಶನ್ ಬಳಸಿ",
-        choosePortal: "ಪೋರ್ಟಲ್ ಆಯ್ಕೆಮಾಡಿ",
-        buyerPortalTitle: "ಖರೀದಿದಾರರ ಪೋರ್ಟಲ್",
-        buyerPortalDesc: "ಸೈನ್ ಇನ್ ಮಾಡಿ, ખરીದಿಸಿ, ಪಾವತಿಸಿ",
-        sellerPortalTitle: "ಕುಶಲಕರ್ಮಿ / ಮಾರಾಟಗಾರರ ಪೋರ್ಟಲ್",
-        sellerPortalDesc: "AI ಸ್ಟುಡಿಯೋ, QR ಕೋಡ್ ಮತ್ತು ಬೆಲೆ ಲೆಕ್ಕಾಚಾರ",
-        buyerSignInTitle: "ಖರೀದಿದಾರರ ಸೈನ್ ಇನ್",
-        buyerSignInDesc: "ಹಸ್ತ ಕಲಾ ಸ್ಟೋರ್ ಪ್ರವೇಶಿಸಿ",
-        btnBuyerSignIn: "ಖರೀದಿಸಲು ಸೈನ್ ಇನ್ ಮಾಡಿ ➔",
-        btnBuyerGuest: "ಅತಿಥಿಯಾಗಿ ಮುಂದುವರಿಯಿರಿ",
-        studioTitle: "✨ 1. 8K AI ಫೋಟೋ ಸ್ಟುಡಿಯೋ",
-        rawPhotoText: "ಮೂಲ ಫೋಟೋ",
-        tapUploadText: "ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
-        outputPhotoText: "8K ಸ್ಟುಡಿಯೋ ಔಟ್‌ಪುಟ್",
-        studioDesc: "ಕೈ ಬೆರಳುಗಳನ್ನು ತೆಗೆದುಹಾಕಿ ಉತ್ತಮ ಸ್ಟುಡಿಯೋ ಲೈಟಿಂಗ್ ನೀಡುತ್ತದೆ.",
-        btnNextToVoice: "ಮುಂದಿನ ಪುಟ: ಧ್ವನಿ ವಿವರಣೆ ➔",
-        voiceTitle: "🎙️ 2. ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ವಿವರಣೆ",
-        btnVoiceRecord: "ನಿಮ್ಮ ಮಾತೃಭಾಷೆಯಲ್ಲಿ ಮಾತನಾಡಿ",
-        spokenTranscriptText: "ನೋಂದಾಯಿತ ಮಾತು:",
-        translatedDescText: "ಇಂಗ್ಲಿಷ್ ಅನುವಾದ:",
-        voicePlaceholder: "ರೆಕಾರ್ಡ್ ಮಾಡಲು ಮೇಲೆ ಟ್ಯಾಪ್ ಮಾಡಿ...",
-        btnNextToBank: "ಮುಂದಿನ ಪುಟ: ಬ್ಯಾಂಕ್ ವಿವರಗಳು ➔",
-        bankTitle: "🏦 3. ಬ್ಯಾಂಕ್ ವಿವರಗಳು & QR",
-        qrText: "ನಿಮ್ಮ ಪಾವತಿ QR ಕೋಡ್:",
-        qrDesc: "ಖರೀದಿದಾರರು ನೇರವಾಗಿ ಹಣ ಪಾವತಿಸಲು ಇದನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡುತ್ತಾರೆ.",
-        btnNextToPricing: "ಮುಂದಿನ ಪುಟ: ಬೆಲೆ ಕ್ಯಾಲ್ಕುಲೇಟರ್ ➔",
-        calcTitle: "🧮 4. ಮಾರುಕಟ್ಟೆ ಬೆಲೆ ಕ್ಯಾಲ್ಕುಲೇಟರ್",
-        productTitleText: "ಉತ್ಪನ್ನದ ಹೆಸರು:",
-        costRawText: "ಕಚ್ಚಾ ವಸ್ತುವಿನ ವೆಚ್ಚ (₹)",
-        costHoursText: "ತಯಾರಿಕೆಯ ಸಮಯ (ಗಂಟೆಗಳು)",
-        costRateText: "ಕೂಲಿ ದರ (₹/ಗಂಟೆ)",
-        costBenchmarkText: "ಮಾರುಕಟ್ಟೆ ಬೆಲೆ (₹)",
-        floorText: "ಕನಿಷ್ಠ",
-        targetText: "ಸರಿಯಾದ ಬೆಲೆ",
-        premiumText: "ಪ್ರೀಮಿಯಂ",
-        btnPublishStore: "🚀 ಅಂಗಡಿಯಲ್ಲಿ ಪ್ರಕಟಿಸಿ",
-        catalogTitle: "📊 5. ಪ್ರಕಟಿತ ಪಟ್ಟಿ",
-        navStudio: "ಸ್ಟುಡಿಯೋ",
-        navVoice: "ಧ್ವನಿ",
-        navBank: "ಬ್ಯಾಂಕ್/QR",
-        navPricing: "ಬೆಲೆ",
-        navCatalog: "ಪಟ್ಟಿ",
-        storefrontTitle: "🛍️ ಹಸ್ತ ಕಲಾ ಕರಕುಶಲ ಅಂಗಡಿ",
-        storefrontDesc: "ಗ್ರಾಮೀಣ ಕಲಾವಿದರಿಗೆ ನೇರ ಬೆಂಬಲ.",
-        noItemsText: "ಇನ್ನೂ ಯಾವುದೇ ವಸ್ತುಗಳಿಲ್ಲ.<br>ಮಾರಾಟಗಾರರು ಪ್ರಕಟಿಸಿದ ವಸ್ತುಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.",
-        btnSignOut: "ಸೈನ್ ಔಟ್"
-      },
-      'mr-IN': {
-        welcomeTitle: "हस्तकला मध्ये आपले स्वागत आहे",
-        welcomeSubtitle: "ग्रामीण हात • जागतिक पोहोच",
-        getStarted: "शुरू करा ➔",
-        selectLangTitle: "भाषा निवडा",
-        confirmLang: "मोड निवडा ➔",
-        chooseModeTitle: "नेव्हिगेशन मोड निवडा",
-        manualModeTitle: "मॅन्युअल / टच मोड",
-        manualModeDesc: "स्क्रीन आणि बटणांद्वारे सोप्या पद्धतीने वापरा",
-        voiceModeTitle: "व्हॉइस असिस्टंट मोड",
-        voiceModeDesc: "मातृभाषेत बोलून पूर्ण ॲप चालवा",
-        choosePortal: "पोर्टल निवडा",
-        buyerPortalTitle: "ग्राहक पोर्टल",
-        buyerPortalDesc: "साइन इन करा, खरेदी करा आणि थेट पेमेंट करा",
-        sellerPortalTitle: "कारागीर / विक्रेता पोर्टल",
-        sellerPortalDesc: "एआई स्टुडिओ, क्यूआर कोड आणि किंमत निर्धारण",
-        buyerSignInTitle: "ग्राहक साइन इन",
-        buyerSignInDesc: "हस्तकला ई-कॉमर्स स्टोअरमध्ये प्रवेश करा",
-        btnBuyerSignIn: "खरेदीसाठी साइन इन करा ➔",
-        btnBuyerGuest: "पाहुणे म्हणून पुढे जा",
-        studioTitle: "✨ १. ८के एआय फोटो स्टुडिओ",
-        rawPhotoText: "मूळ फोटो",
-        tapUploadText: "अपलोड करा",
-        outputPhotoText: "८के स्टुडिओ आउटपुट",
-        studioDesc: "हाताची बोटे काढून उच्च दर्जाचे स्टुडिओ लाईटिंग प्रदान करते.",
-        btnNextToVoice: "पुढील पृष्ठ: आवाजात वर्णन द्या ➔",
-        voiceTitle: "🎙️ २. आपल्या भाषेत वर्णन करा",
-        btnVoiceRecord: "आपल्या मातृभाषेत बोलून सांगा",
-        spokenTranscriptText: "बोललेले वर्णन:",
-        translatedDescText: "स्वयंचलित इंग्रजी भाषांतर:",
-        voicePlaceholder: "रेकॉर्ड करण्यासाठी वर टॅप करा...",
-        btnNextToBank: "पुढील पृष्ठ: बँक तपशील आणि क्यूआर ➔",
-        bankTitle: "🏦 ३. विक्रेता बँक तपशील आणि क्यूआर",
-        qrText: "तुमचा पेमेंट क्यूआर कोड:",
-        qrDesc: "ग्राहक थेट तुमच्या खात्यात पैसे भरण्यासाठी हे स्कॅन करतील.",
-        btnNextToPricing: "पुढील पृष्ठ: किंमत कॅल्क्युलेटर ➔",
-        calcTitle: "🧮 ४. बाजार मूल्य कॅल्क्युलेटर",
-        productTitleText: "उत्पादनाचे नाव:",
-        costRawText: "काच्चा माल खर्च (₹)",
-        costHoursText: "बनवण्याचा वेळ (तास)",
-        costRateText: "कारागीर दर (₹/तास)",
-        costBenchmarkText: "बाजार मूल्य (₹)",
-        floorText: "किमान",
-        targetText: "योग्य किंमत",
-        premiumText: "प्रीमियम",
-        btnPublishStore: "🚀 स्टोअरफ्रंटवर प्रकाशित करा",
-        catalogTitle: "📊 ५. तुमची उत्पादने",
-        navStudio: "स्टुडिओ",
-        navVoice: "आवाज",
-        navBank: "बँक/QR",
-        navPricing: "किंमत",
-        navCatalog: "कॅटलॉग",
-        storefrontTitle: "🛍️ हस्तकला हस्तशिल्प स्टोअर",
-        storefrontDesc: "ग्रामीण कारागिरांना थेट पाठिंबा.",
-        noItemsText: "दुकान सध्या रिकामे आहे.<br>विक्रेत्यांची उत्पादने येथे दिसतील.",
-        btnSignOut: "साइन आउट"
-      },
-      'gu-IN': {
-        welcomeTitle: "હસ્તકલામાં આપનું સ્વાગત છે",
-        welcomeSubtitle: "ગ્રામીણ હાથ • વૈશ્વિક પહોંચ",
-        getStarted: "શરૂ કરો ➔",
-        selectLangTitle: "ભાષા પસંદ કરો",
-        confirmLang: "મોડ પસંદ કરો ➔",
-        chooseModeTitle: "નેવિગેશન મોડ પસંદ કરો",
-        manualModeTitle: "મેન્યુઅલ / ટચ મોડ",
-        manualModeDesc: "બટનો અને ટચ દ્વારા સરળતાથી વાપરો",
-        voiceModeTitle: "વોઇસ આસિસ્ટન્ટ મોડ",
-        voiceModeDesc: "પોતાની ભાષામાં બોલીને આખી એપ ચલાવો",
-        choosePortal: "પોર્ટલ પસંદ કરો",
-        buyerPortalTitle: "ખરીદનાર પોર્ટલ",
-        buyerPortalDesc: "સાઇન ઇન કરો, ખરીદી કરો અને સીધું ચુકવણું કરો",
-        sellerPortalTitle: "કારીગર / વિક્રેતા પોર્ટલ",
-        sellerPortalDesc: "એઆઈ સ્ટુડિયો, ક્યુઆર કોડ અને કિંમત નિરધારણ",
-        buyerSignInTitle: "ખરીદનાર સાઇન ઇન",
-        buyerSignInDesc: "હસ્તકલા સ્ટોરમાં પ્રવેશ કરો",
-        btnBuyerSignIn: "ખરીદી માટે સાઇન ઇન કરો ➔",
-        btnBuyerGuest: "મહેમાન તરીકે આગળ વધો",
-        studioTitle: "✨ ૧. ૮K એઆઈ ફોટો સ્ટુડિયો",
-        rawPhotoText: "મૂળ ફોટો",
-        tapUploadText: "અપલોડ કરો",
-        outputPhotoText: "૮K સ્ટુડિયો આઉટપુટ",
-        studioDesc: "હાથની આંગળીઓ હટાવીને ઉત્તમ સ્ટુડિયો લાઇટિંગ આપે છે.",
-        btnNextToVoice: "આગળનું પેજ: અવાજમાં વર્ણન આપો ➔",
-        voiceTitle: "🎙️ ૨. તમારી ભાષામાં વર્ણન કરો",
-        btnVoiceRecord: "તમારી માતૃભાષામાં બોલીને જણાવો",
-        spokenTranscriptText: "બોલાયેલું વર્ણન:",
-        translatedDescText: "અંગ્રેજી અનુવાદ:",
-        voicePlaceholder: "રેકોર્ડ કરવા માટે ઉપર ટેપ કરો...",
-        btnNextToBank: "આગળનું પેજ: બેંક વિગત અને QR ➔",
-        bankTitle: "🏦 ૩. વિક્રેતા બેંક વિગત અને QR",
-        qrText: "તમારો પેમેન્ટ ક્યુઆર કોડ:",
-        qrDesc: "ખરીદદારો તમારા ખાતામાં સીધા પૈસા ચૂકવવા આ સ્કેન કરશે.",
-        btnNextToPricing: "આગળનું પેજ: કિંમત કેલ્ક્યુલેટર ➔",
-        calcTitle: "🧮 ૪. બજાર કિંમત કેલ્ક્યુલેટર",
-        productTitleText: "વસ્તુનું નામ:",
-        costRawText: "કાચો માલ ખર્ચ (₹)",
-        costHoursText: "બનાવવાનો સમય (કલાક)",
-        costRateText: "મજૂરી દર (₹/કલાક)",
-        costBenchmarkText: "બજાર ભાવ (₹)",
-        floorText: "ન્યૂનતમ",
-        targetText: "વાજબી ભાવ",
-        premiumText: "પ્રીમિયમ",
-        btnPublishStore: "🚀 સ્ટોરમાં પ્રકાશિત કરો",
-        catalogTitle: "📊 ૫. તમારી વસ્તુઓ",
-        navStudio: "સ્ટુડિયો",
-        navVoice: "અવાજ",
-        navBank: "બેંક/QR",
-        navPricing: "કિંમત",
-        navCatalog: "કેટલોગ",
-        storefrontTitle: "🛍️ હસ્તકલા હસ્તકળા સ્ટોર",
-        storefrontDesc: "ગ્રામીણ કારીગરોને સીધો ટેકો.",
-        noItemsText: "હજુ સુધી કોઈ વસ્તુઓ નથી.<br>વેચનારની વસ્તુઓ અહીં દેખાશે.",
-        btnSignOut: "સાઇન આઉટ"
       }
     };
 
@@ -1147,11 +787,6 @@
     function selectAppMode(mode) {
       appMode = mode;
       showScreen('screenPortalSelect');
-
-      if (mode === 'voice') {
-        const floatingBtn = document.getElementById('draggableVoiceBtn');
-        if (floatingBtn) floatingBtn.click();
-      }
     }
 
     function openBuyerLogin() {
@@ -1428,47 +1063,42 @@
       document.getElementById('screenCartModal').classList.add('hidden');
     }
 
-    // --- DRAGGABLE VOICE BUTTON LOGIC ---
+    // --- FULL FIXED DRAGGABLE VOICE ASSISTANT ICON LOGIC ---
     const dragBtn = document.getElementById('draggableVoiceBtn');
-    let isDragging = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
+    let activeDrag = false;
+    let currentPosX = 0, currentPosY = 0, initialPosX = 0, initialPosY = 0;
 
     dragBtn.addEventListener('mousedown', dragStart);
     dragBtn.addEventListener('touchstart', dragStart, { passive: false });
     window.addEventListener('mouseup', dragEnd);
     window.addEventListener('touchend', dragEnd);
-    window.addEventListener('mousemove', drag);
-    window.addEventListener('touchmove', drag, { passive: false });
+    window.addEventListener('mousemove', dragMove);
+    window.addEventListener('touchmove', dragMove, { passive: false });
 
     function dragStart(e) {
-      if (e.type === "touchstart") {
-        initialX = e.touches[0].clientX - xOffset;
-        initialY = e.touches[0].clientY - yOffset;
-      } else {
-        initialX = e.clientX - xOffset;
-        initialY = e.clientY - yOffset;
+      const clientX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
+      const clientY = e.type === "touchstart" ? e.touches[0].clientY : e.clientY;
+      initialPosX = clientX - currentPosX;
+      initialPosY = clientY - currentPosY;
+      if (e.target === dragBtn) {
+        activeDrag = true;
       }
-      if (e.target === dragBtn) isDragging = true;
     }
 
     function dragEnd() {
-      initialX = currentX;
-      initialY = currentY;
-      isDragging = false;
+      initialPosX = currentPosX;
+      initialPosY = currentPosY;
+      activeDrag = false;
     }
 
-    function drag(e) {
-      if (isDragging) {
+    function dragMove(e) {
+      if (activeDrag) {
         e.preventDefault();
-        if (e.type === "touchmove") {
-          currentX = e.touches[0].clientX - initialX;
-          currentY = e.touches[0].clientY - initialY;
-        } else {
-          currentX = e.clientX - initialX;
-          currentY = e.clientY - initialY;
-        }
-        xOffset = currentX;
-        yOffset = currentY;
-        dragBtn.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+        const clientX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
+        currentPosX = clientX - initialPosX;
+        currentPosY = clientY - initialPosY;
+        dragBtn.style.transform = `translate3d(${currentPosX}px, ${currentPosY}px, 0)`;
       }
     }
   </script>
