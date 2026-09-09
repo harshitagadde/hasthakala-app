@@ -6,32 +6,32 @@
   <title>Hasthakala - Rural Hands, Global Reach</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+
   <style>
     :root {
-      /* Warm Modern Rural Indian Artisan Palette (Matches Reference Image) */
-      --bg-light: #F8F4EE;            /* Warm Linen / Parchment Ivory */
+      --bg-light: #F8F4EE;            /* Parchment Ivory Background */
       --bg-card: #FFFFFF;             /* Clean White Card Background */
-      --accent-green: #234E35;        /* Deep Forest Green (Primary Buttons) */
-      --accent-green-light: #346849;  /* Soft Forest Leaf Green */
-      --accent-crimson: #9B3B2B;      /* Soft Terracotta / Ochre Accent */
+      --accent-green: #234E35;        /* Deep Forest Green */
+      --accent-green-light: #346849;  
+      --accent-crimson: #9B3B2B;      /* Terracotta Accent */
       --accent-crimson-light: #B84A38;
-      --accent-peacock: #1D4E89;      /* Royal Indigo/Peacock Accent */
-      --accent-mustard: #D48C2B;      /* Warm Turmeric Gold */
-      --accent-gold: #C29B38;         /* Subtle Gold Detail */
-      --text-dark: #201D1A;           /* Deep Charcoal / Warm Black */
-      --text-muted: #787067;          /* Soft Earthy Gray/Brown */
-      --border-light: #EBE3D8;        /* Soft Divider Border */
+      --accent-peacock: #1D4E89;      
+      --accent-mustard: #D48C2B;      
+      --accent-gold: #C29B38;         
+      --text-dark: #201D1A;           
+      --text-muted: #787067;          
+      --border-light: #EBE3D8;        
       --border-radius: 18px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
     body {
-      background-color: var(--bg-light);
-      background-image: radial-gradient(circle at 50% 0%, #FAF6F0 0%, #EFE8DD 100%);
-      color: var(--text-dark);
+      background-color: var(--bg-light) !important;
+      background-image: radial-gradient(circle at 50% 0%, #FAF6F0 0%, #EFE8DD 100%) !important;
+      color: var(--text-dark) !important;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -39,13 +39,12 @@
       min-height: 100vh;
     }
 
-    /* Mobile App Viewport Container */
     .app-container {
       width: 100%;
       max-width: 420px;
       height: 880px;
       max-height: 94vh;
-      background: var(--bg-light);
+      background: var(--bg-light) !important;
       border: 1px solid var(--border-light);
       border-radius: 36px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
@@ -55,11 +54,10 @@
       overflow: hidden;
     }
 
-    /* Screen Overlays & General Padding */
     .screen-overlay {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: var(--bg-light);
+      background: var(--bg-light) !important;
       z-index: 200;
       display: flex;
       flex-direction: column;
@@ -68,7 +66,12 @@
     }
     .screen-overlay.hidden { display: none !important; }
 
-    /* Heritage Header Design */
+    /* Explicit Fix for Welcome Screen Background */
+    #screenWelcome {
+      background: var(--bg-light) !important;
+      background-color: var(--bg-light) !important;
+    }
+
     .app-header {
       padding: 14px 18px;
       background: #FFFFFF;
@@ -106,11 +109,8 @@
       cursor: pointer;
       white-space: nowrap;
       box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-      transition: all 0.2s;
     }
-    .signout-btn:hover { background: #FFF5F2; }
 
-    /* Buttons & Inputs */
     .input-field {
       width: 100%; background: #FFF; border: 1px solid var(--border-light);
       color: var(--text-dark); padding: 12px 14px; border-radius: 12px; font-size: 0.9rem; margin-top: 8px;
@@ -120,41 +120,36 @@
 
     .action-btn {
       width: 100%; padding: 14px; 
-      background: var(--accent-green);
-      color: #FFF; font-weight: 700; border: none; border-radius: 25px; cursor: pointer; 
+      background: var(--accent-green) !important;
+      color: #FFF !important; font-weight: 700; border: none !important; border-radius: 25px; cursor: pointer; 
       font-size: 0.95rem; margin-top: 14px;
       box-shadow: 0 4px 12px rgba(35, 78, 53, 0.2);
-      transition: transform 0.2s, background 0.2s;
     }
     .action-btn:active { transform: scale(0.98); }
-    .action-btn.recording { background: var(--accent-crimson); color: white; }
-    .secondary-btn { background: #FFF; border: 1.5px solid var(--border-light); color: var(--text-dark); }
+    .action-btn.recording { background: var(--accent-crimson) !important; color: white !important; }
+    .secondary-btn { background: #FFF !important; border: 1.5px solid var(--border-light) !important; color: var(--text-dark) !important; }
 
-    /* Language Grid */
     .lang-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
     .lang-chip { 
       background: #FFF; border: 1px solid var(--border-light); 
       color: var(--text-dark); padding: 14px; border-radius: 16px; cursor: pointer; 
-      font-size: 0.95rem; font-weight: 700; text-align: center; transition: all 0.2s;
+      font-size: 0.95rem; font-weight: 700; text-align: center;
       box-shadow: 0 2px 6px rgba(0,0,0,0.03);
     }
     .lang-chip.active { 
-      background: var(--accent-green); 
-      color: #FFF; font-weight: 800; border-color: var(--accent-green);
+      background: var(--accent-green) !important; 
+      color: #FFF !important; font-weight: 800; border-color: var(--accent-green) !important;
     }
 
-    /* Portal Cards */
     .portal-card-btn {
       display: flex; align-items: center; 
       background: #FFF; 
       border: 1px solid var(--border-light);
-      border-radius: 20px; padding: 18px; cursor: pointer; text-align: left; margin-bottom: 14px; transition: transform 0.2s;
+      border-radius: 20px; padding: 18px; cursor: pointer; text-align: left; margin-bottom: 14px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.04);
     }
-    .portal-card-btn:hover { transform: translateY(-2px); border-color: var(--accent-green); }
 
-    /* Main Content Spacing */
-    .view-container { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: var(--bg-light); }
+    .view-container { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: var(--bg-light) !important; }
     .portal-view { display: none; flex-direction: column; gap: 16px; flex: 1; }
     .portal-view.active { display: flex !important; }
 
@@ -169,7 +164,6 @@
     }
     .section-title { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--accent-green); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 800; }
 
-    /* AI Studio Viewfinders */
     .arch-viewfinder {
       width: 100%; height: 135px; 
       border-radius: 16px;
@@ -180,7 +174,6 @@
     .arch-viewfinder img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
     .ai-badge { position: absolute; bottom: 6px; right: 6px; background: var(--accent-green); color: #FFF; font-size: 0.65rem; font-weight: 800; padding: 4px 8px; border-radius: 12px; }
 
-    /* Price Calculator Grids */
     .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
     .calc-field label { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; display: block; margin-bottom: 3px; }
     .calc-field input { width: 100%; background: #FFF; border: 1px solid var(--border-light); color: var(--text-dark); padding: 8px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; }
@@ -190,47 +183,24 @@
     .price-card label { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; display: block; }
     .price-card span { font-family: 'Cinzel', serif; color: var(--accent-green); font-size: 0.95rem; font-weight: 800; }
 
-    /* E-Commerce Storefront Grid */
     .buyer-store-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 8px; }
     .buyer-card { background: #FFF; border: 1px solid var(--border-light); border-radius: 16px; padding: 10px; display: flex; flex-direction: column; gap: 6px; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
     .buyer-card img { width: 100%; height: 110px; border-radius: 12px; object-fit: cover; }
 
-    /* Payment Tabs */
     .pay-tabs { display: flex; gap: 6px; margin: 12px 0; }
     .pay-tab { flex: 1; padding: 8px 4px; font-size: 0.75rem; background: #FFF; border: 1px solid var(--border-light); color: var(--text-muted); border-radius: 10px; cursor: pointer; text-align: center; font-weight: 700; }
-    .pay-tab.active { background: var(--accent-green); color: #FFF; font-weight: 800; border-color: var(--accent-green); }
+    .pay-tab.active { background: var(--accent-green) !important; color: #FFF !important; font-weight: 800; border-color: var(--accent-green) !important; }
 
-    /* Navigation Bar */
     .bottom-nav { display: flex; background: #FFF; border-top: 1px solid var(--border-light); padding: 10px 0; margin-top: auto; }
     .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; color: var(--text-muted); font-size: 0.72rem; font-weight: 600; cursor: pointer; }
-    .nav-item.active { color: var(--accent-green); font-weight: 800; }
+    .nav-item.active { color: var(--accent-green) !important; font-weight: 800; }
 
-    /* Floating Voice Assistant Button Matched to Theme */
     .voice-assistant-floating {
       position: absolute; right: 18px; bottom: 65px; width: 54px; height: 54px; border-radius: 50%;
-      border: 2px solid #FFF; background: var(--accent-green);
-      color: white; font-size: 24px; cursor: pointer; z-index: 998; box-shadow: 0 8px 20px rgba(35, 78, 53, 0.3); transition: 0.3s ease;
+      border: 2px solid #FFF; background: var(--accent-green) !important;
+      color: white; font-size: 24px; cursor: pointer; z-index: 998; box-shadow: 0 8px 20px rgba(35, 78, 53, 0.3);
       display: flex; align-items: center; justify-content: center;
     }
-    .voice-assistant-floating:hover { transform: scale(1.08); }
-    
-    .voice-assistant-modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px;
-    }
-    .voice-assistant-modal.active { display: flex; }
-    .voice-assistant-card {
-      width: min(400px, 92%); background: #FFF; border: 1px solid var(--border-light);
-      border-radius: 28px; padding: 24px 20px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.15); position: relative; animation: assistantPopup 0.3s ease;
-    }
-    @keyframes assistantPopup { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-    .voice-assistant-close { position: absolute; top: 12px; right: 14px; width: 32px; height: 32px; border: none; border-radius: 50%; background: var(--bg-light); color: var(--text-muted); font-size: 18px; cursor: pointer; font-weight: bold; }
-    .voice-assistant-close:hover { background: #EBE3D8; }
-    .voice-assistant-icon { width: 72px; height: 72px; margin: 5px auto 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 34px; background: var(--accent-green); color: #FFF; box-shadow: 0 6px 18px rgba(35, 78, 53, 0.25); }
-    .voice-assistant-card h2 { margin: 0 0 8px; color: var(--accent-green); font-size: 18px; font-family: 'Cinzel', serif; font-weight: 800; }
-    .voice-assistant-card p { color: var(--text-dark); font-size: 0.9rem; margin-bottom: 16px; }
-    .voice-assistant-button { width: 160px; height: 44px; border: none; border-radius: 25px; background: var(--accent-green); color: #fff; font-size: 0.9rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(35,78,53,0.3); transition: 0.3s ease; }
-    .voice-assistant-button.listening { background: var(--accent-crimson); animation: listeningPulse 1.2s infinite; }
-    @keyframes listeningPulse { 0% { box-shadow: 0 0 0 0 rgba(184,74,56,0.7); } 70% { box-shadow: 0 0 0 16px rgba(184,74,56,0); } 100% { box-shadow: 0 0 0 0 rgba(184,74,56,0); } }
   </style>
 </head>
 <body>
@@ -242,8 +212,8 @@
       <div style="background:#FFF; border-radius:50%; width:120px; height:120px; display:flex; align-items:center; justify-content:center; border:1px solid var(--border-light); margin-bottom:20px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); overflow:hidden;">
         <img src="logo.jpeg" alt="Hasthakala Logo" style="width:100%; height:100%; object-fit:cover;" />
       </div>
-      <h1 style="font-family:'Cinzel',serif; color:var(--accent-green); font-size:1.6rem; font-weight:800;" id="lblWelcomeTitle">WELCOME TO HASTHAKALA</h1>
-      <p style="font-size:0.9rem; color:var(--accent-crimson); font-style:italic; margin-top:6px; font-weight:600;" id="lblWelcomeSubtitle">Rural Hands • Global Reach</p>
+      <h1 style="font-family:'Cinzel',serif; color:var(--accent-green) !important; font-size:1.6rem; font-weight:800;" id="lblWelcomeTitle">WELCOME TO HASTHAKALA</h1>
+      <p style="font-size:0.9rem; color:var(--accent-crimson) !important; font-style:italic; margin-top:6px; font-weight:600;" id="lblWelcomeSubtitle">Rural Hands • Global Reach</p>
       <button class="action-btn" onclick="startAppFromWelcome()" style="margin-top:32px; width:88%; font-size:1rem;" id="btnGetStarted">Get Started ➔</button>
     </div>
 
@@ -254,7 +224,7 @@
       <button class="action-btn" onclick="confirmLanguageSelection()" id="btnConfirmLang" style="margin-top:auto;">Continue to Navigation Mode ➔</button>
     </div>
 
-    <!-- OVERLAY 1.5: INTERACTION MODE SELECTION (MANUAL VS VOICE) -->
+    <!-- OVERLAY 1.5: INTERACTION MODE SELECTION -->
     <div id="screenModeSelect" class="screen-overlay hidden" style="justify-content:center;">
       <h2 style="font-family:'Cinzel',serif; color:var(--accent-green); text-align:center; margin-bottom:24px; font-size:1.25rem; font-weight:800;" id="lblChooseModeTitle">CHOOSE NAVIGATION MODE</h2>
       
@@ -509,7 +479,6 @@
           <p style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;" id="lblStorefrontDesc">Authentic. Handmade. Sustainable. Directly supporting rural artisans across India.</p>
         </div>
 
-        <!-- Rounded Search Bar matching reference image -->
         <div style="background:#FFF; border-radius:20px; padding:10px 14px; display:flex; align-items:center; gap:8px; border:1px solid var(--border-light); box-shadow:0 2px 6px rgba(0,0,0,0.02);">
           <span style="font-size:0.85rem; color:var(--text-muted);">🔍</span>
           <input type="text" placeholder="Search for products or categories..." style="border:none; outline:none; background:transparent; width:100%; font-size:0.8rem;" />
@@ -1322,7 +1291,6 @@
       `).join('');
     }
 
-    // --- BUYER CART & CHECKOUT LOGIC ---
     function addToCart(productId) {
       const item = publishedProducts.find(p => p.id === productId);
       if (item) {
@@ -1383,7 +1351,6 @@
     }
   </script>
 
-  <!-- Hashtakala AI Voice Assistant -->
   <script src="js/assistant.js"></script>
 
 </body>
