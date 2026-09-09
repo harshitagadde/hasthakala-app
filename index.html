@@ -484,7 +484,6 @@
             <input type="text" id="bankIfsc" class="input-field" placeholder="IFSC Code" value="SBIN0001420" />
             <input type="text" id="bankUpi" class="input-field" placeholder="UPI ID" value="lakshmidevi@ybl" />
 
-            <!-- Restored Payment QR Section -->
             <div style="margin-top: 14px; background: #FAF6EE; border: 1px dashed #234E35; border-radius: 14px; padding: 14px; text-align: center;">
               <div style="font-size: 0.8rem; font-weight: 800; color: #234E35; margin-bottom: 8px;">📱 Your Direct Payment QR Code</div>
               <div style="width: 120px; height: 120px; background: #FFF; margin: 0 auto; border: 1px solid #EBE3D8; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
@@ -951,8 +950,8 @@
         document.getElementById('buyerPortal').classList.remove('active');
         document.getElementById('btnCartHeader').style.display = 'none';
         
-        // Show voice assistant ONLY for seller portal when in voice mode
-        if (appMode === 'voice' && voiceBtn) {
+        // Ensure voice assistant button shows in seller portal if mode is 'voice' or always available as a floating helper
+        if (voiceBtn) {
           voiceBtn.style.setProperty('display', 'flex', 'important');
         }
         switchSellerPage('seller-studio');
