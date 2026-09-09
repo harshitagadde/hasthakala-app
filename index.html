@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  
+
   <!-- FORCE BROWSER & VERCEL CACHE PURGE -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
@@ -14,8 +14,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=11.0">
-  
+  <link rel="stylesheet" href="css/main.css?v=12.0">
+
   <style>
     /* ENFORCED PARCHMENT LIGHT THEME PALETTE */
     :root {
@@ -122,13 +122,13 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
     .app-logo-box img { width: 100%; height: 100%; object-fit: cover; }
-    
+
     .brand-info { display: flex; flex-direction: column; overflow: hidden; }
     .brand-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: #234E35 !important; font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; }
     .brand-tagline { font-size: 0.65rem; color: #787067 !important; font-weight: 500; white-space: nowrap; }
 
     .header-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
-    
+
     .signout-btn {
       background: #FFF !important;
       border: 1px solid #EBE3D8 !important;
@@ -160,32 +160,6 @@
     .action-btn:active { transform: scale(0.98); }
     .action-btn.recording { background: #9B3B2B !important; color: white !important; }
     .secondary-btn { background: #FFF !important; border: 1.5px solid #EBE3D8 !important; color: #201D1A !important; }
-
-    .lang-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
-    .lang-chip { 
-      background: #FFF !important; border: 1px solid #EBE3D8 !important; 
-      color: #201D1A !important; padding: 14px; border-radius: 16px; cursor: pointer; 
-      font-size: 0.95rem; font-weight: 700; text-align: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-      transition: border-color 0.2s ease, background-color 0.2s ease;
-    }
-    .lang-chip.active { 
-      background: #234E35 !important; 
-      color: #FFF !important; font-weight: 800; border-color: #234E35 !important;
-    }
-
-    .portal-card-btn {
-      display: flex; align-items: center; 
-      background: #FFF !important; 
-      border: 1px solid #EBE3D8 !important;
-      border-radius: 20px; padding: 18px; cursor: pointer; text-align: left; margin-bottom: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .portal-card-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
-    }
 
     .view-container { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: #F8F4EE !important; }
     .portal-view { display: none; flex-direction: column; gap: 16px; flex: 1; }
@@ -228,10 +202,6 @@
     .pay-tabs { display: flex; gap: 6px; margin: 12px 0; }
     .pay-tab { flex: 1; padding: 8px 4px; font-size: 0.75rem; background: #FFF; border: 1px solid #EBE3D8; color: #787067; border-radius: 10px; cursor: pointer; text-align: center; font-weight: 700; }
     .pay-tab.active { background: #234E35 !important; color: #FFF !important; font-weight: 800; border-color: #234E35 !important; }
-
-    .bottom-nav { display: flex; background: #FFF; border-top: 1px solid #EBE3D8; padding: 10px 0; margin-top: auto; }
-    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; color: #787067; font-size: 0.72rem; font-weight: 600; cursor: pointer; }
-    .nav-item.active { color: #234E35 !important; font-weight: 800; }
 
     /* SINGLE DRAGGABLE FLOATING VOICE ASSISTANT BUTTON */
     #draggableVoiceBtn {
@@ -286,9 +256,9 @@
         <button class="back-arrow-btn" onclick="showScreen('screenLanguage')">← Back</button>
       </div>
       <h2 style="font-family:'Cinzel',serif; color:#234E35; text-align:center; margin-bottom:24px; font-size:1.25rem; font-weight:800;" id="lblChooseModeTitle">CHOOSE NAVIGATION MODE</h2>
-      
+
       <div class="portal-card-btn" onclick="selectAppMode('manual')">
-        <div style="font-size:28px; margin-right:16px;">👆</div>
+        <div class="portal-icon">👆</div>
         <div>
           <div style="font-weight:800; font-size:1rem; color:#234E35;" id="lblManualModeTitle">Manual / Touch Mode</div>
           <div style="font-size:0.8rem; color:#787067; margin-top:4px;" id="lblManualModeDesc">Navigate using visual buttons, touch & controls</div>
@@ -296,7 +266,7 @@
       </div>
 
       <div class="portal-card-btn" onclick="selectAppMode('voice')">
-        <div style="font-size:28px; margin-right:16px;">🎙️</div>
+        <div class="portal-icon">🎙️</div>
         <div>
           <div style="font-weight:800; font-size:1rem; color:#9B3B2B;" id="lblVoiceModeTitle">Voice Assistant Mode</div>
           <div style="font-size:0.8rem; color:#787067; margin-top:4px;" id="lblVoiceModeDesc">Hands-free app guidance via spoken native voice commands</div>
@@ -311,14 +281,14 @@
       </div>
       <h2 style="font-family:'Cinzel',serif; color:#234E35; text-align:center; margin-bottom:24px; font-size:1.25rem; font-weight:800;" id="lblChoosePortalTitle">CHOOSE PORTAL</h2>
       <div class="portal-card-btn" onclick="openBuyerLogin()">
-        <div style="font-size:28px; margin-right:16px;">🛍️</div>
+        <div class="portal-icon">🛍️</div>
         <div>
           <div style="font-weight:800; font-size:1rem; color:#234E35;" id="lblBuyerPortalTitle">Buyer Portal</div>
           <div style="font-size:0.8rem; color:#787067; margin-top:4px;" id="lblBuyerPortalDesc">Sign In, Shop & Direct Pay</div>
         </div>
       </div>
       <div class="portal-card-btn" onclick="openRole('seller')">
-        <div style="font-size:28px; margin-right:16px;">🏺</div>
+        <div class="portal-icon">🏺</div>
         <div>
           <div style="font-weight:800; font-size:1rem; color:#9B3B2B;" id="lblSellerPortalTitle">Artisan / Seller Portal</div>
           <div style="font-size:0.8rem; color:#787067; margin-top:4px;" id="lblSellerPortalDesc">AI Studio, QR Code & Pricing</div>
@@ -360,7 +330,7 @@
 
       <div class="section-card" style="margin-top:12px;">
         <div class="section-title" id="lblPayMethodTitle">💳 Select Payment Method</div>
-        
+
         <div class="pay-tabs">
           <div class="pay-tab active" id="ptab-upi" onclick="switchPayTab('upi')">UPI / Seller QR</div>
           <div class="pay-tab" id="ptab-bank" onclick="switchPayTab('bank')">Bank Transfer</div>
@@ -419,12 +389,12 @@
 
       <!-- ================= SELLER PORTAL ================= -->
       <div id="sellerPortal" class="portal-view">
-        
+
         <!-- PAGE 1: AI STUDIO PAGE -->
         <div id="seller-studio" class="page-section active">
           <div class="section-card">
             <div class="section-title" id="lblStudioTitle">✨ 1. 8K AI Photo Studio & Hand Remover</div>
-            
+
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px;">
               <div style="text-align: center;">
                 <p style="font-size: 0.72rem; color: #787067; margin-bottom: 6px; font-weight: 700;" id="lblRawPhotoText">Raw Photo</p>
@@ -460,7 +430,7 @@
           <div class="section-card">
             <div class="section-title" id="lblVoiceTitle">🎙️ 2. Native Voice Description</div>
             <button id="recordBtn" class="action-btn" onclick="toggleRealVoiceRecording()">Describe Craft in Native Language</button>
-            
+
             <div style="margin-top:12px;">
               <label style="font-size:0.72rem; color:#787067; display:block; font-weight:700;" id="lblSpokenTranscriptText">Spoken Speech Transcript:</label>
               <div id="transcriptOutput" style="font-size:0.82rem; color:#201D1A; background:#FAF7F2; padding:10px; border-radius:10px; border:1px solid #EBE3D8; min-height:40px; margin-top:4px;">
@@ -530,27 +500,67 @@
           </div>
         </div>
 
-        <!-- BOTTOM NAVIGATION BAR -->
+        <!-- BOTTOM NAVIGATION BAR WITH ENLARGED ICONS -->
         <nav class="bottom-nav">
-          <button class="nav-item active" id="snav-studio" onclick="switchSellerPage('seller-studio')"><span>📸</span> <span id="navTxtStudio">Studio</span></button>
-          <button class="nav-item" id="snav-voice" onclick="switchSellerPage('seller-voice')"><span>🎙️</span> <span id="navTxtVoice">Voice</span></button>
-          <button class="nav-item" id="snav-bank" onclick="switchSellerPage('seller-bank')"><span>🏦</span> <span id="navTxtBank">Bank/QR</span></button>
-          <button class="nav-item" id="snav-pricing" onclick="switchSellerPage('seller-pricing')"><span>🧮</span> <span id="navTxtPricing">Pricing</span></button>
-          <button class="nav-item" id="snav-inventory" onclick="switchSellerPage('seller-inventory')"><span>📊</span> <span id="navTxtCatalog">Catalog</span></button>
+          <button class="nav-item active" id="snav-studio" onclick="switchSellerPage('seller-studio')">
+            <span class="nav-icon">📸</span>
+            <span id="navTxtStudio">Studio</span>
+          </button>
+          <button class="nav-item" id="snav-voice" onclick="switchSellerPage('seller-voice')">
+            <span class="nav-icon">🎙️</span>
+            <span id="navTxtVoice">Voice</span>
+          </button>
+          <button class="nav-item" id="snav-bank" onclick="switchSellerPage('seller-bank')">
+            <span class="nav-icon">🏦</span>
+            <span id="navTxtBank">Bank/QR</span>
+          </button>
+          <button class="nav-item" id="snav-pricing" onclick="switchSellerPage('seller-pricing')">
+            <span class="nav-icon">🧮</span>
+            <span id="navTxtPricing">Pricing</span>
+          </button>
+          <button class="nav-item" id="snav-inventory" onclick="switchSellerPage('seller-inventory')">
+            <span class="nav-icon">📊</span>
+            <span id="navTxtCatalog">Catalog</span>
+          </button>
         </nav>
 
       </div>
 
       <!-- ================= BUYER PORTAL ================= -->
       <div id="buyerPortal" class="portal-view">
-        <div class="section-card" style="background: linear-gradient(135deg, #FAF4EB 0%, #EFE5D8 100%); border: none;">
-          <div class="section-title" id="lblStorefrontTitle" style="font-size: 1.1rem; color: #234E35;">Timeless Crafts from Rural India</div>
-          <p style="font-size:0.78rem; color:#787067; margin-top:2px;" id="lblStorefrontDesc">Authentic. Handmade. Sustainable. Directly supporting rural artisans across India.</p>
+        <!-- HERO BANNER -->
+        <div class="hero-banner-card">
+          <div>
+            <div class="section-title" id="lblStorefrontTitle" style="font-size: 1.1rem; color: #234E35; margin-bottom:2px;">Timeless Crafts from Rural India</div>
+            <p style="font-size:0.75rem; color:#787067;" id="lblStorefrontDesc">Authentic. Handmade. Sustainable.</p>
+          </div>
+          <span style="font-size:2.2rem;">🏺</span>
         </div>
 
+        <!-- SEARCH BAR -->
         <div style="background:#FFF; border-radius:20px; padding:10px 14px; display:flex; align-items:center; gap:8px; border:1px solid #EBE3D8; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
           <span style="font-size:0.85rem; color:#787067;">🔍</span>
           <input type="text" placeholder="Search for products or categories..." style="border:none; outline:none; background:transparent; width:100%; font-size:0.8rem;" />
+        </div>
+
+        <!-- CATEGORIES ROW -->
+        <div class="categories-row">
+          <div class="category-chip-item">
+            <div class="category-circle-icon">🏺</div>
+            <span class="category-label">Pottery</span>
+          </div>
+          <div class="category-chip-item">
+            <div class="category-circle-icon">🧵</div>
+            <span class="category-label">Textiles</span>
+          </div>
+          <div class="category-chip-item">
+            <div class="category-circle-icon">🧺</div>
+            <span class="category-label">Baskets</span>
+          </div>
+          <div class="category-chip-item">
+            <div class="category-circle-icon">🐘</div>
+            <span class="category-label">Wooden</span>
+          </div>
         </div>
 
         <div class="buyer-store-grid" id="buyerStoreGrid"></div>
@@ -1062,7 +1072,7 @@
 
     function applyLanguageTranslation(langCode) {
       const dict = i18n[langCode] || i18n['en-IN'];
-      
+
       document.getElementById('lblWelcomeTitle').innerText = dict.welcomeTitle;
       document.getElementById('lblWelcomeSubtitle').innerText = dict.welcomeSubtitle;
       document.getElementById('btnGetStarted').innerText = dict.getStarted;
@@ -1179,7 +1189,7 @@
     function switchSellerPage(pageId) {
       document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.bottom-nav .nav-item').forEach(i => i.classList.remove('active'));
-      
+
       document.getElementById(pageId).classList.add('active');
       if(pageId === 'seller-studio') document.getElementById('snav-studio').classList.add('active');
       if(pageId === 'seller-voice') document.getElementById('snav-voice').classList.add('active');
@@ -1192,7 +1202,7 @@
     function updateArtisanQR() {
       const upi = document.getElementById('bankUpi').value || 'lakshmidevi@ybl';
       const holder = document.getElementById('bankHolderName').value || 'Lakshmi Devi';
-      
+
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent(holder)}`;
       document.getElementById('artisanQRImage').src = qrUrl;
       document.getElementById('buyerCheckoutQR').src = qrUrl;
@@ -1209,12 +1219,12 @@
         reader.onload = function(e) {
           const rawImg = document.getElementById('rawPhotoPreview');
           const procImg = document.getElementById('photoPreview');
-          
+
           rawImg.src = e.target.result;
           rawImg.style.display = 'block';
           document.getElementById('photoPlaceholder').style.display = 'none';
           document.getElementById('processedPlaceholder').innerText = 'Processing 8K AI Studio...';
-          
+
           setTimeout(() => {
             procImg.src = e.target.result;
             procImg.style.display = 'block';
