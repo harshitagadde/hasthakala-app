@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css?v=9.0">
+  <link rel="stylesheet" href="css/main.css?v=10.0">
   
   <style>
     /* ENFORCED PARCHMENT LIGHT THEME PALETTE */
@@ -74,6 +74,29 @@
       overflow-y: auto;
     }
     .screen-overlay.hidden { display: none !important; }
+
+    /* In-App Navigation Bar for Overlays */
+    .overlay-back-bar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .back-arrow-btn {
+      background: #FFF !important;
+      border: 1px solid #EBE3D8 !important;
+      color: #234E35 !important;
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    }
+    .back-arrow-btn:active { transform: scale(0.96); }
 
     #screenWelcome {
       background: #F8F4EE !important;
@@ -210,19 +233,32 @@
     .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; color: #787067; font-size: 0.72rem; font-weight: 600; cursor: pointer; }
     .nav-item.active { color: #234E35 !important; font-weight: 800; }
 
-    .voice-assistant-floating {
-      position: absolute; right: 18px; bottom: 65px; width: 54px; height: 54px; border-radius: 50%;
-      border: 2px solid #FFF; background: #234E35 !important;
-      color: white; font-size: 24px; cursor: pointer; z-index: 998; box-shadow: 0 8px 20px rgba(35, 78, 53, 0.3);
-      display: flex; align-items: center; justify-content: center;
-      transition: transform 0.2s ease;
+    /* SINGLE DRAGGABLE FLOATING VOICE ASSISTANT BUTTON */
+    #draggableVoiceBtn {
+      position: absolute;
+      left: 330px;
+      top: 760px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 2px solid #FFF;
+      background: #234E35 !important;
+      color: white;
+      font-size: 24px;
+      cursor: move;
+      z-index: 999;
+      box-shadow: 0 8px 20px rgba(35, 78, 53, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      touch-action: none;
     }
-    .voice-assistant-floating:hover { transform: scale(1.08); }
   </style>
 </head>
 <body>
 
-  <div class="app-container">
+  <div class="app-container" id="appContainer">
 
     <!-- OVERLAY 0: WELCOME SCREEN -->
     <div id="screenWelcome" class="screen-overlay" style="align-items:center; justify-content:center; text-align:center;">
@@ -236,13 +272,19 @@
 
     <!-- OVERLAY 1: LANGUAGE SELECTION -->
     <div id="screenLanguage" class="screen-overlay hidden">
-      <h2 style="font-family:'Cinzel',serif; color:#234E35; text-align:center; font-size:1.3rem; margin-top:10px; font-weight:800;" id="lblSelectLangTitle">Select Language</h2>
+      <div class="overlay-back-bar">
+        <button class="back-arrow-btn" onclick="showScreen('screenWelcome')">← Back</button>
+      </div>
+      <h2 style="font-family:'Cinzel',serif; color:#234E35; text-align:center; font-size:1.3rem; font-weight:800;" id="lblSelectLangTitle">Select Language</h2>
       <div class="lang-grid" id="languageGrid"></div>
       <button class="action-btn" onclick="confirmLanguageSelection()" id="btnConfirmLang" style="margin-top:auto;">Continue to Navigation Mode ➔</button>
     </div>
 
     <!-- OVERLAY 1.5: INTERACTION MODE SELECTION -->
     <div id="screenModeSelect" class="screen-overlay hidden" style="justify-content:center;">
+      <div class="overlay-back-bar">
+        <button class="back-arrow-btn" onclick="showScreen('screenLanguage')">← Back</button>
+      </div>
       <h2 style="font-family:'Cinzel',serif; color:#234E35; text-align:center; margin-bottom:24px; font-size:1.25rem; font-weight:800;" id="lblChooseModeTitle">CHOOSE NAVIGATION MODE</h2>
       
       <div class="portal-card-btn" onclick="selectAppMode('manual')">
@@ -264,6 +306,9 @@
 
     <!-- OVERLAY 2: PORTAL SELECTION -->
     <div id="screenPortalSelect" class="screen-overlay hidden" style="justify-content:center;">
+      <div class="overlay-back-bar">
+        <button class="back-arrow-btn" onclick="showScreen('screenModeSelect')">← Back</button>
+      </div>
       <h2 style="font-family:'Cinzel',serif; color:#234E35; text-align:center; margin-bottom:24px; font-size:1.25rem; font-weight:800;" id="lblChoosePortalTitle">CHOOSE PORTAL</h2>
       <div class="portal-card-btn" onclick="openBuyerLogin()">
         <div style="font-size:28px; margin-right:16px;">🛍️</div>
@@ -283,6 +328,9 @@
 
     <!-- OVERLAY 3: BUYER LOGIN PAGE -->
     <div id="screenBuyerLogin" class="screen-overlay hidden" style="justify-content:center;">
+      <div class="overlay-back-bar">
+        <button class="back-arrow-btn" onclick="showScreen('screenPortalSelect')">← Back</button>
+      </div>
       <div style="text-align:center; margin-bottom:20px;">
         <h2 style="font-family:'Cinzel',serif; color:#234E35; font-size:1.3rem; font-weight:800;" id="lblBuyerSignInTitle">BUYER SIGN IN</h2>
         <p style="font-size:0.85rem; color:#787067; margin-top:4px;" id="lblBuyerSignInDesc">Access Hasthakala E-Commerce Store</p>
@@ -297,6 +345,9 @@
 
     <!-- OVERLAY 4: BUYER CART & CHECKOUT MODAL -->
     <div id="screenCartModal" class="screen-overlay hidden">
+      <div class="overlay-back-bar">
+        <button class="back-arrow-btn" onclick="document.getElementById('screenCartModal').classList.add('hidden')">← Back to Store</button>
+      </div>
       <div class="section-card">
         <div class="section-title" id="lblCartTitle">🛒 Shopping Cart & Direct Checkout</div>
         <div id="cartItemsList" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
@@ -359,6 +410,7 @@
       </div>
       <div class="header-actions">
         <button id="btnCartHeader" class="signout-btn" style="display:none;" onclick="openCartModal()">🛒 Cart (<span id="cartCount">0</span>)</button>
+        <button class="back-arrow-btn" style="font-size:0.72rem; padding:4px 10px;" onclick="showScreen('screenPortalSelect')">← Portals</button>
         <button class="signout-btn" onclick="signOut()" id="btnSignOut">Sign Out</button>
       </div>
     </header>
@@ -504,10 +556,10 @@
         <div class="buyer-store-grid" id="buyerStoreGrid"></div>
       </div>
 
-      <!-- Floating Voice Assistant Button -->
-      <button class="voice-assistant-floating" title="Voice Assistant">🎙️</button>
-
     </main>
+
+    <!-- SINGLE DRAGGABLE FLOATING VOICE ASSISTANT BUTTON -->
+    <div id="draggableVoiceBtn" title="Drag to re-position | Tap for Voice Assistant">🎙️</div>
 
   </div>
 
@@ -989,9 +1041,13 @@
       }
     };
 
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen-overlay').forEach(s => s.classList.add('hidden'));
+      document.getElementById(screenId).classList.remove('hidden');
+    }
+
     function startAppFromWelcome() {
-      document.getElementById('screenWelcome').classList.add('hidden');
-      document.getElementById('screenLanguage').classList.remove('hidden');
+      showScreen('screenLanguage');
       document.getElementById('languageGrid').innerHTML = languages.map(l => 
         `<div class="lang-chip ${l.code === selectedLang ? 'active' : ''}" onclick="selectLanguage('${l.code}', this)">${l.name}</div>`
       ).join('');
@@ -1075,29 +1131,25 @@
 
     function confirmLanguageSelection() {
       applyLanguageTranslation(selectedLang);
-      document.getElementById('screenLanguage').classList.add('hidden');
-      document.getElementById('screenModeSelect').classList.remove('hidden');
+      showScreen('screenModeSelect');
     }
 
     function selectAppMode(mode) {
       appMode = mode;
-      document.getElementById('screenModeSelect').classList.add('hidden');
-      document.getElementById('screenPortalSelect').classList.remove('hidden');
+      showScreen('screenPortalSelect');
 
       if (mode === 'voice') {
-        const floatingBtn = document.querySelector('.voice-assistant-floating');
+        const floatingBtn = document.getElementById('draggableVoiceBtn');
         if (floatingBtn) floatingBtn.click();
       }
     }
 
     function openBuyerLogin() {
-      document.getElementById('screenPortalSelect').classList.add('hidden');
-      document.getElementById('screenBuyerLogin').classList.remove('hidden');
+      showScreen('screenBuyerLogin');
     }
 
     function handleBuyerLogin(e) {
       e.preventDefault();
-      document.getElementById('screenBuyerLogin').classList.add('hidden');
       openRole('buyer');
     }
 
@@ -1121,8 +1173,7 @@
       document.getElementById('sellerPortal').classList.remove('active');
       document.getElementById('buyerPortal').classList.remove('active');
       document.getElementById('btnCartHeader').style.display = 'none';
-      document.querySelectorAll('.screen-overlay').forEach(o => o.classList.add('hidden'));
-      document.getElementById('screenWelcome').classList.remove('hidden');
+      showScreen('screenWelcome');
     }
 
     function switchSellerPage(pageId) {
@@ -1365,6 +1416,50 @@
       cart = [];
       document.getElementById('cartCount').innerText = '0';
       document.getElementById('screenCartModal').classList.add('hidden');
+    }
+
+    // --- DRAGGABLE VOICE BUTTON LOGIC ---
+    const dragBtn = document.getElementById('draggableVoiceBtn');
+    let isDragging = false, currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
+
+    dragBtn.addEventListener('mousedown', dragStart);
+    dragBtn.addEventListener('touchstart', dragStart, { passive: false });
+    window.addEventListener('mouseup', dragEnd);
+    window.addEventListener('touchend', dragEnd);
+    window.addEventListener('mousemove', drag);
+    window.addEventListener('touchmove', drag, { passive: false });
+
+    function dragStart(e) {
+      if (e.type === "touchstart") {
+        initialX = e.touches[0].clientX - xOffset;
+        initialY = e.touches[0].clientY - yOffset;
+      } else {
+        initialX = e.clientX - xOffset;
+        initialY = e.clientY - yOffset;
+      }
+      if (e.target === dragBtn) isDragging = true;
+    }
+
+    function dragEnd() {
+      initialX = currentX;
+      initialY = currentY;
+      isDragging = false;
+    }
+
+    function drag(e) {
+      if (isDragging) {
+        e.preventDefault();
+        if (e.type === "touchmove") {
+          currentX = e.touches[0].clientX - initialX;
+          currentY = e.touches[0].clientY - initialY;
+        } else {
+          currentX = e.clientX - initialX;
+          currentY = e.clientY - initialY;
+        }
+        xOffset = currentX;
+        yOffset = currentY;
+        dragBtn.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+      }
     }
   </script>
 
