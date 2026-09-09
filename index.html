@@ -17,220 +17,169 @@
   <link rel="stylesheet" href="css/main.css?v=300.0">
 
   <style>
-    /* ENFORCED PARCHMENT LIGHT THEME PALETTE */
-    :root {
-      --bg-light: #F8F4EE !important;
-      --bg-card: #FFFFFF !important;
-      --accent-green: #234E35 !important;
-      --accent-green-light: #346849 !important;
-      --accent-crimson: #9B3B2B !important;
-      --accent-crimson-light: #B84A38 !important;
-      --text-dark: #201D1A !important;
-      --text-muted: #787067 !important;
-      --border-light: #EBE3D8 !important;
-      --border-radius: 18px !important;
-    }
+/* =========================================================
+   HASTHAKALA — PASTEL THEME OVERRIDES
+   VISUAL ONLY — FUNCTIONS UNCHANGED
+========================================================= */
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+:root {
+  --bg-light: #FBF7F1 !important;
+  --bg-card: #FFFDF9 !important;
 
-    html, body {
-      background-color: #F8F4EE !important;
-      background: #F8F4EE !important;
-      color: #201D1A !important;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 12px;
-      min-height: 100vh;
-    }
+  --accent-green: #668B73 !important;
+  --accent-green-light: #91A995 !important;
 
-    .app-container {
-      width: 100%;
-      max-width: 420px;
-      height: 880px;
-      max-height: 94vh;
-      background: #F8F4EE !important;
-      border: 1px solid #EBE3D8 !important;
-      border-radius: 36px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-    }
+  --accent-crimson: #C98270 !important;
+  --accent-crimson-light: #D99B8A !important;
 
-    /* Full screen overlays covering app frame */
-    .screen-overlay {
-      position: absolute !important;
-      inset: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-      background: #F8F4EE !important;
-      z-index: 500 !important;
-      display: flex;
-      flex-direction: column;
-      padding: 24px 20px;
-      overflow-y: auto;
-    }
-    .screen-overlay.hidden { display: none !important; }
+  --text-dark: #403B36 !important;
+  --text-muted: #817970 !important;
 
-    /* Welcome overlay header setup */
-    #screenWelcome {
-      background: #F8F4EE linear-gradient(180deg, #E8DEC8 0%, #F8F4EE 65%) !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      padding: 40px 24px 30px 24px !important;
-      text-align: center !important;
-    }
+  --border-light: #E9DED2 !important;
+}
 
-    .welcome-logo-container {
-      width: 120px !important;
-      height: 120px !important;
-      margin-top: 20px !important;
-      border-radius: 50% !important;
-      background: #FFFFFF !important;
-      border: 2px solid #EBE3D8 !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      box-shadow: 0 10px 25px rgba(35, 78, 53, 0.08) !important;
-      padding: 8px !important;
-      overflow: hidden !important;
-      flex-shrink: 0 !important;
-    }
+html,
+body {
+  background: #F5EEE6 !important;
+  color: #403B36 !important;
+}
 
-    .welcome-logo-container img {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: cover !important;
-      border-radius: 50% !important;
-    }
+.app-container {
+  background: #FBF7F1 !important;
+  border-color: #E9DED2 !important;
+}
 
-    .welcome-text-group { margin-top: auto; margin-bottom: auto; }
-    .welcome-tagline-main { font-family: 'Cinzel', serif; font-size: 1.1rem; color: #234E35; font-weight: 700; margin-top: 14px; }
-    .welcome-tagline-sub { font-size: 0.8rem; color: #787067; margin-top: 6px; }
+.screen-overlay {
+  background: #FBF7F1 !important;
+}
 
-    /* In-App Navigation Bar for Overlays */
-    .overlay-back-bar { display: flex; align-items: center; margin-bottom: 12px; }
+#screenWelcome {
+  background:
+    radial-gradient(
+      circle at 50% 15%,
+      #F1D8CB 0%,
+      #F7E9DD 30%,
+      #FBF7F1 70%
+    ) !important;
+}
 
-    .back-arrow-btn {
-      background: #FFF !important;
-      border: 1px solid #EBE3D8 !important;
-      color: #234E35 !important;
-      font-weight: 800;
-      font-size: 0.85rem;
-      padding: 6px 14px;
-      border-radius: 20px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-    }
-    .back-arrow-btn:active { transform: scale(0.96); }
+.welcome-logo-container {
+  background: #FFFDF9 !important;
+  border-color: #E7D4C7 !important;
+}
 
-    /* App main header (Hidden by default on onboarding screens) */
-    .app-header {
-      padding: 14px 18px;
-      background: #FFFFFF !important;
-      border-bottom: 1px solid #EBE3D8 !important;
-      display: none;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      z-index: 10;
-    }
+.welcome-tagline-main {
+  color: #668B73 !important;
+}
 
-    .brand-section { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-    .app-logo-box { 
-      width: 38px; height: 38px; border-radius: 50% !important; 
-      border: 1px solid #EBE3D8 !important; 
-      overflow: hidden !important; display: flex; align-items: center; justify-content: center; 
-      background: #FFF; flex-shrink: 0;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
-    .app-logo-box img { width: 100%; height: 100%; object-fit: cover; }
+.app-header {
+  background: #FFFDF9 !important;
+  border-color: #E9DED2 !important;
+}
 
-    .brand-info { display: flex; flex-direction: column; overflow: hidden; }
-    .brand-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: #234E35 !important; font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; }
-    .brand-tagline { font-size: 0.65rem; color: #787067 !important; font-weight: 500; white-space: nowrap; }
+.app-logo-box {
+  background: #F9EFE8 !important;
+  border-color: #E5D5C8 !important;
+}
 
-    .header-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+.brand-title {
+  color: #668B73 !important;
+}
 
-    .signout-btn {
-      background: #FFF !important;
-      border: 1px solid #EBE3D8 !important;
-      color: #9B3B2B !important;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-    }
+.brand-tagline {
+  color: #817970 !important;
+}
 
-    .input-field {
-      width: 100%; background: #FFF !important; border: 1px solid #EBE3D8 !important;
-      color: #201D1A !important; padding: 12px 14px; border-radius: 12px; font-size: 0.9rem; margin-top: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    }
-    .input-field:focus { outline: none; border-color: #234E35 !important; }
+.signout-btn {
+  background: #FFFDF9 !important;
+  color: #C98270 !important;
+  border-color: #E6D8CC !important;
+}
 
-    .action-btn {
-      width: 100%; padding: 14px; 
-      background: #234E35 !important;
-      color: #FFF !important; font-weight: 700; border: none !important; border-radius: 25px; cursor: pointer; 
-      font-size: 0.95rem; margin-top: 14px;
-      box-shadow: 0 4px 12px rgba(35, 78, 53, 0.2);
-      transition: background-color 0.2s ease, transform 0.1s ease;
-    }
-    .action-btn:active { transform: scale(0.98); }
-    .action-btn.recording { background: #9B3B2B !important; color: white !important; }
-    .secondary-btn { background: #FFF !important; border: 1.5px solid #EBE3D8 !important; color: #201D1A !important; }
+.input-field {
+  background: #FFFDF9 !important;
+  color: #403B36 !important;
+  border-color: #E5D8CD !important;
+}
 
-    .view-container { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: #F8F4EE !important; }
-    .portal-view { display: none; flex-direction: column; gap: 16px; flex: 1; }
-    .portal-view.active { display: flex !important; }
+.action-btn {
+  background: #668B73 !important;
+  color: #FFFDF9 !important;
+}
 
-    .page-section { display: none; flex-direction: column; gap: 16px; flex: 1; }
-    .page-section.active { display: flex !important; }
+.secondary-btn {
+  background: #FFFDF9 !important;
+  color: #668B73 !important;
+  border-color: #E4D6CA !important;
+}
 
-    .section-card { 
-      background: #FFFFFF !important; 
-      border: 1px solid #EBE3D8 !important; border-radius: 18px; 
-      padding: 18px 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-      position: relative;
-    }
-    .section-title { font-family: 'Cinzel', serif; font-size: 1rem; color: #234E35 !important; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 800; }
+.view-container {
+  background: #FBF7F1 !important;
+}
 
-    .arch-viewfinder {
-      width: 100%; height: 135px; 
-      border-radius: 16px;
-      border: 1.5px dashed #787067; background: #FAF7F2;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; 
-      cursor: pointer; overflow: hidden; position: relative;
-    }
-    .arch-viewfinder img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
-    .ai-badge { position: absolute; bottom: 6px; right: 6px; background: #234E35; color: #FFF; font-size: 0.65rem; font-weight: 800; padding: 4px 8px; border-radius: 12px; }
+.section-card {
+  background: #FFFDF9 !important;
+  border-color: #E9DED2 !important;
+}
 
-    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-    .calc-field label { font-size: 0.75rem; color: #787067; font-weight: 700; display: block; margin-bottom: 3px; }
-    .calc-field input { width: 100%; background: #FFF; border: 1px solid #EBE3D8; color: #201D1A; padding: 8px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; }
+.section-title {
+  color: #668B73 !important;
+}
 
-    .price-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 14px; }
-    .price-card { background: #FAF6EE; border: 1px solid #EBE3D8; padding: 10px 4px; border-radius: 12px; text-align: center; }
-    .price-card label { font-size: 0.65rem; color: #787067; font-weight: 700; text-transform: uppercase; display: block; }
-    .price-card span { font-family: 'Cinzel', serif; color: #234E35; font-size: 0.95rem; font-weight: 800; }
+.buyer-card {
+  background: #FFFDF9 !important;
+  border-color: #E9DED2 !important;
+}
 
-    .buyer-store-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 8px; }
-    .buyer-card { background: #FFF; border: 1px solid #EBE3D8; border-radius: 16px; padding: 10px; display: flex; flex-direction: column; gap: 6px; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-    .buyer-card img { width: 100%; height: 110px; border-radius: 12px; object-fit: cover; }
+.price-card {
+  background: #F8EEE3 !important;
+  border-color: #E8D9CA !important;
+}
 
-    .pay-tabs { display: flex; gap: 6px; margin: 12px 0; }
-    .pay-tab { flex: 1; padding: 8px 4px; font-size: 0.75rem; background: #FFF; border: 1px solid #EBE3D8; color: #787067; border-radius: 10px; cursor: pointer; text-align: center; font-weight: 700; }
-    .pay-tab.active { background: #234E35 !important; color: #FFF !important; font-weight: 800; border-color: #234E35 !important; }
-  </style>
+.price-card span {
+  color: #668B73 !important;
+}
+
+.bottom-nav {
+  background: #FFFDF9 !important;
+  border-color: #E9DED2 !important;
+}
+
+.nav-item {
+  color: #938980 !important;
+}
+
+.nav-item.active {
+  color: #668B73 !important;
+}
+
+.pay-tab {
+  background: #FFFDF9 !important;
+  color: #817970 !important;
+  border-color: #E5D8CD !important;
+}
+
+.pay-tab.active {
+  background: #91A995 !important;
+  color: #FFFDF9 !important;
+  border-color: #91A995 !important;
+}
+
+.arch-viewfinder {
+  background: #F8F1E9 !important;
+  border-color: #B9ADA3 !important;
+}
+
+.ai-badge {
+  background: #82AFA5 !important;
+}
+
+.back-arrow-btn {
+  background: #FFFDF9 !important;
+  color: #668B73 !important;
+  border-color: #E4D6CA !important;
+}
+</style>
 </head>
 <body>
 
