@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Hasthakala - Rural Hands, Global Reach</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,18 +11,16 @@
 
   <style>
     :root {
-      /* Vibrant Indian Heritage Theme */
-      --bg-dark: #120907;
-      --bg-card: #1D0F0A;
-      --accent-saffron: #FF8C00;
-      --accent-saffron-light: #FFA033;
-      --accent-gold: #FFD700;
-      --accent-emerald: #00A86B;
-      --accent-ruby: #E63946;
-      --accent-maroon: #800020;
-      --text-light: #FFF8F0;
-      --text-muted: #D1C7BD;
-      --border-gold: rgba(255, 215, 0, 0.4);
+      /* Primary Colors & Indian Nature Palette */
+      --bg-dark: #120A07;
+      --bg-card: #1D100B;
+      --accent-saffron: #FF671F;       /* Tiranga Saffron */
+      --accent-gold: #FFC107;          /* Marigold Gold */
+      --accent-peacock: #008080;       /* Indian Peacock Teal */
+      --accent-terracotta: #C0392B;    /* Clay & Terracotta */
+      --text-light: #FFFBF5;
+      --text-muted: #D8C3B5;
+      --border-gold: rgba(255, 193, 7, 0.4);
       --border-radius: 20px;
     }
 
@@ -31,9 +29,9 @@
     body {
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(circle at 10% 10%, rgba(255, 140, 0, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 90% 90%, rgba(0, 168, 107, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(128, 0, 32, 0.2) 0%, transparent 60%);
+        radial-gradient(circle at 0% 0%, rgba(255, 103, 31, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 100% 100%, rgba(0, 128, 128, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(192, 57, 43, 0.12) 0%, transparent 60%);
       color: var(--text-light);
       display: flex;
       justify-content: center;
@@ -42,183 +40,192 @@
       min-height: 100vh;
     }
 
+    /* Standard Mobile App Viewport Container */
     .app-container {
       width: 100%;
-      max-width: 480px;
-      height: 92vh;
-      max-height: 900px;
+      max-width: 430px;
+      height: 880px;
+      max-height: 94vh;
       background: var(--bg-card);
       border: 2px solid var(--border-gold);
-      border-radius: 28px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 140, 0, 0.2);
+      border-radius: 32px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(255, 103, 31, 0.2);
       display: flex;
       flex-direction: column;
       position: relative;
       overflow: hidden;
     }
 
-    /* Overlays & Container Layout */
+    /* Screen Overlays & General Padding */
     .screen-overlay {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(180deg, #1D0F0A 0%, #120907 100%);
+      background: linear-gradient(180deg, #1D100B 0%, #120A07 100%);
       z-index: 200;
       display: flex;
       flex-direction: column;
-      padding: 24px 20px;
+      padding: 28px 22px;
       overflow-y: auto;
     }
     .screen-overlay.hidden { display: none !important; }
 
-    /* Vibrant Header */
+    /* Header Design - Fixed Layout & Overflow Prevention */
     .app-header {
-      padding: 14px 18px;
-      background: linear-gradient(135deg, #2A1208 0%, #1D0F0A 100%);
+      padding: 14px 16px;
+      background: linear-gradient(135deg, #2A150D 0%, #1A0D08 100%);
       border-bottom: 2px solid var(--border-gold);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 8px;
     }
 
-    .brand-section { display: flex; align-items: center; gap: 12px; }
+    .brand-section { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
     .app-logo-box { 
-      width: 50px; height: 50px; border-radius: 50%; 
+      width: 44px; height: 44px; border-radius: 50%; 
       border: 2px solid var(--accent-gold); 
       overflow: hidden; display: flex; align-items: center; justify-content: center; 
-      background: #FFFDF9;
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+      background: #FFFDF9; shrink: 0;
+      box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
     }
     .app-logo-box img { width: 100%; height: 100%; object-fit: cover; }
-    .brand-title { font-family: 'Cinzel', serif; font-size: 1.15rem; color: var(--accent-gold); font-weight: 800; letter-spacing: 0.5px; }
-    .brand-tagline { font-size: 0.75rem; color: var(--accent-saffron-light); font-style: italic; font-weight: 600; }
+    
+    .brand-info { display: flex; flex-direction: column; overflow: hidden; }
+    .brand-title { font-family: 'Cinzel', serif; font-size: 1.05rem; color: var(--accent-gold); font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; }
+    .brand-tagline { font-size: 0.65rem; color: var(--accent-saffron); font-style: italic; font-weight: 600; white-space: nowrap; }
 
+    .header-actions { display: flex; gap: 6px; align-items: center; shrink: 0; }
+    
     .signout-btn {
-      background: rgba(230, 57, 70, 0.2);
-      border: 1.5px solid var(--accent-ruby);
-      color: #FF8080;
-      padding: 8px 14px;
+      background: rgba(192, 57, 43, 0.25);
+      border: 1.5px solid var(--accent-terracotta);
+      color: #FF8A80;
+      padding: 8px 12px;
       border-radius: 20px;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       font-weight: 700;
       cursor: pointer;
+      white-space: nowrap;
     }
 
-    /* Improved Inputs & Interactive Elements */
+    /* Buttons & Interactive Elements */
     .input-field {
       width: 100%; background: rgba(0,0,0,0.5); border: 1.5px solid var(--border-gold);
-      color: var(--text-light); padding: 14px; border-radius: 12px; font-size: 1rem; margin-top: 8px;
+      color: var(--text-light); padding: 14px; border-radius: 12px; font-size: 0.95rem; margin-top: 10px;
     }
     .input-field:focus { outline: none; border-color: var(--accent-saffron); }
 
     .action-btn {
       width: 100%; padding: 16px; 
-      background: linear-gradient(135deg, var(--accent-saffron) 0%, var(--accent-ruby) 100%);
+      background: linear-gradient(135deg, var(--accent-saffron) 0%, var(--accent-terracotta) 100%);
       color: #FFF; font-weight: 800; border: none; border-radius: 35px; cursor: pointer; 
-      font-size: 1.05rem; margin-top: 12px;
-      box-shadow: 0 6px 20px rgba(255, 140, 0, 0.35);
+      font-size: 1rem; margin-top: 16px;
+      box-shadow: 0 6px 20px rgba(255, 103, 31, 0.35);
       transition: transform 0.2s;
     }
     .action-btn:active { transform: scale(0.98); }
-    .action-btn.recording { background: linear-gradient(135deg, #E63946 0%, #800020 100%); color: white; }
+    .action-btn.recording { background: linear-gradient(135deg, #C0392B 0%, #7B1FA2 100%); color: white; }
     .secondary-btn { background: transparent; border: 2px solid var(--accent-gold); color: var(--accent-gold); }
 
-    /* Language Grid with Increased Font Sizes */
-    .lang-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
+    /* Language Grid */
+    .lang-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin: 24px 0; }
     .lang-chip { 
-      background: rgba(255, 140, 0, 0.1); border: 1.5px solid var(--border-gold); 
-      color: var(--text-light); padding: 14px; border-radius: 14px; cursor: pointer; 
-      font-size: 1.05rem; font-weight: 700; text-align: center; transition: all 0.2s;
+      background: rgba(255, 103, 31, 0.1); border: 1.5px solid var(--border-gold); 
+      color: var(--text-light); padding: 14px; border-radius: 16px; cursor: pointer; 
+      font-size: 1rem; font-weight: 700; text-align: center; transition: all 0.2s;
     }
     .lang-chip.active { 
       background: linear-gradient(135deg, var(--accent-saffron), var(--accent-gold)); 
-      color: #120907; font-weight: 800; border-color: var(--accent-gold);
+      color: #120A07; font-weight: 800; border-color: var(--accent-gold);
     }
 
-    /* Portal Selection Cards */
+    /* Portal Cards */
     .portal-card-btn {
-      display: flex; align-items: center; background: linear-gradient(135deg, rgba(255, 140, 0, 0.15), rgba(128, 0, 32, 0.25)); 
+      display: flex; align-items: center; 
+      background: linear-gradient(135deg, rgba(255, 103, 31, 0.15), rgba(0, 128, 128, 0.2)); 
       border: 1.5px solid var(--border-gold);
-      border-radius: 18px; padding: 20px; cursor: pointer; text-align: left; margin-bottom: 16px; transition: transform 0.2s;
+      border-radius: 20px; padding: 22px; cursor: pointer; text-align: left; margin-bottom: 18px; transition: transform 0.2s;
     }
-    .portal-card-btn:hover { transform: translateY(-3px); background: rgba(255,140,0,0.25); }
+    .portal-card-btn:hover { transform: translateY(-2px); background: rgba(255,103,31,0.25); }
 
-    /* Main Container Structure */
-    .view-container { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
-    .portal-view { display: none; flex-direction: column; gap: 16px; flex: 1; }
+    /* Main Content Spacing */
+    .view-container { flex: 1; padding: 20px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; }
+    .portal-view { display: none; flex-direction: column; gap: 18px; flex: 1; }
     .portal-view.active { display: flex !important; }
 
-    .page-section { display: none; flex-direction: column; gap: 16px; flex: 1; }
+    .page-section { display: none; flex-direction: column; gap: 18px; flex: 1; }
     .page-section.active { display: flex !important; }
 
     .section-card { 
-      background: linear-gradient(145deg, #24130D, #1A0D09); 
+      background: linear-gradient(145deg, #25130B, #1B0D07); 
       border: 1.5px solid var(--border-gold); border-radius: var(--border-radius); 
-      padding: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      padding: 20px 18px; box-shadow: 0 4px 18px rgba(0,0,0,0.4);
     }
-    .section-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--accent-gold); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
+    .section-title { font-family: 'Cinzel', serif; font-size: 1.05rem; color: var(--accent-gold); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
 
-    /* Visual Studio Viewfinders */
+    /* AI Studio Viewfinders */
     .arch-viewfinder {
-      width: 100%; height: 150px; 
-      border-top-left-radius: 60px; border-top-right-radius: 60px;
+      width: 100%; height: 140px; 
+      border-top-left-radius: 50px; border-top-right-radius: 50px;
       border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;
       border: 2px dashed var(--accent-saffron); background: #0A0503;
       display: flex; flex-direction: column; align-items: center; justify-content: center; 
       cursor: pointer; overflow: hidden; position: relative;
     }
     .arch-viewfinder img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
-    .ai-badge { position: absolute; bottom: 8px; right: 8px; background: var(--accent-emerald); color: #FFF; font-size: 0.7rem; font-weight: 800; padding: 4px 8px; border-radius: 12px; }
+    .ai-badge { position: absolute; bottom: 8px; right: 8px; background: var(--accent-peacock); color: #FFF; font-size: 0.65rem; font-weight: 800; padding: 4px 8px; border-radius: 12px; }
 
-    /* Pricing & Calculator Cards */
-    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-    .calc-field label { font-size: 0.8rem; color: var(--accent-saffron-light); font-weight: 700; display: block; margin-bottom: 2px; }
-    .calc-field input { width: 100%; background: rgba(0,0,0,0.5); border: 1.5px solid var(--border-gold); color: #fff; padding: 10px; border-radius: 10px; font-size: 0.95rem; }
+    /* Price Calculator Grids */
+    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .calc-field label { font-size: 0.75rem; color: var(--accent-saffron); font-weight: 700; display: block; margin-bottom: 4px; }
+    .calc-field input { width: 100%; background: rgba(0,0,0,0.5); border: 1.5px solid var(--border-gold); color: #fff; padding: 10px; border-radius: 10px; font-size: 0.9rem; }
 
-    .price-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
-    .price-card { background: rgba(0,0,0,0.4); border: 1.5px solid var(--border-gold); padding: 10px 6px; border-radius: 12px; text-align: center; }
-    .price-card label { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; display: block; }
-    .price-card span { font-family: 'Cinzel', serif; color: var(--accent-gold); font-size: 1.05rem; font-weight: 800; }
+    .price-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
+    .price-card { background: rgba(0,0,0,0.4); border: 1.5px solid var(--border-gold); padding: 12px 6px; border-radius: 14px; text-align: center; }
+    .price-card label { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; display: block; }
+    .price-card span { font-family: 'Cinzel', serif; color: var(--accent-gold); font-size: 1rem; font-weight: 800; }
 
     /* E-Commerce Storefront Grid */
-    .buyer-store-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 10px; }
-    .buyer-card { background: linear-gradient(145deg, #2A140B, #1B0C07); border: 1.5px solid var(--border-gold); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 8px; position: relative; }
-    .buyer-card img { width: 100%; height: 120px; border-radius: 10px; object-fit: cover; }
+    .buyer-store-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 12px; }
+    .buyer-card { background: linear-gradient(145deg, #2A140B, #1B0C07); border: 1.5px solid var(--border-gold); border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 10px; position: relative; }
+    .buyer-card img { width: 100%; height: 110px; border-radius: 12px; object-fit: cover; }
 
     /* Payment Tabs */
-    .pay-tabs { display: flex; gap: 6px; margin: 12px 0; }
-    .pay-tab { flex: 1; padding: 10px 6px; font-size: 0.8rem; background: rgba(0,0,0,0.4); border: 1.5px solid var(--border-gold); color: var(--text-muted); border-radius: 10px; cursor: pointer; text-align: center; font-weight: 700; }
-    .pay-tab.active { background: linear-gradient(135deg, var(--accent-saffron), var(--accent-gold)); color: #120907; font-weight: 800; }
+    .pay-tabs { display: flex; gap: 8px; margin: 14px 0; }
+    .pay-tab { flex: 1; padding: 10px 6px; font-size: 0.78rem; background: rgba(0,0,0,0.4); border: 1.5px solid var(--border-gold); color: var(--text-muted); border-radius: 10px; cursor: pointer; text-align: center; font-weight: 700; }
+    .pay-tab.active { background: linear-gradient(135deg, var(--accent-saffron), var(--accent-gold)); color: #120A07; font-weight: 800; }
 
     /* Navigation Bar */
-    .bottom-nav { display: flex; background: #0A0503; border-top: 2px solid var(--border-gold); padding: 10px 0; margin-top: auto; }
-    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; color: var(--text-muted); font-size: 0.75rem; font-weight: 700; cursor: pointer; }
+    .bottom-nav { display: flex; background: #0A0503; border-top: 2px solid var(--border-gold); padding: 12px 0; margin-top: auto; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; color: var(--text-muted); font-size: 0.7rem; font-weight: 700; cursor: pointer; }
     .nav-item.active { color: var(--accent-gold); font-weight: 800; }
 
-    /* Floating Voice Button */
+    /* Floating Voice Assistant Button */
     .voice-assistant-floating {
-      position: fixed; right: 25px; bottom: 25px; width: 70px; height: 70px; border-radius: 50%;
-      border: 3px solid var(--accent-gold); background: linear-gradient(135deg, var(--accent-saffron), var(--accent-ruby));
-      color: white; font-size: 32px; cursor: pointer; z-index: 9998; box-shadow: 0 8px 25px rgba(255, 140, 0, 0.5); transition: 0.3s ease;
+      position: absolute; right: 20px; bottom: 75px; width: 62px; height: 62px; border-radius: 50%;
+      border: 3px solid var(--accent-gold); background: linear-gradient(135deg, var(--accent-saffron), var(--accent-terracotta));
+      color: white; font-size: 28px; cursor: pointer; z-index: 998; box-shadow: 0 8px 25px rgba(255, 103, 31, 0.5); transition: 0.3s ease;
+      display: flex; align-items: center; justify-content: center;
     }
-    .voice-assistant-floating:hover { transform: scale(1.1); }
+    .voice-assistant-floating:hover { transform: scale(1.08); }
     
     .voice-assistant-modal {
       position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px;
     }
     .voice-assistant-modal.active { display: flex; }
     .voice-assistant-card {
-      width: min(500px, 95%); background: linear-gradient(145deg, #2A1208, #120907); border: 2px solid var(--accent-gold);
-      border-radius: 28px; padding: 35px 25px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(255, 140, 0, 0.2); position: relative; animation: assistantPopup 0.3s ease;
+      width: min(420px, 95%); background: linear-gradient(145deg, #2A1208, #120A07); border: 2px solid var(--accent-gold);
+      border-radius: 28px; padding: 30px 22px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 30px rgba(255, 103, 31, 0.2); position: relative; animation: assistantPopup 0.3s ease;
     }
     @keyframes assistantPopup { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-    .voice-assistant-close { position: absolute; top: 14px; right: 16px; width: 38px; height: 38px; border: none; border-radius: 50%; background: rgba(255,255,255,0.1); color: #fff; font-size: 26px; cursor: pointer; }
-    .voice-assistant-close:hover { background: var(--accent-ruby); }
-    .voice-assistant-icon { width: 95px; height: 95px; margin: 5px auto 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 46px; background: linear-gradient(135deg, var(--accent-saffron), var(--accent-gold)); box-shadow: 0 10px 30px rgba(255, 140, 0, 0.4); }
-    .voice-assistant-card h2 { margin: 0 0 10px; color: var(--accent-gold); font-size: 26px; font-family: 'Cinzel', serif; }
-    .voice-assistant-card p { color: var(--text-light); font-size: 1.05rem; margin-bottom: 25px; }
-    .voice-assistant-button { width: 200px; height: 60px; border: none; border-radius: 30px; background: linear-gradient(135deg, var(--accent-saffron), var(--accent-ruby)); color: #fff; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 25px rgba(0,0,0,0.5); transition: 0.3s ease; }
-    .voice-assistant-button.listening { background: var(--accent-ruby); animation: listeningPulse 1.2s infinite; }
-    @keyframes listeningPulse { 0% { box-shadow: 0 0 0 0 rgba(230,57,70,0.7); } 70% { box-shadow: 0 0 0 20px rgba(230,57,70,0); } 100% { box-shadow: 0 0 0 0 rgba(230,57,70,0); } }
+    .voice-assistant-close { position: absolute; top: 12px; right: 14px; width: 36px; height: 36px; border: none; border-radius: 50%; background: rgba(255,255,255,0.1); color: #fff; font-size: 24px; cursor: pointer; }
+    .voice-assistant-close:hover { background: var(--accent-terracotta); }
+    .voice-assistant-icon { width: 85px; height: 85px; margin: 5px auto 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 42px; background: linear-gradient(135deg, var(--accent-saffron), var(--accent-gold)); box-shadow: 0 10px 30px rgba(255, 103, 31, 0.4); }
+    .voice-assistant-card h2 { margin: 0 0 8px; color: var(--accent-gold); font-size: 22px; font-family: 'Cinzel', serif; }
+    .voice-assistant-card p { color: var(--text-light); font-size: 0.95rem; margin-bottom: 20px; }
+    .voice-assistant-button { width: 180px; height: 52px; border: none; border-radius: 30px; background: linear-gradient(135deg, var(--accent-saffron), var(--accent-terracotta)); color: #fff; font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 25px rgba(0,0,0,0.5); transition: 0.3s ease; }
+    .voice-assistant-button.listening { background: var(--accent-terracotta); animation: listeningPulse 1.2s infinite; }
+    @keyframes listeningPulse { 0% { box-shadow: 0 0 0 0 rgba(192,57,43,0.7); } 70% { box-shadow: 0 0 0 20px rgba(192,57,43,0); } 100% { box-shadow: 0 0 0 0 rgba(192,57,43,0); } }
   </style>
 </head>
 <body>
@@ -227,88 +234,88 @@
 
     <!-- OVERLAY 0: WELCOME SCREEN -->
     <div id="screenWelcome" class="screen-overlay" style="align-items:center; justify-content:center; text-align:center;">
-      <div style="background:#FFFDF9; border-radius:50%; width:150px; height:150px; display:flex; align-items:center; justify-content:center; border:3px solid var(--accent-gold); margin-bottom:16px; box-shadow: 0 10px 30px rgba(255,140,0,0.4); overflow:hidden;">
+      <div style="background:#FFFDF9; border-radius:50%; width:140px; height:140px; display:flex; align-items:center; justify-content:center; border:3px solid var(--accent-gold); margin-bottom:20px; box-shadow: 0 10px 30px rgba(255,103,31,0.4); overflow:hidden;">
         <img src="logo.jpeg" alt="Hasthakala Logo" style="width:100%; height:100%; object-fit:cover;" />
       </div>
-      <h1 style="font-family:'Cinzel',serif; color:var(--accent-gold); font-size:1.8rem; font-weight:800;" id="lblWelcomeTitle">WELCOME TO HASTHAKALA</h1>
-      <p style="font-size:1rem; color:var(--accent-saffron-light); font-style:italic; margin-top:6px; font-weight:600;" id="lblWelcomeSubtitle">Rural Hands • Global Reach</p>
-      <button class="action-btn" onclick="startAppFromWelcome()" style="margin-top:28px; width:90%; font-size:1.15rem;" id="btnGetStarted">Get Started ➔</button>
+      <h1 style="font-family:'Cinzel',serif; color:var(--accent-gold); font-size:1.7rem; font-weight:800;" id="lblWelcomeTitle">WELCOME TO HASTHAKALA</h1>
+      <p style="font-size:0.95rem; color:var(--accent-saffron); font-style:italic; margin-top:6px; font-weight:600;" id="lblWelcomeSubtitle">Rural Hands • Global Reach</p>
+      <button class="action-btn" onclick="startAppFromWelcome()" style="margin-top:32px; width:88%; font-size:1.1rem;" id="btnGetStarted">Get Started ➔</button>
     </div>
 
     <!-- OVERLAY 1: LANGUAGE SELECTION -->
     <div id="screenLanguage" class="screen-overlay hidden">
-      <h2 style="font-family:'Cinzel',serif; color:var(--accent-gold); text-align:center; font-size:1.5rem;" id="lblSelectLangTitle">Select Language</h2>
+      <h2 style="font-family:'Cinzel',serif; color:var(--accent-gold); text-align:center; font-size:1.4rem; margin-top:10px;" id="lblSelectLangTitle">Select Language</h2>
       <div class="lang-grid" id="languageGrid"></div>
-      <button class="action-btn" onclick="confirmLanguageSelection()" id="btnConfirmLang">Continue to Interaction Mode ➔</button>
+      <button class="action-btn" onclick="confirmLanguageSelection()" id="btnConfirmLang" style="margin-top:auto;">Continue to Navigation Mode ➔</button>
     </div>
 
     <!-- OVERLAY 1.5: INTERACTION MODE SELECTION (MANUAL VS VOICE) -->
     <div id="screenModeSelect" class="screen-overlay hidden" style="justify-content:center;">
-      <h2 style="font-family:'Cinzel',serif; color:var(--accent-gold); text-align:center; margin-bottom:24px; font-size:1.4rem;" id="lblChooseModeTitle">CHOOSE NAVIGATION MODE</h2>
+      <h2 style="font-family:'Cinzel',serif; color:var(--accent-gold); text-align:center; margin-bottom:28px; font-size:1.35rem;" id="lblChooseModeTitle">CHOOSE NAVIGATION MODE</h2>
       
       <div class="portal-card-btn" onclick="selectAppMode('manual')">
-        <div style="font-size:36px; margin-right:18px;">👆</div>
+        <div style="font-size:32px; margin-right:16px;">👆</div>
         <div>
-          <div style="font-weight:800; font-size:1.15rem; color:var(--text-light);" id="lblManualModeTitle">Manual / Touch Mode</div>
-          <div style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;" id="lblManualModeDesc">Navigate using visual buttons, touch & controls</div>
+          <div style="font-weight:800; font-size:1.1rem; color:var(--text-light);" id="lblManualModeTitle">Manual / Touch Mode</div>
+          <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;" id="lblManualModeDesc">Navigate using visual buttons, touch & controls</div>
         </div>
       </div>
 
       <div class="portal-card-btn" onclick="selectAppMode('voice')">
-        <div style="font-size:36px; margin-right:18px;">🎙️</div>
+        <div style="font-size:32px; margin-right:16px;">🎙️</div>
         <div>
-          <div style="font-weight:800; font-size:1.15rem; color:var(--accent-gold);" id="lblVoiceModeTitle">Voice Assistant Mode</div>
-          <div style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;" id="lblVoiceModeDesc">Hands-free app guidance via spoken native voice commands</div>
+          <div style="font-weight:800; font-size:1.1rem; color:var(--accent-gold);" id="lblVoiceModeTitle">Voice Assistant Mode</div>
+          <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;" id="lblVoiceModeDesc">Hands-free app guidance via spoken native voice commands</div>
         </div>
       </div>
     </div>
 
     <!-- OVERLAY 2: PORTAL SELECTION -->
     <div id="screenPortalSelect" class="screen-overlay hidden" style="justify-content:center;">
-      <h2 style="font-family:'Cinzel',serif; color:var(--accent-gold); text-align:center; margin-bottom:24px; font-size:1.4rem;" id="lblChoosePortalTitle">CHOOSE PORTAL</h2>
+      <h2 style="font-family:'Cinzel',serif; color:var(--accent-gold); text-align:center; margin-bottom:28px; font-size:1.35rem;" id="lblChoosePortalTitle">CHOOSE PORTAL</h2>
       <div class="portal-card-btn" onclick="openBuyerLogin()">
-        <div style="font-size:32px; margin-right:18px;">🛍️</div>
+        <div style="font-size:30px; margin-right:16px;">🛍️</div>
         <div>
-          <div style="font-weight:800; font-size:1.15rem; color:var(--text-light);" id="lblBuyerPortalTitle">Buyer Portal</div>
-          <div style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;" id="lblBuyerPortalDesc">Sign In, Shop & Direct Pay</div>
+          <div style="font-weight:800; font-size:1.1rem; color:var(--text-light);" id="lblBuyerPortalTitle">Buyer Portal</div>
+          <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;" id="lblBuyerPortalDesc">Sign In, Shop & Direct Pay</div>
         </div>
       </div>
       <div class="portal-card-btn" onclick="openRole('seller')">
-        <div style="font-size:32px; margin-right:18px;">🏺</div>
+        <div style="font-size:30px; margin-right:16px;">🏺</div>
         <div>
-          <div style="font-weight:800; font-size:1.15rem; color:var(--text-light);" id="lblSellerPortalTitle">Artisan / Seller Portal</div>
-          <div style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;" id="lblSellerPortalDesc">AI Studio, QR Code & Pricing</div>
+          <div style="font-weight:800; font-size:1.1rem; color:var(--text-light);" id="lblSellerPortalTitle">Artisan / Seller Portal</div>
+          <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;" id="lblSellerPortalDesc">AI Studio, QR Code & Pricing</div>
         </div>
       </div>
     </div>
 
     <!-- OVERLAY 3: BUYER LOGIN PAGE -->
     <div id="screenBuyerLogin" class="screen-overlay hidden" style="justify-content:center;">
-      <div style="text-align:center; margin-bottom:20px;">
-        <h2 style="font-family:'Cinzel',serif; color:var(--accent-gold); font-size:1.5rem;" id="lblBuyerSignInTitle">BUYER SIGN IN</h2>
-        <p style="font-size:0.9rem; color:var(--text-muted);" id="lblBuyerSignInDesc">Access Hasthakala E-Commerce Store</p>
+      <div style="text-align:center; margin-bottom:24px;">
+        <h2 style="font-family:'Cinzel',serif; color:var(--accent-gold); font-size:1.4rem;" id="lblBuyerSignInTitle">BUYER SIGN IN</h2>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;" id="lblBuyerSignInDesc">Access Hasthakala E-Commerce Store</p>
       </div>
-      <form onsubmit="handleBuyerLogin(event)" style="display:flex; flex-direction:column; gap:12px;">
+      <form onsubmit="handleBuyerLogin(event)" style="display:flex; flex-direction:column; gap:14px;">
         <input type="text" id="inputBuyerPhone" placeholder="Phone Number / Email Address" class="input-field" required />
         <input type="password" id="inputBuyerPassword" placeholder="Password" class="input-field" required />
-        <button type="submit" class="action-btn" style="margin-top:14px;" id="btnBuyerSignIn">Sign In to Shop ➔</button>
+        <button type="submit" class="action-btn" style="margin-top:16px;" id="btnBuyerSignIn">Sign In to Shop ➔</button>
       </form>
-      <button class="action-btn secondary-btn" onclick="openRole('buyer')" style="margin-top:12px;" id="btnBuyerGuest">Continue as Guest</button>
+      <button class="action-btn secondary-btn" onclick="openRole('buyer')" style="margin-top:14px;" id="btnBuyerGuest">Continue as Guest</button>
     </div>
 
     <!-- OVERLAY 4: BUYER CART & CHECKOUT MODAL -->
     <div id="screenCartModal" class="screen-overlay hidden">
       <div class="section-card">
         <div class="section-title" id="lblCartTitle">🛒 Shopping Cart & Direct Checkout</div>
-        <div id="cartItemsList" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
-          <p style="font-size:0.9rem; color:var(--text-muted);" id="lblCartEmpty">Your cart is empty.</p>
+        <div id="cartItemsList" style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
+          <p style="font-size:0.85rem; color:var(--text-muted);" id="lblCartEmpty">Your cart is empty.</p>
         </div>
-        <div style="margin-top:14px; font-size:1.1rem; font-weight:800; color:var(--accent-gold); text-align:right;">
+        <div style="margin-top:16px; font-size:1rem; font-weight:800; color:var(--accent-gold); text-align:right;">
           <span id="lblTotalText">Total:</span> <span id="cartTotal">₹0</span>
         </div>
       </div>
 
-      <div class="section-card" style="margin-top:12px;">
+      <div class="section-card" style="margin-top:14px;">
         <div class="section-title" id="lblPayMethodTitle">💳 Select Payment Method</div>
         
         <div class="pay-tabs">
@@ -318,14 +325,14 @@
         </div>
 
         <div id="paySectionUPI">
-          <p style="font-size:0.85rem; color:var(--text-muted);" id="lblUpiInstruction">Scan Artisan UPI QR Code to Transfer Directly:</p>
+          <p style="font-size:0.8rem; color:var(--text-muted);" id="lblUpiInstruction">Scan Artisan UPI QR Code to Transfer Directly:</p>
           <div style="text-align:center; margin:14px 0;">
-            <img id="buyerCheckoutQR" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=lakshmidevi@ybl" style="border:3px solid var(--accent-gold); border-radius:12px; padding:6px; background:#fff;" />
-            <p style="font-size:0.85rem; color:var(--accent-gold); margin-top:6px; font-weight:700;" id="lblCheckoutUpi">UPI ID: lakshmidevi@ybl</p>
+            <img id="buyerCheckoutQR" src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=lakshmidevi@ybl" style="border:3px solid var(--accent-gold); border-radius:12px; padding:6px; background:#fff;" />
+            <p style="font-size:0.8rem; color:var(--accent-gold); margin-top:6px; font-weight:700;" id="lblCheckoutUpi">UPI ID: lakshmidevi@ybl</p>
           </div>
         </div>
 
-        <div id="paySectionBank" style="display:none; font-size:0.85rem; line-height:1.5;">
+        <div id="paySectionBank" style="display:none; font-size:0.8rem; line-height:1.5;">
           <p style="color:var(--text-muted); margin-bottom:8px;" id="lblBankInstruction">Transfer funds directly to the verified artisan account:</p>
           <div style="background:rgba(0,0,0,0.5); padding:12px; border-radius:12px; border:1px solid var(--border-gold);">
             <div><strong id="lblAccName">Account Name:</strong> <span id="checkoutBankHolder">Lakshmi Devi</span></div>
@@ -343,8 +350,8 @@
         </div>
       </div>
 
-      <button class="action-btn" onclick="completePaymentAndOrder()" style="margin-top:14px;" id="btnCompletePayment">Confirm & Complete Payment ➔</button>
-      <button class="action-btn secondary-btn" onclick="document.getElementById('screenCartModal').classList.add('hidden')" id="btnBackToStore">Back to Store</button>
+      <button class="action-btn" onclick="completePaymentAndOrder()" style="margin-top:16px;" id="btnCompletePayment">Confirm & Complete Payment ➔</button>
+      <button class="action-btn secondary-btn" onclick="document.getElementById('screenCartModal').classList.add('hidden')" id="btnBackToStore" style="margin-top:10px;">Back to Store</button>
     </div>
 
     <!-- APP HEADER -->
@@ -353,13 +360,13 @@
         <div class="app-logo-box">
           <img src="logo.jpeg" alt="Logo" />
         </div>
-        <div>
+        <div class="brand-info">
           <h1 class="brand-title">HASTHAKALA</h1>
           <p class="brand-tagline" id="hdrTagline">Rural Hands • Global Reach</p>
         </div>
       </div>
-      <div style="display:flex; gap:8px; align-items:center;">
-        <button id="btnCartHeader" class="signout-btn" style="background:rgba(255, 215, 0, 0.2); border-color:var(--accent-gold); color:var(--accent-gold); display:none;" onclick="openCartModal()">🛒 Cart (<span id="cartCount">0</span>)</button>
+      <div class="header-actions">
+        <button id="btnCartHeader" class="signout-btn" style="background:rgba(255, 193, 7, 0.2); border-color:var(--accent-gold); color:var(--accent-gold); display:none;" onclick="openCartModal()">🛒 Cart (<span id="cartCount">0</span>)</button>
         <button class="signout-btn" onclick="signOut()" id="btnSignOut">🚪 Sign Out</button>
       </div>
     </header>
@@ -374,30 +381,30 @@
           <div class="section-card">
             <div class="section-title" id="lblStudioTitle">✨ 1. 8K AI Photo Studio & Hand Remover</div>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px;">
               <div style="text-align: center;">
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; font-weight: 700;" id="lblRawPhotoText">Raw Photo</p>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;" id="lblRawPhotoText">Raw Photo</p>
                 <div class="arch-viewfinder" onclick="document.getElementById('photoInput').click()">
                   <img id="rawPhotoPreview" style="display:none;" />
                   <div id="photoPlaceholder" style="text-align:center;">
-                    <p style="font-size:1.5rem; margin-bottom:4px;">📸</p>
-                    <p style="font-size:0.8rem; color:var(--accent-saffron-light); font-weight:700;" id="lblTapUploadText">Tap Upload</p>
+                    <p style="font-size:1.4rem; margin-bottom:4px;">📸</p>
+                    <p style="font-size:0.75rem; color:var(--accent-saffron); font-weight:700;" id="lblTapUploadText">Tap Upload</p>
                   </div>
                 </div>
               </div>
 
               <div style="text-align: center;">
-                <p style="font-size: 0.8rem; color: var(--accent-gold); margin-bottom: 4px; font-weight: 700;" id="lblOutputPhotoText">8K Studio Output</p>
+                <p style="font-size: 0.75rem; color: var(--accent-gold); margin-bottom: 6px; font-weight: 700;" id="lblOutputPhotoText">8K Studio Output</p>
                 <div class="arch-viewfinder">
                   <img id="photoPreview" style="display:none;" />
-                  <span id="processedPlaceholder" style="font-size:0.8rem; color:var(--text-muted);">Awaiting...</span>
+                  <span id="processedPlaceholder" style="font-size:0.75rem; color:var(--text-muted);">Awaiting...</span>
                   <div class="ai-badge" id="aiStatusBadge" style="display:none;">Studio 8K</div>
                 </div>
               </div>
             </div>
 
             <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(this)" />
-            <p style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin-top:8px; line-height:1.4;" id="lblStudioDesc">
+            <p style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:10px; line-height:1.4;" id="lblStudioDesc">
               Auto-detects central craft, removes holding fingers & clutter, and outputs high-resolution studio lighting.
             </p>
           </div>
@@ -410,16 +417,16 @@
             <div class="section-title" id="lblVoiceTitle">🎙️ 2. Native Voice Description</div>
             <button id="recordBtn" class="action-btn" onclick="toggleRealVoiceRecording()">Describe Craft in Native Language</button>
             
-            <div style="margin-top:12px;">
-              <label style="font-size:0.8rem; color:var(--text-muted); display:block; font-weight:700;" id="lblSpokenTranscriptText">Spoken Speech Transcript:</label>
-              <div id="transcriptOutput" style="font-size:0.9rem; color:var(--text-light); background:rgba(0,0,0,0.4); padding:10px; border-radius:10px; border:1px solid var(--border-gold); min-height:40px; margin-top:4px;">
+            <div style="margin-top:14px;">
+              <label style="font-size:0.75rem; color:var(--text-muted); display:block; font-weight:700;" id="lblSpokenTranscriptText">Spoken Speech Transcript:</label>
+              <div id="transcriptOutput" style="font-size:0.85rem; color:var(--text-light); background:rgba(0,0,0,0.4); padding:10px; border-radius:10px; border:1px solid var(--border-gold); min-height:40px; margin-top:6px;">
                 <em id="lblVoicePlaceholder">Tap above to record voice in your native language...</em>
               </div>
             </div>
 
-            <div style="margin-top:12px;">
-              <label style="font-size:0.8rem; color:var(--accent-gold); display:block; font-weight:700;" id="lblTranslatedDescText">Auto-Translated English Description:</label>
-              <p id="englishTranscript" style="font-size:0.9rem; color:var(--accent-saffron-light); background:rgba(0,0,0,0.5); padding:10px; border-radius:10px; border:1px solid var(--border-gold); line-height:1.4; min-height:40px; margin-top:4px;">
+            <div style="margin-top:14px;">
+              <label style="font-size:0.75rem; color:var(--accent-gold); display:block; font-weight:700;" id="lblTranslatedDescText">Auto-Translated English Description:</label>
+              <p id="englishTranscript" style="font-size:0.85rem; color:var(--accent-saffron); background:rgba(0,0,0,0.5); padding:10px; border-radius:10px; border:1px solid var(--border-gold); line-height:1.4; min-height:40px; margin-top:6px;">
                 Handcrafted authentic rural craft creation.
               </p>
             </div>
@@ -436,10 +443,10 @@
             <input type="text" id="bankIfsc" class="input-field" placeholder="IFSC Code" value="SBIN0001420" />
             <input type="text" id="bankUpi" class="input-field" placeholder="PhonePe / Google Pay / UPI ID" value="lakshmidevi@ybl" oninput="updateArtisanQR()" />
 
-            <div style="margin-top:14px; text-align:center;">
-              <label style="font-size:0.85rem; color:var(--accent-gold); display:block; margin-bottom:6px; font-weight:700;" id="lblQrText">Your Generated Payment QR Code:</label>
+            <div style="margin-top:16px; text-align:center;">
+              <label style="font-size:0.8rem; color:var(--accent-gold); display:block; margin-bottom:8px; font-weight:700;" id="lblQrText">Your Generated Payment QR Code:</label>
               <img id="artisanQRImage" src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=lakshmidevi@ybl" style="border:3px solid var(--accent-gold); border-radius:12px; padding:6px; background:#fff;" />
-              <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;" id="lblQrDesc">Buyers scan this to pay directly into your account.</p>
+              <p style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;" id="lblQrDesc">Buyers scan this to pay directly into your account.</p>
             </div>
           </div>
           <button class="action-btn" onclick="switchSellerPage('seller-pricing')" id="btnNextToPricing">Next Page: Price Calculator ➔</button>
@@ -449,8 +456,8 @@
         <div id="seller-pricing" class="page-section">
           <div class="section-card">
             <div class="section-title" id="lblCalcTitle">🧮 4. Market Price Calculator</div>
-            <div style="margin-bottom:8px;">
-              <label style="font-size:0.8rem; color:var(--accent-gold); font-weight:700;" id="lblProductTitleText">Product Title:</label>
+            <div style="margin-bottom:10px;">
+              <label style="font-size:0.75rem; color:var(--accent-gold); font-weight:700;" id="lblProductTitleText">Product Title:</label>
               <input type="text" id="draftTitleInput" class="input-field" value="Handcrafted Heritage Plush Craft" style="margin-top:4px;" />
             </div>
 
@@ -463,7 +470,7 @@
 
             <div class="price-tiers">
               <div class="price-card"><label id="lblFloorText">Floor</label><span id="priceFloor">₹1,170</span></div>
-              <div class="price-card" style="border-color:var(--accent-gold); background:rgba(255,215,0,0.15);"><label style="color:var(--accent-gold);" id="lblTargetText">Target Fair</label><span id="priceTarget" style="font-size:1.15rem;">₹1,520</span></div>
+              <div class="price-card" style="border-color:var(--accent-gold); background:rgba(255,193,7,0.15);"><label style="color:var(--accent-gold);" id="lblTargetText">Target Fair</label><span id="priceTarget" style="font-size:1.05rem;">₹1,520</span></div>
               <div class="price-card"><label id="lblPremiumText">Premium</label><span id="pricePremium">₹1,980</span></div>
             </div>
           </div>
@@ -475,7 +482,7 @@
         <div id="seller-inventory" class="page-section">
           <div class="section-card">
             <div class="section-title" id="lblCatalogTitle">📊 5. Your Published Catalog</div>
-            <div id="sellerInventoryList" style="font-size:0.9rem; color:var(--text-muted);">No products published yet.</div>
+            <div id="sellerInventoryList" style="font-size:0.85rem; color:var(--text-muted);">No products published yet.</div>
           </div>
         </div>
 
@@ -494,10 +501,13 @@
       <div id="buyerPortal" class="portal-view">
         <div class="section-card">
           <div class="section-title" id="lblStorefrontTitle">🛍️ Hasthakala Handicraft Storefront</div>
-          <p style="font-size:0.85rem; color:var(--text-muted);" id="lblStorefrontDesc">Directly supporting rural artisans across India.</p>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;" id="lblStorefrontDesc">Directly supporting rural artisans across India.</p>
         </div>
         <div class="buyer-store-grid" id="buyerStoreGrid"></div>
       </div>
+
+      <!-- Floating Voice Assistant Button -->
+      <button class="voice-assistant-floating" title="Voice Assistant">🎙️</button>
 
     </main>
 
@@ -528,7 +538,7 @@
         welcomeSubtitle: "Rural Hands • Global Reach",
         getStarted: "Get Started ➔",
         selectLangTitle: "Select Language",
-        confirmLang: "Continue to Interaction Mode ➔",
+        confirmLang: "Continue to Navigation Mode ➔",
         chooseModeTitle: "CHOOSE NAVIGATION MODE",
         manualModeTitle: "Manual / Touch Mode",
         manualModeDesc: "Navigate using visual buttons, touch & controls",
@@ -880,7 +890,7 @@
         buyerPortalTitle: "ग्राहक पोर्टल",
         buyerPortalDesc: "साइन इन करा, खरेदी करा आणि थेट पेमेंट करा",
         sellerPortalTitle: "कारागीर / विक्रेता पोर्टल",
-        sellerPortalDesc: "एआय स्टुडिओ, क्यूआर कोड आणि किंमत निर्धारण",
+        sellerPortalDesc: "एआई स्टुडिओ, क्यूआर कोड आणि किंमत निर्धारण",
         buyerSignInTitle: "ग्राहक साइन इन",
         buyerSignInDesc: "हस्तकला ई-कॉमर्स स्टोअरमध्ये प्रवेश करा",
         btnBuyerSignIn: "खरेदीसाठी साइन इन करा ➔",
@@ -1134,7 +1144,7 @@
       const upi = document.getElementById('bankUpi').value || 'lakshmidevi@ybl';
       const holder = document.getElementById('bankHolderName').value || 'Lakshmi Devi';
       
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent(holder)}`;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent(holder)}`;
       document.getElementById('artisanQRImage').src = qrUrl;
       document.getElementById('buyerCheckoutQR').src = qrUrl;
       document.getElementById('lblCheckoutUpi').innerText = `UPI ID: ${upi}`;
@@ -1273,10 +1283,10 @@
       }
       container.innerHTML = publishedProducts.map(p => `
         <div style="display:flex; gap:12px; background:rgba(0,0,0,0.4); border:1px solid var(--border-gold); padding:10px; border-radius:12px; align-items:center; margin-bottom:8px;">
-          <img src="${p.imageSrc}" style="width:50px; height:50px; border-radius:8px; object-fit:cover;" />
+          <img src="${p.imageSrc}" style="width:48px; height:48px; border-radius:8px; object-fit:cover;" />
           <div style="flex:1;">
-            <div style="font-weight:800; color:var(--accent-gold); font-size:0.95rem;">${p.title}</div>
-            <div style="font-size:0.85rem; color:var(--text-light);">₹${p.price.toLocaleString('en-IN')}</div>
+            <div style="font-weight:800; color:var(--accent-gold); font-size:0.9rem;">${p.title}</div>
+            <div style="font-size:0.8rem; color:var(--text-light);">₹${p.price.toLocaleString('en-IN')}</div>
           </div>
         </div>
       `).join('');
@@ -1286,16 +1296,16 @@
       const grid = document.getElementById('buyerStoreGrid');
       const dict = i18n[selectedLang] || i18n['en-IN'];
       if (publishedProducts.length === 0) {
-        grid.innerHTML = `<p style="grid-column: span 2; font-size:0.9rem; color:var(--text-muted); text-align:center; padding: 30px 0;">${dict.noItemsText}</p>`;
+        grid.innerHTML = `<p style="grid-column: span 2; font-size:0.85rem; color:var(--text-muted); text-align:center; padding: 24px 0;">${dict.noItemsText}</p>`;
         return;
       }
       grid.innerHTML = publishedProducts.map(p => `
         <div class="buyer-card">
           <img src="${p.imageSrc}" />
-          <div style="font-size:0.85rem; font-weight:800; color:var(--accent-gold); line-height:1.2;">${p.title}</div>
-          <div style="font-size:0.75rem; color:var(--text-muted);">By ${p.artisan}</div>
-          <div style="font-size:0.95rem; font-weight:800; color:#fff;">₹${p.price.toLocaleString('en-IN')}</div>
-          <button class="action-btn" style="padding:8px; font-size:0.8rem; margin-top:auto;" onclick="addToCart(${p.id})">🛒 Add to Cart</button>
+          <div style="font-size:0.8rem; font-weight:800; color:var(--accent-gold); line-height:1.2;">${p.title}</div>
+          <div style="font-size:0.7rem; color:var(--text-muted);">By ${p.artisan}</div>
+          <div style="font-size:0.9rem; font-weight:800; color:#fff;">₹${p.price.toLocaleString('en-IN')}</div>
+          <button class="action-btn" style="padding:8px; font-size:0.75rem; margin-top:auto;" onclick="addToCart(${p.id})">🛒 Add to Cart</button>
         </div>
       `).join('');
     }
@@ -1313,14 +1323,14 @@
     function openCartModal() {
       const list = document.getElementById('cartItemsList');
       if (cart.length === 0) {
-        list.innerHTML = '<p style="font-size:0.9rem; color:var(--text-muted);">Your cart is empty.</p>';
+        list.innerHTML = '<p style="font-size:0.85rem; color:var(--text-muted);">Your cart is empty.</p>';
         document.getElementById('cartTotal').innerText = '₹0';
       } else {
         let total = 0;
         list.innerHTML = cart.map((item) => {
           total += item.price;
           return `
-            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.4); padding:10px; border-radius:10px; font-size:0.85rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.4); padding:8px 10px; border-radius:10px; font-size:0.8rem;">
               <span>${item.title}</span>
               <span style="color:var(--accent-gold); font-weight:800;">₹${item.price}</span>
             </div>
