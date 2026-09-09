@@ -194,8 +194,8 @@
       <div class="welcome-text-group">
         <h1 style="font-family:'Cinzel',serif; color:var(--accent-green); font-size:1.75rem; font-weight:800; letter-spacing:1px;" id="lblWelcomeTitle">HASTHAKALA</h1>
         <p style="font-size:0.85rem; color:var(--accent-crimson); font-weight:700; letter-spacing:1px; margin-top:4px;" id="lblWelcomeSubtitle">Rural Hands • Global Reach</p>
-        <div class="welcome-tagline-main">Authentic Crafts from Rural India</div>
-        <div class="welcome-tagline-sub">Support artisans. Celebrate heritage.</div>
+        <div class="welcome-tagline-main" id="lblWelcomeTagMain">Authentic Crafts from Rural India</div>
+        <div class="welcome-tagline-sub" id="lblWelcomeTagSub">Support artisans. Celebrate heritage.</div>
       </div>
       <button class="action-btn" onclick="startAppFromWelcome()" style="width:100%; font-size:1rem;" id="btnGetStarted">Get Started ➔</button>
     </div>
@@ -265,7 +265,7 @@
 
     <!-- CHECKOUT CART MODAL -->
     <div id="screenCartModal" class="screen-overlay hidden">
-      <div class="overlay-back-bar"><button class="back-arrow-btn" onclick="document.getElementById('screenCartModal').classList.add('hidden')">← Back to Store</button></div>
+      <div class="overlay-back-bar"><button class="back-arrow-btn" onclick="document.getElementById('screenCartModal').classList.add('hidden')" id="lblCartBack">← Back to Store</button></div>
       <div class="section-card">
         <div class="section-title" id="lblCartTitle">🛒 Shopping Cart & Checkout</div>
         <div id="cartItemsList" style="display:flex; flex-direction:column; gap:8px; margin-top:10px; max-height:140px; overflow-y:auto;">
@@ -275,10 +275,10 @@
           <span id="lblTotalText">Total:</span> <span id="cartTotal">₹0</span>
         </div>
         <div style="margin-top:14px;">
-          <label style="font-size:0.75rem; color:var(--text-muted); font-weight:800; display:block; margin-bottom:6px;">Select Payment Option:</label>
-          <div class="payment-option-btn active" onclick="selectPaymentMethod('upi', this)"><span>📱</span> <span>UPI / Google Pay / PhonePe / Paytm</span></div>
-          <div class="payment-option-btn" onclick="selectPaymentMethod('card', this)"><span>💳</span> <span>Credit / Debit Card / Net Banking</span></div>
-          <div class="payment-option-btn" onclick="selectPaymentMethod('cod', this)"><span>💵</span> <span>Cash on Delivery</span></div>
+          <label style="font-size:0.75rem; color:var(--text-muted); font-weight:800; display:block; margin-bottom:6px;" id="lblSelectPaymentLabel">Select Payment Option:</label>
+          <div class="payment-option-btn active" onclick="selectPaymentMethod('upi', this)"><span>📱</span> <span id="lblPayUpi">UPI / Google Pay / PhonePe / Paytm</span></div>
+          <div class="payment-option-btn" onclick="selectPaymentMethod('card', this)"><span>💳</span> <span id="lblPayCard">Credit / Debit Card / Net Banking</span></div>
+          <div class="payment-option-btn" onclick="selectPaymentMethod('cod', this)"><span>💵</span> <span id="lblPayCod">Cash on Delivery</span></div>
         </div>
       </div>
       <button class="action-btn" onclick="completePaymentAndOrder()" style="margin-top:14px;" id="btnCompletePayment">Proceed to Pay ➔</button>
@@ -293,12 +293,12 @@
         </div>
         <img id="modalProdImg" style="width:100%; height:160px; object-fit:cover; border-radius:12px;" />
         <div>
-          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Translated English Description:</span>
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;" id="lblModalDescLabel">Translated English Description:</span>
           <p id="modalProdDesc" style="font-size:0.85rem; color:var(--text-dark); background:#FAF7F2; padding:8px; border-radius:8px; margin-top:4px; border:1px solid var(--border-light);"></p>
         </div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
           <span id="modalProdPrice" style="font-family:'Cinzel',serif; font-size:1.1rem; font-weight:800; color:var(--accent-green);">₹0</span>
-          <button class="action-btn" style="margin-top:0; width:auto; padding:10px 20px;" onclick="addModalItemToCart()">Add to Cart 🛒</button>
+          <button class="action-btn" style="margin-top:0; width:auto; padding:10px 20px;" onclick="addModalItemToCart()" id="btnAddToCart">Add to Cart 🛒</button>
         </div>
       </div>
     </div>
@@ -313,8 +313,8 @@
         </div>
       </div>
       <div class="header-actions">
-        <button id="btnCartHeader" class="signout-btn" style="display:none;" onclick="openCartModal()">🛒 Cart (<span id="cartCount">0</span>)</button>
-        <button class="back-arrow-btn" style="font-size:0.72rem; padding:4px 10px;" onclick="showScreen('screenPortalSelect')">← Portals</button>
+        <button id="btnCartHeader" class="signout-btn" style="display:none;" onclick="openCartModal()">🛒 <span id="lblCartNav">Cart</span> (<span id="cartCount">0</span>)</button>
+        <button class="back-arrow-btn" style="font-size:0.72rem; padding:4px 10px;" onclick="showScreen('screenPortalSelect')" id="lblHeaderPortals">← Portals</button>
         <button class="signout-btn" onclick="signOut()" id="btnSignOut">Sign Out</button>
       </div>
     </header>
@@ -351,9 +351,9 @@
                     <div class="ai-tool-section">
                       <span class="ai-tool-label" id="lblProdBg">🎨 Product Background</span>
                       <div class="ai-background-grid">
-                        <button class="ai-background bg-original active" data-bg="original" type="button">Original</button>
-                        <button class="ai-background bg-white" data-bg="white" type="button">White</button>
-                        <button class="ai-background bg-cream" data-bg="cream" type="button">Cream</button>
+                        <button class="ai-background bg-original active" data-bg="original" type="button" id="lblBgOrig">Original</button>
+                        <button class="ai-background bg-white" data-bg="white" type="button" id="lblBgWhite">White</button>
+                        <button class="ai-background bg-cream" data-bg="cream" type="button" id="lblBgCream">Cream</button>
                       </div>
                     </div>
                   </div>
@@ -396,7 +396,7 @@
             <input type="text" id="bankHolderName" class="input-field" placeholder="Account Holder Name" value="Lakshmi Devi" />
             <input type="text" id="bankUpi" class="input-field" placeholder="UPI ID" value="lakshmidevi@ybl" oninput="generateSellerQRCode()" />
             <div style="margin-top: 14px; background: #FAF6EE; border: 1px dashed var(--accent-green); border-radius: 14px; padding: 14px; text-align: center;">
-              <div style="font-size: 0.8rem; font-weight: 800; color: var(--accent-green); margin-bottom: 8px;">📱 Your Scannable Payment QR Code</div>
+              <div style="font-size: 0.8rem; font-weight: 800; color: var(--accent-green); margin-bottom: 8px;" id="lblQrCodeSub">📱 Your Scannable Payment QR Code</div>
               <div id="qrcodeContainer" style="display: flex; justify-content: center; align-items: center; background: #FFF; padding: 10px; border-radius: 8px; width: fit-content; margin: 0 auto; border: 1px solid var(--border-light);"></div>
             </div>
           </div>
@@ -492,6 +492,129 @@
       { code: 'as-IN', name: 'অসমীয়া (Assamese)' }
     ];
 
+    // MULTI-LINGUAL DICTIONARY FOR INSTANT APP TRANSLATION UPON SELECTION
+    const translations = {
+      'en-IN': {
+        welcomeTitle: "HASTHAKALA", welcomeSub: "Rural Hands • Global Reach",
+        tagMain: "Authentic Crafts from Rural India", tagSub: "Support artisans. Celebrate heritage.",
+        getStarted: "Get Started ➔", selectLangTitle: "Select Language", confirmLang: "Continue to Navigation Mode ➔",
+        chooseModeTitle: "CHOOSE NAVIGATION MODE", manualTitle: "Manual / Touch Mode", manualDesc: "Navigate using visual buttons, touch & controls",
+        voiceModeTitle: "Voice Assistant Mode", voiceDesc: "Hands-free app guidance via spoken native voice commands",
+        choosePortalTitle: "CHOOSE PORTAL", buyerPortalTitle: "Buyer Portal", buyerPortalDesc: "Sign In, Shop & Direct Pay",
+        sellerPortalTitle: "Artisan / Seller Portal", sellerPortalDesc: "AI Studio, QR Code & Pricing",
+        buyerSignInTitle: "BUYER SIGN IN", buyerSignInDesc: "Access Hasthakala E-Commerce Store", buyerSignInBtn: "Sign In to Shop ➔", buyerGuest: "Continue as Guest",
+        cartTitle: "🛒 Shopping Cart & Checkout", cartEmpty: "Your cart is empty.", totalText: "Total:", selectPayLabel: "Select Payment Option:",
+        payUpi: "UPI / Google Pay / PhonePe / Paytm", payCard: "Credit / Debit Card / Net Banking", payCod: "Cash on Delivery", completePay: "Proceed to Pay ➔",
+        modalDescLabel: "Translated English Description:", addToCart: "Add to Cart 🛒", cartNav: "Cart", portalsNav: "← Portals", signOut: "Sign Out",
+        aiHeader: "✨ AI Photo Studio", aiSub: "Upload any photo — studio automatically improves it for selling.",
+        uploadStrong: "Take or upload a product photo", uploadSpan: "No photography skills needed • AI improves lighting & background",
+        oneTap: "🤖 One-tap AI enhancement", prodBg: "🎨 Product Background", bgOrig: "Original", bgWhite: "White", bgCream: "Cream",
+        nextVoice: "Next Page: Native Voice Description ➔", voiceTitle: "🎙️ 2. Native Voice Description",
+        recordBtn: "Describe Craft in Native Language", spokenTranscript: "Spoken Speech Transcript (Live Multi-lingual Rec):",
+        voicePlaceholder: "Tap above to record voice in your selected language...",
+        translatedDesc: "Auto-Translated English Description:", nextBank: "Next Page: Bank Details & QR ➔",
+        bankTitle: "🏦 3. Bank Details & Payment QR", qrSub: "📱 Your Scannable Payment QR Code", nextPricing: "Next Page: Price Calculator ➔",
+        calcTitle: "🧮 4. Market Price Calculator", prodTitleLabel: "Product Title:", rawText: "Raw Material (₹)",
+        hoursText: "Making (Hours)", rateText: "Rate (₹/Hr)", benchText: "Market Avg (₹)", floor: "Floor", target: "Target Fair",
+        premium: "Premium", publish: "🚀 Publish to Public Storefront", catalogTitle: "📊 5. Your Published Catalog",
+        navStudio: "Studio", navVoice: "Voice", navBank: "Bank/QR", navPricing: "Pricing", navCatalog: "Catalog",
+        storeTitle: "🛍️ Hasthakala Handicraft Storefront", storeDesc: "Directly supporting rural artisans across India."
+      },
+      'hi-IN': {
+        welcomeTitle: "हस्तकला", welcomeSub: "ग्रामीण हाथ • वैश्विक पहुंच",
+        tagMain: "ग्रामीण भारत के प्रामाणिक हस्तशिल्प", tagSub: "कारीगरों का समर्थन करें। विरासत का जश्न मनाएं।",
+        getStarted: "शुरू करें ➔", selectLangTitle: "भाषा चुनें", confirmLang: "नेविगेशन मोड पर जारी रखें ➔",
+        chooseModeTitle: "नेविगेशन मोड चुनें", manualTitle: "मैनुअल / टच मोड", manualDesc: "विज़ुअल बटन, टच और नियंत्रण का उपयोग करके नेविगेट करें",
+        voiceModeTitle: "वॉइस असिस्टेंट मोड", voiceDesc: "बोली जाने वाली मूल आवाज के माध्यम से हैंड्स-फ्री ऐप मार्गदर्शन",
+        choosePortalTitle: "पोर्टल चुनें", buyerPortalTitle: "क्रेता पोर्टल", buyerPortalDesc: "साइन इन करें, खरीदारी करें और सीधा भुगतान करें",
+        sellerPortalTitle: "कारीगर / विक्रेता पोर्टल", sellerPortalDesc: "AI स्टूडियो, QR कोड और मूल्य निर्धारण",
+        buyerSignInTitle: "क्रेता साइन इन", buyerSignInDesc: "हस्तकला ई-कॉमर्स स्टोर तक पहुंचें", buyerSignInBtn: "खरीदारी के लिए साइन इन करें ➔", buyerGuest: "अतिथि के रूप में जारी रखें",
+        cartTitle: "🛒 शॉपिंग कार्ट और चेकआउट", cartEmpty: "आपकी कार्ट खाली है।", totalText: "कुल:", selectPayLabel: "भुगतान विकल्प चुनें:",
+        payUpi: "यूपीआई / गूगल पे / फोनपे / पेटीएम", payCard: "क्रेडिट / डेबिट कार्ड / नेट बैंकिंग", payCod: "कैश ऑन डिलीवरी", completePay: "भुगतान के लिए आगे बढ़ें ➔",
+        modalDescLabel: "अनुवादित अंग्रेजी विवरण:", addToCart: "कार्ट में जोड़ें 🛒", cartNav: "कार्ट", portalsNav: "← पोर्टल्स", signOut: "साइन आउट",
+        aiHeader: "✨ AI फोटो स्टूडियो", aiSub: "कोई भी फोटो अपलोड करें — स्टूडियो स्वचालित रूप से इसमें सुधार करता है।",
+        uploadStrong: "उत्पाद की फोटो लें या अपलोड करें", uploadSpan: "फोटोग्राफी कौशल की आवश्यकता नहीं • AI लाइटिंग और बैकग्राउंड सुधारता है",
+        oneTap: "🤖 वन-टैप AI संवर्द्धन", prodBg: "🎨 उत्पाद बैकग्राउंड", bgOrig: "मूल", bgWhite: "सफेद", bgCream: "क्रीम",
+        nextVoice: "अगला पृष्ठ: मूल आवाज़ विवरण ➔", voiceTitle: "🎙️ 2. मूल आवाज़ विवरण",
+        recordBtn: "अपनी मूल भाषा में शिल्प का वर्णन करें", spokenTranscript: "बोली गई वाक् प्रतिलिपि (लाइव बहुभाषी रिक):",
+        voicePlaceholder: "अपनी चयनित भाषा में रिकॉर्ड करने के लिए ऊपर टैप करें...",
+        translatedDesc: "स्वतः-अनुवादित अंग्रेजी विवरण:", nextBank: "अगला पृष्ठ: बैंक विवरण और QR ➔",
+        bankTitle: "🏦 3. बैंक विवरण और भुगतान QR", qrSub: "📱 आपका स्कैन करने योग्य भुगतान QR कोड", nextPricing: "अगला पृष्ठ: मूल्य कैलकुलेटर ➔",
+        calcTitle: "🧮 4. बाज़ार मूल्य कैलकुलेटर", prodTitleLabel: "उत्पाद शीर्षक:", rawText: "कच्चा माल (₹)",
+        hoursText: "बनाने में (घंटे)", rateText: "दर (₹/घंटा)", benchText: "बाज़ार औसत (₹)", floor: "न्यूनतम", target: "लक्षित उचित",
+        premium: "प्रीमियम", publish: "🚀 सार्वजनिक स्टोरफ्रंट पर प्रकाशित करें", catalogTitle: "📊 5. आपकी प्रकाशित सूची",
+        navStudio: "स्टूडियो", navVoice: "आवाज़", navBank: "बैंक/QR", navPricing: "मूल्य", navCatalog: "कैटलॉग",
+        storeTitle: "🛍️ हस्तकला हस्तशिल्प स्टोरफ्रंट", storeDesc: "भारत भर के ग्रामीण कारीगरों का सीधा समर्थन करना।"
+      },
+      'te-IN': {
+        welcomeTitle: "హస్తకళ", welcomeSub: "గ్రామీణ చేతులు • ప్రపంచవ్యాప్త చేరువ",
+        tagMain: "గ్రామీణ భారతదేశం నుండి ప్రామాణికమైన హస్తకళలు", tagSub: "చేతివృత్తులవారిని ఆదరించండి. వారసత్వాన్ని జరుపుకోండి.",
+        getStarted: "ప్రారంభించండి ➔", selectLangTitle: "భాషను ఎంచుకోండి", confirmLang: "నేవిగేషన్ మోడ్‌కి వెళ్లండి ➔",
+        chooseModeTitle: "నేవిగేషన్ మోడ్‌ని ఎంచుకోండి", manualTitle: "మాన్యువల్ / టచ్ మోడ్", manualDesc: "విజువల్ బటన్లు, టచ్ & కంట్రోల్స్ ఉపయోగించి నావిగేట్ చేయండి",
+        voiceModeTitle: "వాయిస్ అసిస్టెంట్ మోడ్", voiceDesc: "మాట్లాడే స్థానిక వాయిస్ ఆదేశాల ద్వారా హ్యాండ్స్-ఫ్రీ యాప్ గైడెన్స్",
+        choosePortalTitle: "పోర్టల్‌ని ఎంచుకోండి", buyerPortalTitle: "కొనుగోలుదారు పోర్టల్", buyerPortalDesc: "సైన్ ఇన్ చేయండి, షాపింగ్ & డైరెక్ట్ పే",
+        sellerPortalTitle: "ఆర్టిసన్ / విక్రేత పోర్టల్", sellerPortalDesc: "AI స్టూడియో, QR కోడ్ & ధర",
+        buyerSignInTitle: "కొనుగోలుదారు సైన్ ఇన్", buyerSignInDesc: "హస్తకళ ఈ-కామర్స్ స్టోర్‌ని యాక్సెస్ చేయండి", buyerSignInBtn: "షాపింగ్ చేయడానికి సైన్ ఇన్ చేయండి ➔", buyerGuest: "అతిథిగా కొనసాగించండి",
+        cartTitle: "🛒 షాపింగ్ కార్ట్ & చెక్‌అవుట్", cartEmpty: "మీ కార్ట్ ఖాళీగా ఉంది.", totalText: "మొత్తం:", selectPayLabel: "చెల్లింపు ఎంపికను ఎంచుకోండి:",
+        payUpi: "యూపీఐ / గూగుల్ పే / ఫోన్‌పే / పేటీఎం", payCard: "క్రెడిట్ / డెబిట్ కార్డ్ / నెట్ బ్యాంకింగ్", payCod: "క్యాష్ ఆన్ డెలివరీ", completePay: "చెల్లించడానికి కొనసాగించండి ➔",
+        modalDescLabel: "అనువదించబడిన ఇంగ్లీష్ వివరణ:", addToCart: "కార్ట్‌కి జోడించండి 🛒", cartNav: "కార్ట్", portalsNav: "← పోర్టల్స్", signOut: "సైన్ అవుట్",
+        aiHeader: "✨ AI ఫోటో స్టూడియో", aiSub: "ఏదైనా ఫోటోను అప్‌లోడ్ చేయండి — స్టూడియో అమ్మకం కోసం స్వయంచాలకంగా మెరుగుపరుస్తుంది.",
+        uploadStrong: "ఉత్పత్తి ఫోటోను తీయండి లేదా అప్‌లోడ్ చేయండి", uploadSpan: "ఫోటోగ్రఫీ నైపుణ్యాలు అవసరం లేదు • AI లైటింగ్ & బ్యాక్‌గ్రౌండ్‌ని మెరుగుపరుస్తుంది",
+        oneTap: "🤖 వన్-ట్యాప్ AI మెరుగుదల", prodBg: "🎨 ఉత్పత్తి నేపథ్యం", bgOrig: "అసలు", bgWhite: "తెలుపు", bgCream: "క్రీమ్",
+        nextVoice: "తదుపరి పేజీ: స్థానిక వాయిస్ వివరణ ➔", voiceTitle: "🎙️ 2. స్థానిక వాయిస్ వివరణ",
+        recordBtn: "మీ స్థానిక భాషలో హస్తకళను వివరించండి", spokenTranscript: "మాట్లాడిన ప్రసంగ ట్రాన్‌స్క్రిప్ట్ (లైవ్ బహుభాషా రికార్డింగ్):",
+        voicePlaceholder: "మీ ఎంచుకున్న భాషలో రికార్డ్ చేయడానికి పైన నొక్కండి...",
+        translatedDesc: "స్వయంచాలకంగా అనువదించబడిన ఇంగ్లీష్ వివరణ:", nextBank: "తదుపరి పేజీ: బ్యాంక్ వివరాలు & QR ➔",
+        bankTitle: "🏦 3. బ్యాంక్ వివరాలు & చెల్లింపు QR", qrSub: "📱 మీ స్కాన్ చేయదగిన చెల్లింపు QR కోడ్", nextPricing: "తదుపరి పేజీ: ధర కాలిక్యులేటర్ ➔",
+        calcTitle: "🧮 4. మార్కెట్ ధర కాలిక్యులేటర్", prodTitleLabel: "ఉత్పత్తి శీర్షిక:", rawText: "ముడి పదార్థం (₹)",
+        hoursText: "తయారీ (గంటలు)", rateText: "రేటు (₹/గంట)", benchText: "మార్కెట్ సగటు (₹)", floor: "ఫ్లోర్", target: "టార్గెట్ ఫెయిర్",
+        premium: "ప్రీమియం", publish: "🚀 పబ్లిక్ స్టోర్‌ఫ్రంట్‌కి ప్రచురించండి", catalogTitle: "📊 5. మీ ప్రచురించిన కేటలాగ్",
+        navStudio: "స్టూడియో", navVoice: "వాయిస్", navBank: "బ్యాంక్/QR", navPricing: "ధరలు", navCatalog: "కేటలాగ్",
+        storeTitle: "🛍️ హస్తకళ హస్తకళల స్టోర్‌ఫ్రంట్", storeDesc: "భారతదేశం అంతటా ఉన్న గ్రామీణ చేతివృత్తులవారికి నేరుగా మద్దతు ఇస్తోంది."
+      }
+    };
+
+    function translateUI() {
+      const dict = translations[selectedLang] || translations['en-IN'];
+      const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+
+      setTxt('lblWelcomeTitle', dict.welcomeTitle); setTxt('lblWelcomeSubtitle', dict.welcomeSub);
+      setTxt('lblWelcomeTagMain', dict.tagMain); setTxt('lblWelcomeTagSub', dict.tagSub);
+      setTxt('btnGetStarted', dict.getStarted); setTxt('lblSelectLangTitle', dict.selectLangTitle);
+      setTxt('btnConfirmLang', dict.confirmLang); setTxt('lblChooseModeTitle', dict.chooseModeTitle);
+      setTxt('lblManualModeTitle', dict.manualTitle); setTxt('lblManualModeDesc', dict.manualDesc);
+      setTxt('lblVoiceModeTitle', dict.voiceModeTitle); setTxt('lblVoiceModeDesc', dict.voiceDesc);
+      setTxt('lblChoosePortalTitle', dict.choosePortalTitle); setTxt('lblBuyerPortalTitle', dict.buyerPortalTitle);
+      setTxt('lblBuyerPortalDesc', dict.buyerPortalDesc); setTxt('lblSellerPortalTitle', dict.sellerPortalTitle);
+      setTxt('lblSellerPortalDesc', dict.sellerPortalDesc); setTxt('lblBuyerSignInTitle', dict.buyerSignInTitle);
+      setTxt('lblBuyerSignInDesc', dict.buyerSignInDesc); setTxt('btnBuyerSignIn', dict.buyerSignInBtn);
+      setTxt('btnBuyerGuest', dict.buyerGuest); setTxt('lblCartTitle', dict.cartTitle);
+      setTxt('lblCartEmpty', dict.cartEmpty); setTxt('lblTotalText', dict.totalText);
+      setTxt('lblSelectPaymentLabel', dict.selectPayLabel); setTxt('lblPayUpi', dict.payUpi);
+      setTxt('lblPayCard', dict.payCard); setTxt('lblPayCod', dict.payCod);
+      setTxt('btnCompletePayment', dict.completePay); setTxt('lblModalDescLabel', dict.modalDescLabel);
+      setTxt('btnAddToCart', dict.addToCart); setTxt('lblCartNav', dict.cartNav);
+      setTxt('lblHeaderPortals', dict.portalsNav); setTxt('btnSignOut', dict.signOut);
+      setTxt('lblAiStudioHeader', dict.aiHeader); setTxt('lblAiStudioSub', dict.aiSub);
+      setTxt('lblUploadStrong', dict.uploadStrong); setTxt('lblUploadSpan', dict.uploadSpan);
+      setTxt('lblOneTapEnhance', dict.oneTap); setTxt('lblProdBg', dict.prodBg);
+      setTxt('lblBgOrig', dict.bgOrig); setTxt('lblBgWhite', dict.bgWhite); setTxt('lblBgCream', dict.bgCream);
+      setTxt('btnNextToVoice', dict.nextVoice); setTxt('lblVoiceTitle', dict.voiceTitle);
+      setTxt('recordBtn', dict.recordBtn); setTxt('lblSpokenTranscriptText', dict.spokenTranscript);
+      setTxt('lblVoicePlaceholder', dict.voicePlaceholder); setTxt('lblTranslatedDescText', dict.translatedDesc);
+      setTxt('btnNextToBank', dict.nextBank); setTxt('lblBankTitle', dict.bankTitle);
+      setTxt('lblQrCodeSub', dict.qrSub); setTxt('btnNextToPricing', dict.nextPricing);
+      setTxt('lblCalcTitle', dict.calcTitle); setTxt('lblProductTitleText', dict.prodTitleLabel);
+      setTxt('lblCostRawText', dict.rawText); setTxt('lblCostHoursText', dict.hoursText);
+      setTxt('lblCostRateText', dict.rateText); setTxt('lblCostBenchmarkText', dict.benchText);
+      setTxt('lblFloorText', dict.floor); setTxt('lblTargetText', dict.target);
+      setTxt('lblPremiumText', dict.premium); setTxt('btnPublishStore', dict.publish);
+      setTxt('lblCatalogTitle', dict.catalogTitle); setTxt('navTxtStudio', dict.navStudio);
+      setTxt('navTxtVoice', dict.navVoice); setTxt('navTxtBank', dict.navBank);
+      setTxt('navTxtPricing', dict.navPricing); setTxt('navTxtCatalog', dict.navCatalog);
+      setTxt('lblStorefrontTitle', dict.storeTitle); setTxt('lblStorefrontDesc', dict.storeDesc);
+    }
+
     function showScreen(screenId) {
       document.querySelectorAll('.screen-overlay').forEach(s => s.classList.add('hidden'));
       document.getElementById(screenId).classList.remove('hidden');
@@ -511,8 +634,16 @@
       element.classList.add('active');
     }
 
-    function confirmLanguageSelection() { showScreen('screenModeSelect'); }
-    function selectAppMode(mode) { appMode = mode; showScreen('screenPortalSelect'); }
+    function confirmLanguageSelection() { 
+      translateUI(); // Instantly apply language translation across the entire app
+      showScreen('screenModeSelect'); 
+    }
+
+    function selectAppMode(mode) { 
+      appMode = mode; 
+      showScreen('screenPortalSelect'); 
+    }
+
     function openBuyerLogin() { showScreen('screenBuyerLogin'); }
     function handleBuyerLogin(e) { e.preventDefault(); openRole('buyer'); }
 
@@ -525,7 +656,14 @@
         document.getElementById('sellerPortal').classList.add('active');
         document.getElementById('buyerPortal').classList.remove('active');
         document.getElementById('btnCartHeader').style.display = 'none';
-        if (voiceBtn) voiceBtn.style.setProperty('display', 'flex', 'important');
+        
+        // HIDE VOICE ASSISTANT BUTTON ENTIRELY IF MANUAL MODE WAS CHOSEN
+        if (appMode === 'manual') {
+          if (voiceBtn) voiceBtn.style.setProperty('display', 'none', 'important');
+        } else {
+          if (voiceBtn) voiceBtn.style.setProperty('display', 'flex', 'important');
+        }
+
         switchSellerPage('seller-studio');
         renderCatalog();
         setTimeout(() => generateSellerQRCode(), 200);
@@ -682,8 +820,9 @@
       }
     }
 
-    // VOICE ASSISTANT MODAL & NAVIGATION COMMANDS (FIXED STICKING ISSUES)
+    // VOICE ASSISTANT MODAL & NAVIGATION COMMANDS (GUARDED BY APPMODE CHECK)
     function toggleVoiceAssistantModal() {
+      if (appMode === 'manual') return; // Completely disable voice assistant popup if Manual Mode is active
       const modal = document.getElementById('voiceAssistantModal');
       if (!modal) return;
       if (modal.style.display === 'flex') {
@@ -721,14 +860,13 @@
         document.getElementById('assistantTranscript').innerText = text;
         const lower = text.toLowerCase();
         
-        // Comprehensive command mapping to prevent modal locking/freezing
         if (lower.includes('studio') || lower.includes('photo') || lower.includes('फोटो') || lower.includes('ఫోటో')) {
           toggleVoiceAssistantModal();
           switchSellerPage('seller-studio');
         } else if (lower.includes('voice') || lower.includes('description') || lower.includes('विवरण') || lower.includes('వివరణ')) {
           toggleVoiceAssistantModal();
           switchSellerPage('seller-voice');
-        } else if (lower.includes('bank') || lower.includesन्.includes('qr') || lower.includes('bank details') || lower.includes('बैंक') || lower.includes('ব্যাংক') || lower.includes('ব্যাঙ্ক') || lower.includes('బ్యాంక్')) {
+        } else if (lower.includes('bank') || lower.includes('qr') || lower.includes('bank details') || lower.includes('बैंक') || lower.includes('ব্যাংক') || lower.includes('ব্যাঙ্ক') || lower.includes('బ్యాంక్')) {
           toggleVoiceAssistantModal();
           switchSellerPage('seller-bank');
         } else if (lower.includes('price') || lower.includes('cost') || lower.includes('मूल्य') || lower.includes('ధర')) {
@@ -747,7 +885,6 @@
       };
 
       assistantRecognition.onend = function() {
-        // Safe auto-restart if modal remains open
         const modal = document.getElementById('voiceAssistantModal');
         if (modal && modal.style.display === 'flex') {
           try { assistantRecognition.start(); } catch(e) {}
