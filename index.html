@@ -171,7 +171,7 @@
     .bg-cream { background: #f3ead7; color: #3c2c20; text-shadow: none; }
     .bg-black { background: #111; }
     .bg-brown { background: #5c3a21; }
-    .bg-gold { background: #634819; }
+    .bg-gold { background: #8c641e; }
     .ai-actions { display: flex; gap: 8px; margin-top: 14px; }
     .ai-main-btn { flex: 1; border: 0; border-radius: 10px; padding: 10px; cursor: pointer; font-weight: 700; font-size: 0.75rem; }
     .ai-enhance-btn { background: linear-gradient(135deg,#dcae55,#f1d27e); color: #24170d; }
@@ -207,9 +207,9 @@
     .nav-item .nav-icon { font-size: 1.6rem !important; line-height: 1 !important; display: block !important; }
     .nav-item.active { color: #234E35 !important; font-weight: 800 !important; }
 
-    /* FLOATING VOICE ASSISTANT ICON & POPUP */
+    /* SELLER ONLY VOICE ASSISTANT ICON & POPUP */
     #draggableVoiceBtn {
-      position: absolute !important; right: 20px !important; bottom: 80px !important; width: 58px !important; height: 58px !important; border-radius: 50% !important; border: 2px solid #FFFFFF !important; background: #234E35 !important; color: #FFFFFF !important; font-size: 26px !important; cursor: grab !important; z-index: 9999 !important; box-shadow: 0 8px 20px rgba(35, 78, 53, 0.35) !important; display: flex !important; align-items: center !important; justify-content: center !important; user-select: none !important; touch-action: none !important;
+      position: absolute !important; right: 20px !important; bottom: 80px !important; width: 58px !important; height: 58px !important; border-radius: 50% !important; border: 2px solid #FFFFFF !important; background: #234E35 !important; color: #FFFFFF !important; font-size: 26px !important; cursor: grab !important; z-index: 9999 !important; box-shadow: 0 8px 20px rgba(35, 78, 53, 0.35) !important; display: none !important; align-items: center !important; justify-content: center !important; user-select: none !important; touch-action: none !important;
     }
     #voiceAssistantModal {
       position: absolute; bottom: 150px; right: 20px; width: 280px; background: #FFFFFF; border: 1px solid #EBE3D8; border-radius: 16px; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 10000; display: none; flex-direction: column; gap: 10px;
@@ -222,6 +222,12 @@
     .modal-content-card {
       background: #FFF; width: 100%; max-width: 340px; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px; border: 1px solid #EBE3D8;
     }
+
+    /* PAYMENT OPTION CHIPS */
+    .payment-option-btn {
+      display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px; background: #FAF6EE; border: 1.5px solid #EBE3D8; border-radius: 12px; font-weight: 700; font-size: 0.85rem; color: #201D1A; cursor: pointer; text-align: left; margin-bottom: 8px;
+    }
+    .payment-option-btn.active { border-color: #234E35; background: #E8DEC8; color: #234E35; }
   </style>
 </head>
 <body>
@@ -313,21 +319,34 @@
       <button class="action-btn secondary-btn" onclick="openRole('buyer')" style="margin-top:12px;" id="btnBuyerGuest">Continue as Guest</button>
     </div>
 
-    <!-- OVERLAY 4: BUYER CART & CHECKOUT MODAL -->
+    <!-- OVERLAY 4: BUYER CART & CHECKOUT WITH PAYMENT OPTIONS -->
     <div id="screenCartModal" class="screen-overlay hidden">
       <div class="overlay-back-bar">
         <button class="back-arrow-btn" onclick="document.getElementById('screenCartModal').classList.add('hidden')">← Back to Store</button>
       </div>
       <div class="section-card">
         <div class="section-title" id="lblCartTitle">🛒 Shopping Cart & Direct Checkout</div>
-        <div id="cartItemsList" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+        <div id="cartItemsList" style="display:flex; flex-direction:column; gap:8px; margin-top:10px; max-height:140px; overflow-y:auto;">
           <p style="font-size:0.85rem; color:#787067;" id="lblCartEmpty">Your cart is empty.</p>
         </div>
-        <div style="margin-top:14px; font-size:0.95rem; font-weight:800; color:#234E35; text-align:right;">
+        <div style="margin-top:10px; font-size:0.95rem; font-weight:800; color:#234E35; text-align:right; border-top:1px solid #EBE3D8; padding-top:8px;">
           <span id="lblTotalText">Total:</span> <span id="cartTotal">₹0</span>
         </div>
+
+        <div style="margin-top:14px;">
+          <label style="font-size:0.75rem; color:#787067; font-weight:800; display:block; margin-bottom:6px;">Select Payment Option:</label>
+          <div class="payment-option-btn active" onclick="selectPaymentMethod('upi', this)">
+            <span>📱</span> <span>UPI / Google Pay / PhonePe / Paytm</span>
+          </div>
+          <div class="payment-option-btn" onclick="selectPaymentMethod('card', this)">
+            <span>💳</span> <span>Credit / Debit Card / Net Banking</span>
+          </div>
+          <div class="payment-option-btn" onclick="selectPaymentMethod('cod', this)">
+            <span>💵</span> <span>Cash on Delivery (Direct Artisan Pay)</span>
+          </div>
+        </div>
       </div>
-      <button class="action-btn" onclick="completePaymentAndOrder()" style="margin-top:14px;" id="btnCompletePayment">Confirm & Complete Payment ➔</button>
+      <button class="action-btn" onclick="completePaymentAndOrder()" style="margin-top:14px;" id="btnCompletePayment">Proceed to Pay ➔</button>
     </div>
 
     <!-- BUYER PRODUCT INSPECTION MODAL -->
@@ -538,10 +557,10 @@
 
     </main>
 
-    <!-- BUILT-IN VOICE ASSISTANT MODAL & FLOATING BUTTON -->
+    <!-- SELLER-ONLY VOICE ASSISTANT MODAL & FLOATING BUTTON -->
     <div id="voiceAssistantModal">
       <div style="display:flex; justify-content:space-between; align-items:center; font-weight:800; color:#234E35; font-size:0.9rem;">
-        <span>🎙️ Voice Assistant Active</span>
+        <span>🎙️ Seller Voice Assistant</span>
         <button onclick="toggleVoiceAssistantModal()" style="background:none; border:none; font-size:1rem; cursor:pointer;">✕</button>
       </div>
       <p id="assistantStatusText" style="font-size:0.78rem; color:#787067;">Listening for instructions...</p>
@@ -562,6 +581,7 @@
     let publishedProducts = [];
     let cart = [];
     let selectedModalProduct = null;
+    let selectedPaymentMethod = 'upi';
 
     const languages = [
       { code: 'hi-IN', name: 'हिंदी' },
@@ -738,7 +758,7 @@
         storefrontTitle: "🛍️ హస్తకళ హ్యాండ్‌క్రాఫ్ట్ స్టోర్‌ఫ్రంట్",
         storefrontDesc: "భారతదేశంలోని గ్రామీణ చేతివృత్తిదారులకు ప్రత్యక్ష మద్దతు.",
         noItemsText: "స్టోర్‌లో ఇంకా హస్తకళలు లేవు. విక్రేతల ద్వారా ప్రచురించబడిన అంశాలు ఇక్కడ కనిపిస్తాయి.",
-        btnSignOut: "సైన్ అవుట్"
+        btnSignOut: "సైನ್ అవుట్"
       }
     };
 
@@ -826,16 +846,6 @@
 
     function selectAppMode(mode) {
       appMode = mode;
-      const voiceBtn = document.getElementById('draggableVoiceBtn');
-      const voiceModal = document.getElementById('voiceAssistantModal');
-      if (voiceBtn) {
-        if (appMode === 'manual') {
-          voiceBtn.style.setProperty('display', 'none', 'important');
-          if (voiceModal) voiceModal.style.display = 'none';
-        } else {
-          voiceBtn.style.setProperty('display', 'flex', 'important');
-        }
-      }
       showScreen('screenPortalSelect');
     }
 
@@ -853,7 +863,7 @@
       }
     }
 
-    // --- SMART MULTILINGUAL VOICE ASSISTANT ROUTING FIX ---
+    // --- SELLER-ONLY VOICE ASSISTANT NAVIGATION ---
     function startAssistantListening() {
       if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
         document.getElementById('assistantTranscript').innerText = 'Speech recognition not supported.';
@@ -870,8 +880,8 @@
       assistantRecognition.interimResults = true;
       assistantRecognition.lang = selectedLang;
       
-      document.getElementById('assistantStatusText').innerText = 'Listening for voice command...';
-      document.getElementById('assistantTranscript').innerHTML = '<em>Listening... (Say "Buy clothes", "Sell", "Upload", "Price", "Catalogue")</em>';
+      document.getElementById('assistantStatusText').innerText = 'Listening for seller command...';
+      document.getElementById('assistantTranscript').innerHTML = '<em>Listening... (Say "Studio", "Description", "Price", or "Catalogue")</em>';
 
       assistantRecognition.onresult = function(event) {
         let text = '';
@@ -882,49 +892,22 @@
         
         const lower = text.toLowerCase();
 
-        // 1. BUYING / SHOPPING COMMANDS
-        if (lower.includes('buy') || lower.includes('shop') || lower.includes('खरीद') || lower.includes('కొనుగోలు')) {
-          document.getElementById('assistantStatusText').innerText = 'Taking you to Buyer Portal...';
-          setTimeout(() => {
-            toggleVoiceAssistantModal();
-            openRole('buyer');
-          }, 800);
+        // Artisan/Seller navigation actions
+        if (lower.includes('studio') || lower.includes('photo') || lower.includes('upload') || lower.includes('फोटो') || lower.includes('ఫోటో')) {
+          document.getElementById('assistantStatusText').innerText = 'Opening AI Studio...';
+          setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-studio'); }, 600);
         }
-        // 2. SELLING / UPLOAD COMMANDS
-        else if (lower.includes('sell') || lower.includes('upload') || lower.includes('work') || lower.includes('बेच') || lower.includes('అమ్మకం') || lower.includes('अपलोड')) {
-          document.getElementById('assistantStatusText').innerText = 'Opening AI Photo Studio...';
-          setTimeout(() => {
-            toggleVoiceAssistantModal();
-            openRole('seller');
-            switchSellerPage('seller-studio');
-          }, 800);
-        }
-        // 3. VOICE DESCRIPTION COMMAND
         else if (lower.includes('description') || lower.includes('voice') || lower.includes('विवरण') || lower.includes('వివరణ')) {
-          document.getElementById('assistantStatusText').innerText = 'Opening Voice Description Page...';
-          setTimeout(() => {
-            toggleVoiceAssistantModal();
-            openRole('seller');
-            switchSellerPage('seller-voice');
-          }, 800);
+          document.getElementById('assistantStatusText').innerText = 'Opening Voice Description...';
+          setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-voice'); }, 600);
         }
-        // 4. PRICE CALCULATOR COMMAND
         else if (lower.includes('price') || lower.includes('cost') || lower.includes('मूल्य') || lower.includes('ధర')) {
           document.getElementById('assistantStatusText').innerText = 'Opening Price Calculator...';
-          setTimeout(() => {
-            toggleVoiceAssistantModal();
-            openRole('seller');
-            switchSellerPage('seller-pricing');
-          }, 800);
+          setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-pricing'); }, 600);
         }
-        // 5. CATALOGUE COMMAND
         else if (lower.includes('catalogue') || lower.includes('catalog') || lower.includes('कैटलॉग') || lower.includes('క్యాటలాగ్')) {
           document.getElementById('assistantStatusText').innerText = 'Opening Catalog...';
-          setTimeout(() => {
-            toggleVoiceAssistantModal();
-            openRole('seller');
-            switchSellerPage('seller-inventory');
-          }, 800);
+          setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-inventory'); }, 600);
         }
       };
 
@@ -952,15 +935,28 @@
     function openRole(role) {
       document.querySelectorAll('.screen-overlay').forEach(o => o.classList.add('hidden'));
       document.getElementById('mainHeader').style.display = 'flex';
+      const voiceBtn = document.getElementById('draggableVoiceBtn');
+      const voiceModal = document.getElementById('voiceAssistantModal');
+
       if (role === 'seller') {
         document.getElementById('sellerPortal').classList.add('active');
         document.getElementById('buyerPortal').classList.remove('active');
         document.getElementById('btnCartHeader').style.display = 'none';
+        
+        // Show voice assistant ONLY for seller portal when in voice mode
+        if (appMode === 'voice' && voiceBtn) {
+          voiceBtn.style.setProperty('display', 'flex', 'important');
+        }
         switchSellerPage('seller-studio');
       } else {
         document.getElementById('buyerPortal').classList.add('active');
         document.getElementById('sellerPortal').classList.remove('active');
         document.getElementById('btnCartHeader').style.display = 'block';
+
+        // Hide voice assistant for buyer portal
+        if (voiceBtn) voiceBtn.style.setProperty('display', 'none', 'important');
+        if (voiceModal) voiceModal.style.display = 'none';
+
         renderBuyerStore();
       }
     }
@@ -969,6 +965,10 @@
       document.getElementById('sellerPortal').classList.remove('active');
       document.getElementById('buyerPortal').classList.remove('active');
       document.getElementById('btnCartHeader').style.display = 'none';
+      const voiceBtn = document.getElementById('draggableVoiceBtn');
+      const voiceModal = document.getElementById('voiceAssistantModal');
+      if (voiceBtn) voiceBtn.style.setProperty('display', 'none', 'important');
+      if (voiceModal) voiceModal.style.display = 'none';
       showScreen('screenWelcome');
     }
 
@@ -983,7 +983,7 @@
       if(pageId === 'seller-inventory') document.getElementById('snav-inventory').classList.add('active');
     }
 
-    // --- ROBUST NATIVE VOICE RECORDER & TRANSLATOR FIX ---
+    // --- ROBUST NATIVE VOICE RECORDER & TRANSLATOR ---
     function toggleRealVoiceRecording() {
       const btn = document.getElementById('recordBtn');
       const output = document.getElementById('transcriptOutput');
@@ -1009,7 +1009,7 @@
           btn.innerText = '🛑 Tap Here When Finished Speaking';
           btn.classList.add('recording');
           output.innerHTML = '<em>Listening... Speak clearly in your selected language.</em>';
-          engOutput.innerHTML = '<em>Translating live to English...</em>';
+          engOutput.innerHTML = '<em>Translating live to English script...</em>';
         };
 
         recognition.onresult = function(event) {
@@ -1193,22 +1193,38 @@
 
     function openCartModal() {
       const list = document.getElementById('cartItemsList');
+      let totalAmount = 0;
       if (cart.length === 0) {
         list.innerHTML = '<p style="font-size:0.85rem; color:#787067;">Your cart is empty.</p>';
       } else {
-        list.innerHTML = cart.map((item) => `
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#FFF; padding:8px 10px; border-radius:10px; font-size:0.8rem; border:1px solid #EBE3D8;">
-            <span>${item.title}</span>
-            <span style="color:#234E35; font-weight:800;">₹${item.price}</span>
-          </div>
-        `).join('');
+        list.innerHTML = cart.map((item) => {
+          totalAmount += item.price;
+          return `
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#FFF; padding:8px 10px; border-radius:10px; font-size:0.8rem; border:1px solid #EBE3D8;">
+              <span>${item.title}</span>
+              <span style="color:#234E35; font-weight:800;">₹${item.price}</span>
+            </div>
+          `;
+        }).join('');
       }
+      document.getElementById('cartTotal').innerText = '₹' + totalAmount.toLocaleString('en-IN');
       document.getElementById('screenCartModal').classList.remove('hidden');
+    }
+
+    function selectPaymentMethod(methodKey, element) {
+      selectedPaymentMethod = methodKey;
+      document.querySelectorAll('.payment-option-btn').forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
     }
 
     function completePaymentAndOrder() {
       if(cart.length === 0) { alert('Your cart is empty!'); return; }
-      alert('Payment Successful! Funds transferred directly to artisan account.');
+      const methodNames = {
+        'upi': 'UPI / Google Pay / PhonePe',
+        'card': 'Credit / Debit Card',
+        'cod': 'Cash on Delivery'
+      };
+      alert(`Payment Successful via ${methodNames[selectedPaymentMethod]}! Funds transferred directly to artisan account.`);
       cart = [];
       document.getElementById('cartCount').innerText = '0';
       document.getElementById('screenCartModal').classList.add('hidden');
