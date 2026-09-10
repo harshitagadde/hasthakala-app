@@ -466,8 +466,11 @@
   <script>
     // Initialize Supabase Client
     const SUPABASE_URL = 'https://zxnhycdwcapnwzirrlmo.supabase.co';
+    // This MUST be the Publishable key (or legacy anon key) belonging to the SAME project.
+    // If Supabase reports "Invalid API key", copy the current Publishable key from
+    // Supabase Dashboard → Settings → API Keys and replace the value below.
     const SUPABASE_ANON_KEY = 'sb_publishable_nIbG6ou6kAh14Eh6fWHakw_30stxSCQ'; 
-    // Supabase connection (keep the existing project/key; corrected project URL).
+    // Supabase connection.
     let supabaseClient = null;
     let supabaseReady = false;
     try {
@@ -511,6 +514,10 @@
 
 
     let selectedLang = 'en-IN';
+    try {
+      const savedLanguage = localStorage.getItem('hasthakalaLanguage');
+      if (savedLanguage) selectedLang = savedLanguage;
+    } catch (e) {}
     let appMode = 'manual';
     let isRecording = false;
     let recognition = null;
@@ -555,7 +562,16 @@
         const notice = document.getElementById('dbStatusNotice');
         if (notice) notice.style.display = 'none';
       } catch (error) {
-        showDatabaseError('Supabase connection/table error: ' + (error.message || error));
+        const msg = String(error?.message || error || '');
+        const lower = msg.toLowerCase();
+        if (lower.includes('invalid api key') || lower.includes('apikey')) {
+          supabaseReady = false;
+          showDatabaseError('Supabase API key rejected. Use the Publishable key from Supabase Dashboard → Settings → API Keys for this project.');
+        } else if (lower.includes('permission') || lower.includes('row-level') || lower.includes('rls')) {
+          showDatabaseError('Supabase connected, but the products table permissions/RLS need to allow this app.');
+        } else {
+          showDatabaseError('Supabase connection/table error: ' + msg);
+        }
       }
     }
 
@@ -1131,12 +1147,25 @@
 
     function startAppFromWelcome() {
       captureEnglishUI();
-      selectedLang = 'en-IN';
+
+      // IMPORTANT: never reset the user's language when opening the language screen.
+      // Restore the last selected language if one exists.
+      try {
+        const saved = localStorage.getItem('hasthakalaLanguage');
+        if (saved && languages.some(l => l.code === saved)) selectedLang = saved;
+      } catch (e) {}
+
+      document.documentElement.lang = selectedLang;
+      document.body.setAttribute('data-language', selectedLang);
       translateUI();
       showScreen('screenLanguage');
-      document.getElementById('languageGrid').innerHTML = languages.map(l =>
-        `<div class="lang-chip ${l.code === selectedLang ? 'active' : ''}" onclick="selectLanguage('${l.code}', this)">${l.name}</div>`
-      ).join('');
+
+      const grid = document.getElementById('languageGrid');
+      if (grid) {
+        grid.innerHTML = languages.map(l =>
+          `<div class="lang-chip ${l.code === selectedLang ? 'active' : ''}" onclick="selectLanguage('${l.code}', this)">${l.name}</div>`
+        ).join('');
+      }
     }
 
     function selectLanguage(code, element) {
@@ -1159,12 +1188,16 @@
     }
 
     function confirmLanguageSelection() {
+      // Apply one final synchronous pass before leaving the language screen.
       translateUI();
+      try { localStorage.setItem('hasthakalaLanguage', selectedLang); } catch (e) {}
       showScreen('screenModeSelect');
     }
 
     function selectAppMode(mode) { 
-      appMode = mode; 
+      appMode = mode;
+      // Keep the selected language on every screen transition.
+      translateUI();
       showScreen('screenPortalSelect'); 
       if (mode === 'voice') {
         setTimeout(() => {
@@ -1195,6 +1228,8 @@
     function openBuyerGuest() { isBuyerLoggedIn = false; openRole('buyer'); }
 
     function openRole(role) {
+      // Do not allow portal navigation to fall back to English.
+      translateUI();
       document.querySelectorAll('.screen-overlay').forEach(o => o.classList.add('hidden'));
       document.getElementById('mainHeader').style.display = 'flex';
       const voiceBtn = document.getElementById('draggableVoiceBtn');
@@ -1275,7 +1310,7 @@
         recognition = new SpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = true;
-        recognition.lang = selectedLang;
+        recognition.lang = voiceLanguageCode(selectedLang);
         errorNotice.style.display = 'none';
 
         recognition.onstart = function() {
