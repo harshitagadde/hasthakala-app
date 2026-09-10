@@ -459,14 +459,56 @@
       <p id="assistantStatusText" style="font-size:0.78rem; color:var(--text-muted);">Listening for instructions...</p>
       <div id="assistantTranscript" style="background:#FAF7F2; padding:8px; border-radius:8px; font-size:0.8rem; color:var(--text-dark); min-height:30px;">...</div>
     </div>
-    <div id="draggableVoiceBtn" onclick="toggleVoiceAssistantModal()" title="Tap for Voice Assistant">🎙️</div>
+<div id="dbStatusNotice" style="display:none; position:absolute; left:12px; right:12px; bottom:72px; z-index:1000; background:#fff3cd; color:#664d03; border:1px solid #ffecb5; border-radius:10px; padding:8px; font-size:0.72rem; text-align:center;"></div>
+        <div id="draggableVoiceBtn" onclick="toggleVoiceAssistantModal()" title="Tap for Voice Assistant">🎙️</div>
   </div>
 
   <script>
     // Initialize Supabase Client
-    const SUPABASE_URL = 'https://zxnhycdwcapnwzirrlmo.supabaseClient.co';
+    const SUPABASE_URL = 'https://zxnhycdwcapnwzirrlmo.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_nIbG6ou6kAh14Eh6fWHakw_30stxSCQ'; 
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Supabase connection (keep the existing project/key; corrected project URL).
+    let supabaseClient = null;
+    let supabaseReady = false;
+    try {
+      if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        supabaseReady = true;
+      }
+    } catch (e) {
+      console.error('Supabase initialization failed:', e);
+    }
+
+    function showDatabaseError(message) {
+      console.error(message);
+      const notice = document.getElementById('dbStatusNotice');
+      if (notice) { notice.textContent = message; notice.style.display = 'block'; }
+    }
+
+    function voiceLanguageCode(code) {
+      const map = {
+        'en-IN':'en-IN','hi-IN':'hi-IN','bn-IN':'bn-IN','te-IN':'te-IN','ta-IN':'ta-IN',
+        'mr-IN':'mr-IN','gu-IN':'gu-IN','kn-IN':'kn-IN','ml-IN':'ml-IN','pa-IN':'pa-IN',
+        'or-IN':'or-IN','as-IN':'as-IN'
+      };
+      return map[code] || 'en-IN';
+    }
+
+    function normalizeVoiceText(text) {
+      return (text || '').toLowerCase().normalize('NFC').replace(/[.,!?;:]/g,' ').replace(/\s+/g,' ').trim();
+    }
+
+    function speakAssistant(text) {
+      if (!('speechSynthesis' in window) || !text) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = voiceLanguageCode(selectedLang);
+        utterance.rate = 0.9;
+        window.speechSynthesis.speak(utterance);
+      } catch (e) { console.warn('Speech synthesis unavailable:', e); }
+    }
+
 
     let selectedLang = 'en-IN';
     let appMode = 'manual';
@@ -497,18 +539,23 @@
     }
 
     async function loadProductsFromDB() {
-      const { data, error } = await supabaseClient.from('products').select('*').order('id', { ascending: false });
-      if (!error && data) {
-        publishedProducts = data.map(p => ({
-          id: p.id,
-          title: p.title,
-          price: p.price,
-          imageSrc: p.image_url,
-          description: p.description,
-          artisan: p.artisan_name || 'Lakshmi Devi'
+      if (!supabaseReady || !supabaseClient) {
+        showDatabaseError('Supabase is not available. Please check the hosted connection.');
+        return;
+      }
+      try {
+        const { data, error } = await supabaseClient.from('products').select('*').order('id', { ascending: false });
+        if (error) throw error;
+        publishedProducts = (data || []).map(p => ({
+          id: p.id, title: p.title, price: p.price, imageSrc: p.image_url,
+          description: p.description, artisan: p.artisan_name || 'Lakshmi Devi'
         }));
         if (typeof renderCatalog === 'function') renderCatalog();
         if (typeof renderBuyerStore === 'function') renderBuyerStore();
+        const notice = document.getElementById('dbStatusNotice');
+        if (notice) notice.style.display = 'none';
+      } catch (error) {
+        showDatabaseError('Supabase connection/table error: ' + (error.message || error));
       }
     }
 
@@ -517,6 +564,10 @@
     });
 
     async function publishProduct() {
+      if (!supabaseReady || !supabaseClient) {
+        alert('Supabase is not connected. Please open the hosted app and check the database connection.');
+        return;
+      }
       const title = document.getElementById('draftTitleInput').value || 'Handcrafted Heritage Craft';
       const price = parseInt(document.getElementById('priceTarget').innerText.replace(/[^0-9]/g, '')) || 1520;
       const imageSrc = window.HasthakalaAIPhotoStudio ? window.HasthakalaAIPhotoStudio.getImageDataURL() : null;
@@ -1099,8 +1150,9 @@
       translationRequestToken++;
       translateUI();
 
-      if (recognition) recognition.lang = selectedLang;
-      if (assistantRecognition) assistantRecognition.lang = selectedLang;
+      if (recognition) recognition.lang = voiceLanguageCode(selectedLang);
+      if (assistantRecognition) { try { assistantRecognition.abort(); } catch(e){} assistantRecognition = null; }
+      if (appMode === 'voice' && document.getElementById('voiceAssistantModal')?.style.display === 'flex') { setTimeout(() => startAssistantListening(), 250); }
 
       /* Keep the selected language after page interactions. */
       try { localStorage.setItem('hasthakalaLanguage', selectedLang); } catch(e) {}
@@ -1114,6 +1166,28 @@
     function selectAppMode(mode) { 
       appMode = mode; 
       showScreen('screenPortalSelect'); 
+      if (mode === 'voice') {
+        setTimeout(() => {
+          const supported = ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+          if (!supported) {
+            alert('Voice Assistant requires Chrome/Edge speech recognition. Please allow microphone access.');
+            return;
+          }
+          speakAssistant(getVoiceWelcomeText());
+        }, 250);
+      }
+    }
+
+    function getVoiceWelcomeText() {
+      const messages = {
+        'en-IN':'Voice assistant is ready. Say Studio, Voice, Bank, Pricing, Catalog, or Cart.',
+        'hi-IN':'वॉइस असिस्टेंट तैयार है। स्टूडियो, वॉइस, बैंक, प्राइसिंग, कैटलॉग या कार्ट बोलें।',
+        'te-IN':'వాయిస్ అసిస్టెంట్ సిద్ధంగా ఉంది. స్టూడియో, వాయిస్, బ్యాంక్, ధర, కేటలాగ్ లేదా కార్ట్ అని చెప్పండి.',
+        'ta-IN':'குரல் உதவியாளர் தயாராக உள்ளது. ஸ்டுடியோ, குரல், வங்கி, விலை, பட்டியல் அல்லது கார்ட் என்று சொல்லுங்கள்.',
+        'kn-IN':'ವಾಯ್ಸ್ ಅಸಿಸ್ಟೆಂಟ್ ಸಿದ್ಧವಾಗಿದೆ. ಸ್ಟುಡಿಯೋ, ವಾಯ್ಸ್, ಬ್ಯಾಂಕ್, ಬೆಲೆ, ಕ್ಯಾಟಲಾಗ್ ಅಥವಾ ಕಾರ್ಟ್ ಎಂದು ಹೇಳಿ.',
+        'mr-IN':'व्हॉइस असिस्टंट तयार आहे. स्टुडिओ, व्हॉइस, बँक, किंमत, कॅटलॉग किंवा कार्ट म्हणा.'
+      };
+      return messages[selectedLang] || messages['en-IN'];
     }
 
     function openBuyerLogin() { showScreen('screenBuyerLogin'); }
@@ -1138,6 +1212,9 @@
 
         switchSellerPage('seller-studio');
         renderCatalog();
+        if (appMode === 'voice') {
+          setTimeout(() => startAssistantListening(), 450);
+        }
         setTimeout(() => generateSellerQRCode(), 200);
       } else {
         document.getElementById('buyerPortal').classList.add('active');
@@ -1288,71 +1365,129 @@
     }
 
     function toggleVoiceAssistantModal() {
-      if (appMode === 'manual') return; 
       const modal = document.getElementById('voiceAssistantModal');
       if (!modal) return;
       if (modal.style.display === 'flex') {
         modal.style.display = 'none';
-        if (assistantRecognition) {
-          try { assistantRecognition.abort(); } catch(e){}
-        }
-      } else {
-        modal.style.display = 'flex';
-        startAssistantListening();
+        if (assistantRecognition) { try { assistantRecognition.onend = null; assistantRecognition.abort(); } catch(e){} }
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        return;
       }
+      if (appMode !== 'voice') {
+        appMode = 'voice';
+      }
+      modal.style.display = 'flex';
+      startAssistantListening();
+    }
+
+    function findVoiceCommand(text) {
+      const s = normalizeVoiceText(text);
+      const commandWords = {
+        studio:['studio','photo','photos','स्टूडियो','फोटो','స్టూడియో','ఫోటో','ஸ்டுடியோ','புகைப்பட','ಸ್ಟುಡಿಯೋ','ಫೋಟೋ','स्टुडिओ','फोटो'],
+        voice:['voice','description','वॉइस','आवाज़','विवरण','వాయిస్','వివరణ','குரல்','விளக்கம்','ವಾಯ್ಸ್','ವಿವರಣೆ','व्हॉइस','वर्णन'],
+        bank:['bank','qr','upi','payment','pay','बैंक','क्यूआर','यूपीआई','भुगतान','బ్యాంక్','క్యూఆర్','చెల్లింపు','வங்கி','க்யூஆர்','பணம்','ಬ್ಯಾಂಕ್','ಕ್ಯೂಆರ್','ಪಾವತಿ','बँक','पेमेंट'],
+        pricing:['price','pricing','cost','calculator','दाम','कीमत','प्राइस','कैलकुलेटर','ధర','ధరల','కాలిక్యులేటర్','விலை','கால்குலேட்டர்','ಬೆಲೆ','ಕ್ಯಾಲ್ಕುಲೇಟರ್','किंमत','कॅल्क्युलेटर'],
+        catalog:['catalog','inventory','store','कatalog','कैटलॉग','इन्वेंटरी','स्टोर','కేటలాగ్','ఇన్వెంటరీ','స్టోర్','பட்டியல்','சேமிப்பு','கேட்டலாக்','ಕ್ಯಾಟಲಾಗ್','ದಾಸ್ತಾನು','कॅटलॉग','इन्व्हेंटरी'],
+        cart:['cart','checkout','कार्ट','चेकआउट','కార్ట్','చెకౌట్','கார்ட்','செக்அவுட்','ಕಾರ್ಟ್','ಚೆಕ್‌ಔಟ್','कार्ट','चेकआउट']
+      };
+      for (const [cmd, words] of Object.entries(commandWords)) {
+        if (words.some(w => s.includes(normalizeVoiceText(w)))) return cmd;
+      }
+      return null;
     }
 
     function startAssistantListening() {
-      if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-        document.getElementById('assistantTranscript').innerText = 'Speech recognition not supported.';
+      const status = document.getElementById('assistantStatusText');
+      const transcript = document.getElementById('assistantTranscript');
+      if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+        if (status) status.innerText = 'Voice recognition is not supported in this browser. Use Chrome or Edge.';
+        return;
+      }
+      if (!window.isSecureContext && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+        if (status) status.innerText = 'Microphone access requires HTTPS or localhost.';
         return;
       }
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (assistantRecognition) {
-        try { assistantRecognition.abort(); } catch(e){}
-      }
-
+      if (assistantRecognition) { try { assistantRecognition.onend = null; assistantRecognition.abort(); } catch(e){} }
       assistantRecognition = new SpeechRecognition();
-      assistantRecognition.continuous = false;
+      assistantRecognition.continuous = true;
       assistantRecognition.interimResults = true;
-      assistantRecognition.lang = selectedLang;
-      document.getElementById('assistantStatusText').innerText = 'Listening for voice commands...';
+      assistantRecognition.maxAlternatives = 3;
+      assistantRecognition.lang = voiceLanguageCode(selectedLang);
+      if (status) status.innerText = '🎙️ Listening... Speak a command.';
+
+      assistantRecognition.onstart = function() {
+        if (status) status.innerText = '🎙️ Listening... Speak a command.';
+      };
 
       assistantRecognition.onresult = function(event) {
         let text = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          text += event.results[i][0].transcript;
-        }
-        document.getElementById('assistantTranscript').innerText = text;
-        const lower = text.toLowerCase();
-        
-        if (lower.includes('studio') || lower.includes('photo')) {
-          toggleVoiceAssistantModal(); switchSellerPage('seller-studio');
-        } else if (lower.includes('voice') || lower.includes('description')) {
-          toggleVoiceAssistantModal(); switchSellerPage('seller-voice');
-        } else if (lower.includes('bank') || lower.includes('qr') || lower.includes('upi') || lower.includes('pay')) {
-          toggleVoiceAssistantModal(); switchSellerPage('seller-bank');
-        } else if (lower.includes('price') || lower.includes('cost') || lower.includes('calculator')) {
-          toggleVoiceAssistantModal(); switchSellerPage('seller-pricing');
-        } else if (lower.includes('catalog') || lower.includes('inventory')) {
-          toggleVoiceAssistantModal(); switchSellerPage('seller-inventory');
-        } else if (lower.includes('cart') || lower.includes('checkout')) {
-          toggleVoiceAssistantModal(); openCartModal();
+        for (let i = event.resultIndex; i < event.results.length; i++) text += event.results[i][0].transcript + ' ';
+        text = text.trim();
+        if (transcript) transcript.innerText = text || '...';
+        const command = findVoiceCommand(text);
+        if (!command) return;
+
+        if (command === 'studio') {
+          if (status) status.innerText = 'Opening AI Photo Studio...';
+          speakAssistant(getLocalizedCommandReply('studio'));
+          setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-studio'); }, 500);
+        } else if (command === 'voice') {
+          if (status) status.innerText = 'Opening Voice Description...';
+          speakAssistant(getLocalizedCommandReply('voice'));
+          setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-voice'); }, 500);
+        } else if (command === 'bank') {
+          if (status) status.innerText = 'Opening Bank and QR...';
+          speakAssistant(getLocalizedCommandReply('bank'));
+          setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-bank'); }, 500);
+        } else if (command === 'pricing') {
+          if (status) status.innerText = 'Opening Price Calculator...';
+          speakAssistant(getLocalizedCommandReply('pricing'));
+          setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-pricing'); }, 500);
+        } else if (command === 'catalog') {
+          if (status) status.innerText = 'Opening Catalog...';
+          speakAssistant(getLocalizedCommandReply('catalog'));
+          setTimeout(() => { toggleVoiceAssistantModal(); switchSellerPage('seller-inventory'); }, 500);
+        } else if (command === 'cart') {
+          if (status) status.innerText = 'Opening Cart...';
+          speakAssistant(getLocalizedCommandReply('cart'));
+          setTimeout(() => { toggleVoiceAssistantModal(); openCartModal(); }, 500);
         }
       };
-      
-      assistantRecognition.onerror = function(e) { 
-        document.getElementById('assistantStatusText').innerText = 'Error or timeout. Tap to retry.';
+
+      assistantRecognition.onerror = function(e) {
+        console.warn('Assistant speech error:', e.error);
+        if (!status) return;
+        const msg = {
+          'not-allowed':'Microphone permission was denied. Allow microphone access and tap the voice button again.',
+          'service-not-allowed':'Speech service is blocked. Allow microphone/speech access in Chrome.',
+          'audio-capture':'No microphone was detected.',
+          'network':'Speech service network error. Check your internet connection.',
+          'no-speech':'No speech detected. Please speak clearly.'
+        };
+        status.innerText = msg[e.error] || 'Voice error. Tap the microphone to retry.';
       };
 
       assistantRecognition.onend = function() {
         const modal = document.getElementById('voiceAssistantModal');
         if (modal && modal.style.display === 'flex') {
-          try { assistantRecognition.start(); } catch(e) {}
+          setTimeout(() => { try { assistantRecognition.start(); } catch(e) {} }, 250);
         }
       };
 
-      try { assistantRecognition.start(); } catch(e) {}
+      try { assistantRecognition.start(); }
+      catch(e) { if (status) status.innerText = 'Tap the microphone button to start voice assistance.'; }
+    }
+
+    function getLocalizedCommandReply(command) {
+      const replies = {
+        'en-IN':{studio:'Opening AI Photo Studio.',voice:'Opening Voice Description.',bank:'Opening Bank and QR.',pricing:'Opening Price Calculator.',catalog:'Opening Catalog.',cart:'Opening Cart.'},
+        'hi-IN':{studio:'AI फोटो स्टूडियो खोल रहा हूँ।',voice:'वॉइस विवरण खोल रहा हूँ।',bank:'बैंक और QR खोल रहा हूँ।',pricing:'प्राइस कैलकुलेटर खोल रहा हूँ।',catalog:'कैटलॉग खोल रहा हूँ।',cart:'कार्ट खोल रहा हूँ।'},
+        'te-IN':{studio:'AI ఫోటో స్టూడియోను తెరుస్తున్నాను.',voice:'వాయిస్ వివరణను తెరుస్తున్నాను.',bank:'బ్యాంక్ మరియు QR తెరుస్తున్నాను.',pricing:'ధర కాలిక్యులేటర్‌ను తెరుస్తున్నాను.',catalog:'కేటలాగ్‌ను తెరుస్తున్నాను.',cart:'కార్ట్‌ను తెరుస్తున్నాను.'},
+        'ta-IN':{studio:'AI புகைப்பட ஸ்டுடியோவை திறக்கிறேன்.',voice:'குரல் விளக்கத்தை திறக்கிறேன்.',bank:'வங்கி மற்றும் QR ஐ திறக்கிறேன்.',pricing:'விலை கால்குலேட்டரை திறக்கிறேன்.',catalog:'பட்டியலை திறக்கிறேன்.',cart:'கார்ட்டை திறக்கிறேன்.'},
+        'kn-IN':{studio:'AI ಫೋಟೋ ಸ್ಟುಡಿಯೋ ತೆರೆಯುತ್ತಿದ್ದೇನೆ.',voice:'ವಾಯ್ಸ್ ವಿವರಣೆ ತೆರೆಯುತ್ತಿದ್ದೇನೆ.',bank:'ಬ್ಯಾಂಕ್ ಮತ್ತು QR ತೆರೆಯುತ್ತಿದ್ದೇನೆ.',pricing:'ಬೆಲೆ ಕ್ಯಾಲ್ಕುಲೇಟರ್ ತೆರೆಯುತ್ತಿದ್ದೇನೆ.',catalog:'ಕ್ಯಾಟಲಾಗ್ ತೆರೆಯುತ್ತಿದ್ದೇನೆ.',cart:'ಕಾರ್ಟ್ ತೆರೆಯುತ್ತಿದ್ದೇನೆ.'}
+      };
+      return (replies[selectedLang] || replies['en-IN'])[command];
     }
 
     function calculateFairPricing() {
