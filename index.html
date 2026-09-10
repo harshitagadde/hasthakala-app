@@ -78,7 +78,7 @@
     .overlay-back-bar { display: flex; align-items: center; margin-bottom: 12px; }
     .back-arrow-btn { background: #FFF !important; border: 1px solid var(--border-light) !important; color: var(--accent-green) !important; font-weight: 800; font-size: 0.85rem; padding: 6px 14px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
 
-    .app-header { padding: 14px 18px; background: #FFFFFF !important; border-bottom: 1px solid var(--border-light) !important; display: none; justify-content: space-between; align-items: center; gap: 8px; z-index: 10; }
+    .app-header { padding: 14px 18px; background: #FFFFFF !important; border-bottom: 1px solid var(--border-light) !important; display: none; justify-content: space-between; align-items: center; gap: 8px; z-index: 10; flex-shrink: 0; }
     .brand-section { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
     .app-logo-box { width: 38px; height: 38px; border-radius: 50% !important; border: 1px solid var(--border-light) !important; overflow: hidden !important; display: flex; align-items: center; justify-content: center; background: #FFF; flex-shrink: 0; }
     .app-logo-box img { width: 100%; height: 100%; object-fit: cover; }
@@ -97,7 +97,7 @@
     @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(155, 59, 43, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(155, 59, 43, 0); } 100% { box-shadow: 0 0 0 0 rgba(155, 59, 43, 0); } }
     .secondary-btn { background: #FFF !important; border: 1.5px solid var(--border-light) !important; color: var(--text-dark) !important; }
 
-    .view-container { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: var(--bg-light) !important; }
+    .view-container { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: var(--bg-light) !important; min-height: 0; }
     .portal-view { display: none; flex-direction: column; gap: 16px; flex: 1; }
     .portal-view.active { display: flex !important; }
     .page-section { display: none; flex-direction: column; gap: 16px; flex: 1; }
@@ -165,7 +165,7 @@
     .lang-chip { background: #FFFFFF; border: 1px solid var(--border-light); color: var(--text-dark); padding: 10px; border-radius: 12px; cursor: pointer; text-align: center; font-size: 0.85rem; font-weight: 600; }
     .lang-chip.active { background: var(--accent-green); color: #FFFFFF; font-weight: bold; border-color: var(--accent-green); }
 
-    .bottom-nav { display: flex !important; background: #FFFFFF !important; border-top: 1px solid var(--border-light) !important; padding: 10px 0 8px 0 !important; margin-top: auto !important; width: 100% !important; z-index: 100 !important; }
+    .bottom-nav { display: flex !important; background: #FFFFFF !important; border-top: 1px solid var(--border-light) !important; padding: 10px 0 8px 0 !important; margin-top: auto !important; width: 100% !important; z-index: 100 !important; flex-shrink: 0; }
     .nav-item { flex: 1 !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 3px !important; background: transparent !important; border: none !important; color: var(--text-muted) !important; font-size: 0.75rem !important; font-weight: 700 !important; cursor: pointer !important; }
     .nav-item .nav-icon { font-size: 1.6rem !important; line-height: 1 !important; display: block !important; }
     .nav-item.active { color: var(--accent-green) !important; font-weight: 800 !important; }
@@ -360,8 +360,9 @@
                   <div class="ai-actions">
                     <button class="ai-main-btn ai-enhance-btn" id="aiProcessBtn" type="button">✨ Enhance</button>
                     <button class="ai-main-btn ai-download-btn" id="aiDownloadBtn" type="button">↓ Save</button>
+                  </div>
+                  <div class="ai-status" id="aiStatus"></div>
                 </div>
-                <div class="ai-status" id="aiStatus"></div>
               </div>
             </div>
           </div>
@@ -625,7 +626,7 @@
       'mr-IN': {
         welcomeTitle: "हस्तकला", welcomeSub: "ग्रामीण हात • जागतिक पोहोच",
         tagMain: "ग्रामीण भारतातील अस्सल हस्तकला", tagSub: "कारागीरांना पाठिंबा द्या. वारसा साजरा करा.",
-        getStarted: "सुरू करा ➔", selectLangTitle: "भाषा निवडा", confirmLang: "नव्हिगेशन मोडवर συνεχίστε ➔",
+        getStarted: "सुरू करा ➔", selectLangTitle: "भाषा निवडा", confirmLang: "नव्हिगेशन मोडवर продолжить ➔",
         chooseModeTitle: "नव्हिगेशन मोड निवडा", manualTitle: "मॅन्युअल / टच मोड", manualDesc: "व्हिज्युअल बटणे, टच आणि नियंत्रणे वापरून नॅव्हिगेट करा",
         voiceModeTitle: "व्हॉइस असिस्टंट मोड", voiceDesc: "बोलल्या जाणाऱ्या मूळ व्हॉइस कमांडद्वारे हँड्स-फ्री अॅप मार्गदर्शन",
         choosePortalTitle: "पोर्टल निवडा", buyerPortalTitle: "खरेदीदार पोर्टल", buyerPortalDesc: "साइन इन करा, खरेदी करा आणि थेट पेमेंट करा",
@@ -668,7 +669,7 @@
         voicePlaceholder: "તમારી પસંદગીની ભાષામાં રેકોર્ડ કરવા માટે ઉપર ટેપ કરો...",
         translatedDesc: "સ્વચાલિત-અનુવાદિત અંગ્રેજી વર્ણન:", nextBank: "આગળનું પૃષ્ઠ: બેંક વિગતો અને QR ➔",
         bankTitle: "🏦 ૩. બેંક વિગતો અને ચૂકવણી QR", qrSub: "📱 તમારો સ્કેન કરી શકાય તેવો ચુકવણી QR કોડ", nextPricing: "આગળનું પૃષ્ઠ: પ્રાઇસ કેલ્ક્યુલેટર ➔",
-        calcTitle: "🧮 ૪. બજાર ભાવ કેલ્ક્યુલેટર", prodTitleLabel: "પ્રોડક્ટ શીર્ષક:", rawText: "કાચો માલ (₹)",
+        calcTitle: "🧮 4. બજાર ભાવ કેલ્ક્યુલેટર", prodTitleLabel: "પ્રોડક્ટ શીર્ષક:", rawText: "કાચો માલ (₹)",
         hoursText: "બનાવવામાં (કલાક)", rateText: "દેર (₹/કલાક)", benchText: "બજાર સરેરાશ (₹)", floor: "ફ્લોર", target: "લક્ષ્ય યોગ્ય",
         premium: "પ્રીમિયમ", publish: "🚀 પબ્લિક સ્ટોરફ્રન્ટ પર પ્રકાશિત કરો", catalogTitle: "📊 ૫. તમારી પ્રકાશિત કેટેલોગ",
         navStudio: "સ્ટુડિયો", navVoice: "વોઇસ", navBank: "બેંક/QR", navPricing: "કિંમત", navCatalog: "કેટેલોગ",
@@ -709,7 +710,7 @@
         choosePortalTitle: "പോർട്ടൽ തിരഞ്ഞെടുക്കുക", buyerPortalTitle: "വായർ പോർട്ടൽ", buyerPortalDesc: "സൈൻ ഇൻ ചെയ്യുക, ഷോപ്പിംഗ് & ഡയറക്ട് പേ",
         sellerPortalTitle: "ആർട്ടിസൻ / വിൽപ്പനക്കാരന്റെ പോർട്ടൽ", sellerPortalDesc: "AI സ്റ്റുഡിയോ, QR കോഡ് & വില",
         buyerSignInTitle: "വായർ സൈൻ ഇൻ", buyerSignInDesc: "ഹസ്തകല ഇ-കോമേഴ്സ് സ്റ്റോർ ആക്സസ് ചെയ്യുക", buyerSignInBtn: "ഷോപ്പിംഗിനായി സൈൻ ഇൻ ചെയ്യുക ➔", buyerGuest: "അതിഥിയായി തുടരുക",
-        cartTitle: "🛒 ഷോപ്പിംഗ് കാർട്ടും ചെക്ക്ഔട്ടും", cartEmpty: "നിങ്ങളുടെ കാർട്ട് காலியாகയാണ്.", totalText: "ആകെ:", selectPayLabel: "പേയ്മെന്റ് ഓപ്ഷൻ തിരഞ്ഞെടുക്കുക:",
+        cartTitle: "🛒 ഷോപ്പിംഗ് കാർട്ടും ചെക്ക്ഔട്ടും", cartEmpty: "നിങ്ങളുടെ കാർട്ട് കാലியாகയാണ്.", totalText: "ആകെ:", selectPayLabel: "പേയ്മെന്റ് ഓപ്ഷൻ തിരഞ്ഞെടുക്കുക:",
         payUpi: "UPI / Google Pay / PhonePe / Paytm", payCard: "ക്രെഡിറ്റ് / ഡെബിറ്റ് കാർഡ് / നെറ്റ് ബാങ്കിംഗ്", payCod: "കാഷ് ഓൺ ഡെലിവറി", completePay: "പേയ്മെന്റിലേക്ക് തുടരുക ➔",
         modalDescLabel: "വിവർത്തനം ചെയ്ത ഇംഗ്ലീഷ് വിവരണം:", addToCart: "കാർട്ടിലേക്ക് ചേർക്കുക 🛒", cartNav: "കാർട്ട്", portalsNav: "← പോർട്ടലുകൾ", signOut: "സൈൻ ഔട്ട്",
         aiHeader: "✨ AI ഫോട്ടോ സ്റ്റുഡിയോ", aiSub: "ഏതെങ്കിലും ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക — സ്റ്റുഡിയോ വിൽപ്പനയ്ക്കായി അത് സ്വയമേവ മെച്ചപ്പെടുത്തുന്നു.",
@@ -745,7 +746,7 @@
         recordBtn: "ਆਪਣੀ ਮਾਂ ਬੋਲੀ ਵਿੱਚ ਦਸਤਕਾਰੀ ਦਾ ਵਰਣਨ ਕਰੋ", spokenTranscript: "ਬੋਲੀ ਗਈ ਬੋਲੀ ਦਾ ਪ੍ਰਤੀਲਿਪੀ (ਲਾਈਵ ਬਹੁ-ਭਾਸ਼ਾਈ ਰਿਕਾਰਡ):",
         voicePlaceholder: "ਆਪਣੀ ਚੁਣੀ ਗਈ ਭਾਸ਼ਾ ਵਿੱਚ ਰਿਕਾਰਡ ਕਰਨ ਲਈ ਉੱਪਰ ਟੈਪ ਕਰੋ...",
         translatedDesc: "ਆਟੋ-ਅਨੁਵਾਦਿਤ ਅੰਗਰੇਜ਼ੀ ਵਰਣਨ:", nextBank: "ਅਗਲਾ ਪੰਨਾ: ਬੈਂਕ ਵੇਰਵੇ ਅਤੇ QR ➔",
-        bankTitle: "🏦 3. ਬੈਂਕ ਵੇਰਵੇ ਅਤੇ ਭੁਗਤਾਨ QR", qrSub: "📱 ਤੁਹਾਡਾ ਸਕੈਨਯੋਗ ਭੁਗਤਾਨ QR ਕੋਡ", nextPricing: "ਅਗਲਾ ਪੰਨਾ: ਕੀਮਤ ਕੈਲਕੁਲੇਟਰ ➔",
+        bankTitle: "🏦 3. ਬੈਂਕ ਵੇਰਵੇ ਅਤੇ ਭੁਗਤਾਨ QR", qrSub: "📱 ਤੁਹਾਡਾ ਸਕੈਨਯੋਗ ਭੁਗਤਾਨ QR ਕੋଡ", nextPricing: "ਅਗਲਾ ਪੰਨਾ: ਕੀਮਤ ਕੈਲਕੁਲੇਟਰ ➔",
         calcTitle: "🧮 4. ਬਾਜ਼ਾਰ ਕੀਮਤ ਕੈਲਕੁਲੇਟਰ", prodTitleLabel: "ਉਤਪਾਦ ਸਿਰਲੇਖ:", rawText: "ਕੱਚਾ ਮਾਲ (₹)",
         hoursText: "ਬਣਾਉਣ ਵਿੱਚ (ਘੰਟੇ)", rateText: "ਦਰ (₹/ਘੰਟਾ)", benchText: "ਬਾਜ਼ਾਰ ਔਸਤ (₹)", floor: "ਫਰਸ਼", target: "ਟੀਚਾ ਉਚਿਤ",
         premium: "ਪ੍ਰੀਮੀਅਮ", publish: "🚀 ਪਬਲਿਕ ਸਟੋਰਫ੍ਰੰਟ 'ਤੇ ਪ੍ਰਕਾਸ਼ਿਤ ਕਰੋ", catalogTitle: "📊 5. ਤੁਹਾਡੀ ਪ੍ਰਕਾਸ਼ਿਤ ਕੈਟਾਲਾਗ",
@@ -763,7 +764,7 @@
         buyerSignInTitle: "କ୍ରେତା ସାଇନ୍ ଆଇନ୍", buyerSignInDesc: "ହସ୍ତକଳା ଇ-କମର୍ସ ଷ୍ଟୋର୍ କୁ ପ୍ରବେଶ କରନ୍ତୁ", buyerSignInBtn: "ସପିଂ ପାଇଁ ସାଇନ୍ ଆଇନ୍ କରନ୍ତୁ ➔", buyerGuest: "ଅତିଥି ଭାବରେ ଜାରି ରଖନ୍ତୁ",
         cartTitle: "🛒 ସପିଂ କାର୍ଟ ଏବଂ ଚେକ୍ଆଉଟ୍", cartEmpty: "ଆପଣଙ୍କର କାର୍ଟ ଖାଲି ଅଛି।", totalText: "ମୋଟ:", selectPayLabel: "ପେମେଣ୍ଟ ବିକଳ୍ପ ଚୟନ କରନ୍ତୁ:",
         payUpi: "UPI / Google Pay / PhonePe / Paytm", payCard: "କ୍ରେଡିଟ୍ / ଡେବିଟ୍ କାର୍ଡ / ନେଟ୍ ବ୍ୟାଙ୍କି operation", payCod: "କ୍ୟାଶ୍ ଅନ୍ ଡେଲିଭରି", completePay: "ପେମେଣ୍ଟ କରିବାକୁ ଆଗକୁ ବଢ଼ନ୍ତୁ ➔",
-        modalDescLabel: "ଅନୁବାଦିତ ଇଂରାଜୀ ବର୍ଣ୍ଣନା:", addToCart: "କାର୍ଟରେ ଯୋଡନ୍ତୁ 🛒", cartNav: "କାର୍ଟ", portalsNav: "← ପୋର୍ଟାଲ୍", signOut: "ସାଇନ୍ ଆଉଟ୍",
+        modalDescLabel: "ଅନୁବାଦିତ ଇଂରାଜୀ ବର୍ଣ୍ଣନା:", addToCart: "କାର୍ଟରେ ଯୋଡନ୍ତୁ 🛒", cartNav: " କାର୍ଟ", portalsNav: "← ପୋର୍ଟାଲ୍", signOut: "ସାଇନ୍ ଆଉଟ୍",
         aiHeader: "✨ AI ଫଟୋ ଷ୍ଟୁଡିଓ", aiSub: "ଯେକୌଣସି ଫଟୋ ଅପଲୋଡ୍ କରନ୍ତୁ — ଷ୍ଟୁଡିଓ ବିକ୍ରି ପାଇଁ ଏହାକୁ ସ୍ୱୟଂଚାଳିତ ଭାବରେ ଉନ୍ନତ କରେ।",
         uploadStrong: "ଉତ୍ପାଦର ଫଟୋ ନିଅନ୍ତୁ ବା ଅପଲୋଡ୍ କରନ୍ତୁ", uploadSpan: "ଫଟୋଗ୍ରାଫି କୌଶଳର ଆବଶ୍ୟକତା ନାହିଁ • AI ଲାଇଟିଂ ଏବଂ ପୃଷ୍ଠଭୂମି ଉନ୍ନତ କରେ",
         oneTap: "🤖 ୱାନ୍-ଟ୍ୟାପ୍ AI ବୃଦ୍ଧି", prodBg: "🎨 ଉତ୍ପାଦ ପୃଷ୍ଠଭୂମି", bgOrig: "ମୂଳ", bgWhite: "ଧଳା", bgCream: "କ୍ରିମ୍",
@@ -779,11 +780,11 @@
         storeTitle: "🛍️ ହସ୍ତକଳା ହସ୍ତଶିଳ୍ପ ଷ୍ଟୋର୍ଫ୍ରଣ୍ଟ", storeDesc: "ଭାରତର ଗ୍ରାମୀଣ କାରିଗରମାନଙ୍କୁ ସିଧାସଳଖ ସମର୍ଥନ କରିବା।", asstHeader: "🎙️ ବିକ୍ରେତା ଭଏସ୍ ଆସିଷ୍ଟାଣ୍ଟ"
       },
       'as-IN': {
-        welcomeTitle: "ହস্তকଲା", welcomeSub: "ଗ୍ରାମ୍ୟ ହାତ • ବିଶ୍ୱବ୍ୟାପୀ ପ୍ରସାର",
-        tagMain: "ଗ୍ରାମ୍ୟ ଭାରତର ପ୍ରାମାଣିକ হস্তশিল্প", tagSub: "কাৰিকৰসকলক সমৰ্থন কৰক। ঐতিহ্য উদযাপন কৰক।",
+        welcomeTitle: "ହস্তকଲା", welcomeSub: "গ্ৰাম্য হাত • বিশ্বব্যাপী প্ৰসাৰ",
+        tagMain: "গ্ৰাম্য ভাৰতৰ প্ৰামাণিক হস্তশিল্প", tagSub: "কাৰিকৰসকলক সমৰ্থন কৰক। ঐতিহ্য উদযাপন কৰক।",
         getStarted: "আৰম্ভ কৰক ➔", selectLangTitle: "ভাষা নিৰ্বাচন কৰক", confirmLang: "নভিগেচন ম'ডলৈ আগবাঢ়ক ➔",
         chooseModeTitle: "নভিগেচন ম'ড নিৰ্বাচন কৰক", manualTitle: "মেনুৱেল / স্পৰ্শ ম'ড", manualDesc: "ভিজুৱেল বুটাম, স্পৰ্শ আৰু নিয়ন্ত্ৰণ ব্যৱহাৰ কৰি নভিগেট কৰক",
-        voiceModeTitle: "ভইচ এচিষ্টেণ্ট ম'ড", voiceDesc: "কথিত নেটিভ ভইচ কমাণ্ডৰ জৰিয়তে হেণ্ডছ-ଫ্ৰী এপ নিৰ্দেশনা",
+        voiceModeTitle: "ভইচ এচিষ্টেণ্ট ম'ড", voiceDesc: "কথিত নেটিভ ভইচ কমাণ্ডৰ জৰিয়তে হেণ্ডছ-ফ্ৰী এপ নিৰ্দেশনা",
         choosePortalTitle: "পৰ্টেল নিৰ্বাচন কৰক", buyerPortalTitle: "ক্ৰেতা পৰ্টেল", buyerPortalDesc: "চাইন ইন কৰক, শ্বপিং কৰক আৰু পোনপটীয়া পৰিশোধ কৰক",
         sellerPortalTitle: "কাৰিকৰ / বিক্রেতা পৰ্টেল", sellerPortalDesc: "AI ষ্টুডিও, QR ক'ড আৰু মূল্য নিৰ্ধাৰণ",
         buyerSignInTitle: "ক্ৰেতা ছাইন ইন", buyerSignInDesc: "হস্তকলা ই-কমাৰ্চ ষ্টোৰ এক্সেছ কৰক", buyerSignInBtn: "শ্বপিং কৰিবলৈ ছাইন ইন কৰক ➔", buyerGuest: "অতিথি হিচাপে অব্যাহত ৰাখক",
@@ -798,9 +799,9 @@
         voicePlaceholder: "আপোনাৰ নিৰ্বাচিত ভাষাত ৰেকৰ্ড কৰিবলৈ ওপৰত টেপ কৰক...",
         translatedDesc: "স্বয়ংক্রিয়ভাৱে অনূদিত ইংৰাজী বিৱৰণ:", nextBank: "পৰৱৰ্তী পৃষ্ঠা: বেংক বিৱৰণ আৰু QR ➔",
         bankTitle: "🏦 ৩. বেংক বিৱৰণ আৰু পেমেন্ট QR", qrSub: "📱 আপোনাৰ স্কেন কৰিব পৰা পেমেন্ট QR ক'ড", nextPricing: "পৰৱৰ্তী পৃষ্ঠা: মূল্য কেলকুলেটৰ ➔",
-        calcTitle: "🧮 ৪. বজাৰ মূল্য কেলকুলেটর", prodTitleLabel: "উৎপাদন শিৰোনাম:", rawText: "കঁচামাল (₹)",
+        calcTitle: "🧮 ৪. বজাৰ মূল্য কেলকুলেটর", prodTitleLabel: "উৎপাদন শিৰোনাম:", rawText: "कঁচামাল (₹)",
         hoursText: "প্ৰস্তুত কৰিবলৈ (ঘণ্টা)", rateText: "হাৰ (₹/ঘণ্টা)", benchText: "বজাৰ গড় (₹)", floor: "তল", target: "লক্ষ্য উপযুক্ত",
-        premium: "ప్రిమియం", publish: "🚀 ৰাজহুৱା ষ্ট’ৰফ্ৰণ্টত প্ৰকাশ কৰক", catalogTitle: "📊 ৫. আপোনাৰ প্ৰকাশিত কেটেলগ",
+        premium: "پ్రిమియం", publish: "🚀 ৰাজহুৱା ষ্ট’ৰফ্ৰণ্টত প্ৰকাশ কৰক", catalogTitle: "📊 ৫. আপোনাৰ প্ৰকাশিত কেটেলগ",
         navStudio: "ଷ୍ଟୁଡିଓ", navVoice: "ଭଏସ୍", navBank: "বেংক/QR", navPricing: "মূল্য", navCatalog: "কেটেলগ",
         storeTitle: "🛍️ হস্তকলা হস্তশিল্প ষ্ট’ৰফ্ৰণ্ট", storeDesc: "সমগ্ৰ ভাৰତৰ গ্ৰাম্য কাৰিকৰসকলক পোনপটীয়াকৈ সমৰ্থন কৰা।", asstHeader: "🎙️ বিক্ৰେতা ভইচ এচিষ্টেণ্ট"
       }
@@ -922,12 +923,14 @@
     function switchSellerPage(pageId) {
       document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.bottom-nav .nav-item').forEach(i => i.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
-      if(pageId === 'seller-studio') document.getElementById('snav-studio').classList.add('active');
-      if(pageId === 'seller-voice') document.getElementById('snav-voice').classList.add('active');
-      if(pageId === 'seller-bank') { document.getElementById('snav-bank').classList.add('active'); setTimeout(() => generateSellerQRCode(), 100); }
-      if(pageId === 'seller-pricing') document.getElementById('snav-pricing').classList.add('active');
-      if(pageId === 'seller-inventory') document.getElementById('snav-inventory').classList.add('active');
+      const targetPage = document.getElementById(pageId);
+      if (targetPage) targetPage.classList.add('active');
+      
+      if(pageId === 'seller-studio') document.getElementById('snav-studio')?.classList.add('active');
+      if(pageId === 'seller-voice') document.getElementById('snav-voice')?.classList.add('active');
+      if(pageId === 'seller-bank') { document.getElementById('snav-bank')?.classList.add('active'); setTimeout(() => generateSellerQRCode(), 100); }
+      if(pageId === 'seller-pricing') document.getElementById('snav-pricing')?.classList.add('active');
+      if(pageId === 'seller-inventory') document.getElementById('snav-inventory')?.classList.add('active');
     }
 
     function generateSellerQRCode() {
@@ -940,7 +943,6 @@
       try { new QRCode(container, { text: upiString, width: 110, height: 110, colorDark: "#234E35", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M }); } catch(e) {}
     }
 
-    // ROBUST CONTINUOUS SPEECH RECOGNITION FOR CRAFT DESCRIPTIONS
     function toggleRealVoiceRecording() {
       const btn = document.getElementById('recordBtn');
       const output = document.getElementById('transcriptOutput');
@@ -1062,7 +1064,6 @@
       }
     }
 
-    // UPDATED ROBUST ASSISTANT LISTENING FUNCTION TO PREVENT GETTING STUCK
     function startAssistantListening() {
       if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
         document.getElementById('assistantTranscript').innerText = 'Speech recognition not supported.';
@@ -1074,7 +1075,7 @@
       }
 
       assistantRecognition = new SpeechRecognition();
-      assistantRecognition.continuous = false; // Changed to false to prevent hanging/stuck states
+      assistantRecognition.continuous = false;
       assistantRecognition.interimResults = true;
       assistantRecognition.lang = selectedLang;
       document.getElementById('assistantStatusText').innerText = 'Listening for voice commands...';
@@ -1087,16 +1088,16 @@
         document.getElementById('assistantTranscript').innerText = text;
         const lower = text.toLowerCase();
         
-        // Immediate action triggers with extended multilingual keywords
-        if (lower.includes('studio') || lower.includes('photo') || lower.includes('फोटो') || lower.includes('ఫోటో') || lower.includes('ಸ್ಟುಡಿಯೋ') || lower.includes('സ്റ്റുഡിയോ') || lower.includes('ஸ்டுடியோ') || lower.includes('ಫೋಟೋ')) {
+        // Immediate clean intent matching
+        if (lower.includes('studio') || lower.includes('photo') || lower.includes('फोटो') || lower.includes('ఫోటో') || lower.includes('ಸ್ಟುಡಿಯೋ') || lower.includes('ஸ்டுடியோ')) {
           toggleVoiceAssistantModal(); switchSellerPage('seller-studio');
-        } else if (lower.includes('voice') || lower.includes('description') || lower.includes('विवरण') || lower.includes('వివరణ') || lower.includes('বিবরণ') || lower.includes('விவரம்') || lower.includes('वर्णन') || lower.includes('વર્ણન') || lower.includes('വിവരണം')) {
+        } else if (lower.includes('voice') || lower.includes('description') || lower.includes('विवरण') || lower.includes('వివరణ') || lower.includes('বিবরণ') || lower.includes('விவரம்') || lower.includes('वर्णन') || lower.includes('વર્ણન')) {
           toggleVoiceAssistantModal(); switchSellerPage('seller-voice');
-        } else if (lower.includes('bank') || lower.includes('qr') || lower.includes('बैंक') || lower.includes('బ్యాంక్') || lower.includes('ব্যাঙ্ক') || lower.includes('வங்கி') || lower.includes('ಬ್ಯಾಂಕ್') || lower.includes('ਬੈਂਕ') || lower.includes('ବ୍ୟାଙ୍କ')) {
+        } else if (lower.includes('bank') || lower.includes('qr') || lower.includes('बैंक') || lower.includes('బ్యాంక్') || lower.includes('ব্যাঙ্ক') || lower.includes('வங்கி') || lower.includes('ಬ್ಯಾಂಕ್')) {
           toggleVoiceAssistantModal(); switchSellerPage('seller-bank');
-        } else if (lower.includes('price') || lower.includes('cost') || lower.includes('मूल्य') || lower.includes('ధర') || lower.includes('মূল্য') || lower.includes('விலை') || lower.includes('किंमत') || lower.includes('કિંમત') || lower.includes('ಬೆಲೆ')) {
+        } else if (lower.includes('price') || lower.includes('cost') || lower.includes('मूल्य') || lower.includes('ధర') || lower.includes('মূল্য') || lower.includes('விலை') || lower.includes('किंमत')) {
           toggleVoiceAssistantModal(); switchSellerPage('seller-pricing');
-        } else if (lower.includes('catalog') || lower.includes('catalogue') || lower.includes('कैटलॉग') || lower.includes('පட்டியල') || lower.includes('ಕ್ಯಾಟಲಾಗ್') || lower.includes('केटलॉग') || lower.includes('केटलाग')) {
+        } else if (lower.includes('catalog') || lower.includes('catalogue') || lower.includes('कैटलॉग') || lower.includes('ಕ್ಯಾಟಲಾಗ್')) {
           toggleVoiceAssistantModal(); switchSellerPage('seller-inventory');
         }
       };
@@ -1107,7 +1108,6 @@
 
       assistantRecognition.onend = function() {
         const modal = document.getElementById('voiceAssistantModal');
-        // Automatically restart listening if modal remains open, preventing it from getting stuck
         if (modal && modal.style.display === 'flex') {
           try { assistantRecognition.start(); } catch(e) {}
         }
@@ -1116,7 +1116,6 @@
       try { assistantRecognition.start(); } catch(e) {}
     }
 
-    // CALCULATOR & PUBLISHING
     function calculateFairPricing() {
       const raw = parseFloat(document.getElementById('costRaw').value) || 0;
       const hours = parseFloat(document.getElementById('costHours').value) || 0;
@@ -1146,6 +1145,7 @@
 
     function renderCatalog() {
       const container = document.getElementById('sellerInventoryList');
+      if (!container) return;
       if (publishedProducts.length === 0) { container.innerHTML = 'No products published yet.'; return; }
       container.innerHTML = publishedProducts.map(p => `
         <div style="display:flex; gap:12px; background:#FFF; border:1px solid var(--border-light); padding:10px; border-radius:12px; align-items:center; margin-bottom:8px;">
@@ -1157,6 +1157,7 @@
 
     function renderBuyerStore() {
       const grid = document.getElementById('buyerStoreGrid');
+      if (!grid) return;
       if (publishedProducts.length === 0) { grid.innerHTML = `<p style="grid-column:span 2; font-size:0.85rem; text-align:center; padding: 24px 0;">No items in store yet.</p>`; return; }
       grid.innerHTML = publishedProducts.map(p => `
         <div class="buyer-card" onclick="openBuyerProductModal(${p.id})">
@@ -1250,7 +1251,7 @@
     function addShadow() { const w = canvas.width, h = canvas.height, shadow = ctx.createRadialGradient(w/2, h*0.88, 5, w/2, h*0.88, w*0.3); shadow.addColorStop(0, "rgba(0,0,0,0.3)"); shadow.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "destination-over"; ctx.fillStyle = shadow; ctx.beginPath(); ctx.ellipse(w/2, h*0.9, w*0.28, h*0.06, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
     function makeSquare() { const size = Math.max(canvas.width, canvas.height), temp = document.createElement("canvas"); temp.width = size; temp.height = size; const tctx = temp.getContext("2d"); tctx.fillStyle = settings.background !== "original" ? "#ffffff" : "transparent"; tctx.fillRect(0, 0, size, size); tctx.drawImage(canvas, (size - canvas.width) / 2, (size - canvas.height) / 2); canvas.width = size; canvas.height = size; ctx.drawImage(temp, 0, 0); }
     document.getElementById("aiProcessBtn")?.addEventListener("click", () => processImage("Enhancing..."));
-    document.getElementById("aiDownloadBtn")?.addEventListener("click", () => { if (!originalImage) return; const link = document.createElement("a"); link.download = "hasthakala.png"; link.href = canvas.toDataURL("image/png", 1); link.click(); showStatus("✓ Saved"); });
+    document.getElementById("aiDownloadBtn")?.addEventListener("click", () => { if (-1) return; const link = document.createElement("a"); link.download = "hasthakala.png"; link.href = canvas.toDataURL("image/png", 1); link.click(); showStatus("✓ Saved"); });
     window.HasthakalaAIPhotoStudio = { getImageDataURL: () => originalImage ? canvas.toDataURL("image/jpeg", 0.92) : null };
     function clamp(v) { return Math.max(0, Math.min(255, Math.round(v))); }
     function fitSize(w, h, max) { const ratio = Math.min(1, max / Math.max(w, h)); return { width: Math.round(w * ratio), height: Math.round(h * ratio) }; }
