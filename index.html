@@ -464,53 +464,69 @@
   </div>
 
   <script>
-   // Initialize Supabase Client
-  const SUPABASE_URL = 'https://zxnhycdwcapnwzirrlmo.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_n1bG6ou6kAhi4Eh6fWHakw_30stxSCG'; // Paste your copied publishable key here
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Initialize Supabase Client
+    const SUPABASE_URL = 'https://zxnhycdwcapnwzirrlmo.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_n1bG6ou6kAhi4Eh6fWHakw_30stxSCG';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  let selectedLang = 'en-IN';
-  let appMode = 'manual';
-  let isRecording = false;
-  let recognition = null;
-  let assistantRecognition = null;
-  let accumulatedTranscript = '';
-  let selectedModalProduct = null;
-  let selectedPaymentMethod = 'upi';
-  let isBuyerLoggedIn = true; 
+    let selectedLang = 'en-IN';
+    let appMode = 'manual';
+    let isRecording = false;
+    let recognition = null;
+    let assistantRecognition = null;
+    let accumulatedTranscript = '';
+    let selectedModalProduct = null;
+    let selectedPaymentMethod = 'upi';
+    let isBuyerLoggedIn = true; 
 
-  let publishedProducts = [];
-  let cart = []; // Cart can remain in memory or sync later
+    let publishedProducts = [];
+    let cart = [];
 
-  // Fetch products live from Supabase database on startup
-  async function publishProduct() {
-    const title = document.getElementById('draftTitleInput').value || 'Handcrafted Heritage Craft';
-    const price = parseInt(document.getElementById('priceTarget').innerText.replace(/[^0-9]/g, '')) || 1520;
-    const imageSrc = window.HasthakalaAIPhotoStudio ? window.HasthakalaAIPhotoStudio.getImageDataURL() : null;
-    const englishDesc = document.getElementById('englishTranscript').innerText || 'Handcrafted authentic rural craft creation.';
-    const artisanName = document.getElementById('bankHolderName')?.value || 'Lakshmi Devi';
-
-    if (!imageSrc) { alert('Please upload & enhance a photo in the Studio first.'); switchSellerPage('seller-studio'); return; }
-
-    // Insert new product into Supabase table
-    const { data, error } = await supabase.from('products').insert([
-      { title: title, price: price, description: englishDesc, image_url: imageSrc, artisan_name: artisanName }
-    ]).select();
-
-    if (error) {
-      alert('Error publishing product to database: ' + error.message);
-      return;
+    // Fetch products live from Supabase database on startup
+    async function loadProductsFromDB() {
+      const { data, error } = await supabase.from('products').select('*').order('id', { ascending: false });
+      if (!error && data) {
+        publishedProducts = data.map(p => ({
+          id: p.id,
+          title: p.title,
+          price: p.price,
+          imageSrc: p.image_url,
+          description: p.description,
+          artisan: p.artisan_name || 'Lakshmi Devi'
+        }));
+        if (typeof renderCatalog === 'function') renderCatalog();
+        if (typeof renderBuyerStore === 'function') renderBuyerStore();
+      }
     }
 
-    alert('Product published to Public Storefront successfully via Cloud Database!');
-    await loadProductsFromDB();
-    switchSellerPage('seller-inventory');
-  }
+    // Load products when the app boots up
+    window.addEventListener('DOMContentLoaded', () => {
+      loadProductsFromDB();
+    });
 
-  // Load products when the app boots up
-  window.addEventListener('DOMContentLoaded', () => {
-    loadProductsFromDB();
-  });
+    async function publishProduct() {
+      const title = document.getElementById('draftTitleInput').value || 'Handcrafted Heritage Craft';
+      const price = parseInt(document.getElementById('priceTarget').innerText.replace(/[^0-9]/g, '')) || 1520;
+      const imageSrc = window.HasthakalaAIPhotoStudio ? window.HasthakalaAIPhotoStudio.getImageDataURL() : null;
+      const englishDesc = document.getElementById('englishTranscript').innerText || 'Handcrafted authentic rural craft creation.';
+      const artisanName = document.getElementById('bankHolderName')?.value || 'Lakshmi Devi';
+
+      if (!imageSrc) { alert('Please upload & enhance a photo in the Studio first.'); switchSellerPage('seller-studio'); return; }
+
+      // Insert new product into Supabase table
+      const { data, error } = await supabase.from('products').insert([
+        { title: title, price: price, description: englishDesc, image_url: imageSrc, artisan_name: artisanName }
+      ]).select();
+
+      if (error) {
+        alert('Error publishing product to database: ' + error.message);
+        return;
+      }
+
+      alert('Product published to Public Storefront successfully via Cloud Database!');
+      await loadProductsFromDB();
+      switchSellerPage('seller-inventory');
+    }
 
     const languages = [
       { code: 'en-IN', name: 'English (India)' },
@@ -699,7 +715,7 @@
         aiHeader: "✨ AI ફોટો સ્ટુડિયો", aiSub: "કોઈપણ ફોટો અપલોડ કરો — સ્ટુડિયો વેચાણ માટે આપમેળે તેને સુધારે છે.",
         uploadStrong: "ઉત્પાદનનો ફોટો લો અથવા અપલોડ કરો", uploadSpan: "ફોટોગ્રાફી કૌશલ્યની જરૂર નથી • AI લાઇટિંગ અને બેકગ્રાઉન્ડ સુધારે છે",
         oneTap: "🤖 વન-ટેપ AI એન્હાંસમેન્ટ", prodBg: "🎨 પ્રોડક્ટ બેકગ્રાઉન્ડ", bgOrig: "મૂળ", bgWhite: "સફેદ", bgCream: "ક્રીમ",
-        nextVoice: "આગળનું પૃષ્ઠ: નેટીવ વોઇસ વર્ણન ➔", voiceTitle: "🎙️ ૨. નેટીવ વોઇး વર્ણન",
+        nextVoice: "આગળનું પૃષ્ઠ: નેટીવ વોઇး વર્ણન ➔", voiceTitle: "🎙️ ૨. નેટીવ વોઇး વર્ણન",
         recordBtn: "તમારી માતૃભાષામાં શિલ્પનું વર્ણન કરો", spokenTranscript: "બોલાયેલ વાણી લખાણ (લાઇવ બહુભાષી રેક):",
         voicePlaceholder: "તમારી પસંદગીની ભાષામાં રેકોર્ડ કરવા માટે ઉપર ટેપ કરો...",
         translatedDesc: "સ્વચાલિત-અનુવાદિત અંગ્રેજી વર્ણન:", nextBank: "આગળનું પૃષ્ઠ: બેંક વિગતો અને QR ➔",
@@ -708,7 +724,7 @@
         hoursText: "બનાવવામાં (કલાક)", rateText: "દેર (₹/કલાક)", benchText: "બજાર સરેરાશ (₹)", floor: "ફ્લોર", target: "લક્ષ્ય યોગ્ય",
         premium: "પ્રીમિયમ", publish: "🚀 પબ્લિક સ્ટોરફ્રન્ટ પર પ્રકાશિત કરો", catalogTitle: "📊 ૫. તમારી પ્રકાશિત કેટેલોગ",
         navStudio: "સ્ટુડિયો", navVoice: "વોઇસ", navBank: "બેંક/QR", navPricing: "કિંમત", navCatalog: "કેટેલોગ",
-        storeTitle: "🛍️ હસ્તકલા હસ્તકલા સ્ટોરફ્રન્ટ", storeDesc: "સમગ્ર ભારતમાં ગ્રામીણ કારીગરોને સીધો ટેકો આપે છે.", asstHeader: "🎙️ વેચનાર વોઇસ આસિસ્ટન્ટ"
+        storeTitle: "🛍️ હસ્તકલા હસ્તકલા સ્ટોરફ્રન્ટ", storeDesc: "સમગ્ર ભારતમાં ગ્રામીણ કારીગરોને સીધો ટેકો આપે છે.", asstHeader: "🎙️ વેચનાર વોઇး આસિસ્ટન્ટ"
       },
       'kn-IN': {
         welcomeTitle: "HASTHAKALA", welcomeSub: "Rural Hands • Global Reach",
@@ -812,7 +828,7 @@
         hoursText: "ତିଆରି କରିବା (ଘଣ୍ଟା)", rateText: "ହାର୍ (₹/ଘଣ୍ଟା)", benchText: "ବଜାର ହାରାହାରି (₹)", floor: "ମହଲା", target: "ଲକ୍ଷ୍ୟ ଉଚିତ",
         premium: "ପ୍ରିମିୟମ୍", publish: "🚀 ସାର୍ବଜନୀନ ଷ୍ଟୋର୍ଫ୍ରଣ୍ଟରେ ପ୍ରକାଶ କରନ୍ତୁ", catalogTitle: "📊 5. ଆପଣଙ୍କର ପ୍ରକାଶିତ କାଟାଲଗ୍",
         navStudio: "ଷ୍ଟୁଡିଓ", navVoice: "ଭଏସ୍", navBank: "ବ୍ୟାଙ୍କ/QR", navPricing: "ମୂଲ୍ୟ", navCatalog: "କାଟାଲଗ୍",
-        storeTitle: "🛍️ ହସ୍ତକଳା ହସ୍ତଶିଳ୍ପ ଷ୍ଟୋର୍ଫ୍ରଣ୍ଟ", storeDesc: "ଭାରତର ଗ୍ରାମୀଣ କାରିଗରମାନଙ୍କୁ ସିଧାସଳଖ ସମର୍ଥନ କରିବା।", asstHeader: "🎙️ ବିକ୍ରେତା ଭଏସ୍ ଆସିଷ୍ଟାଣ୍ଟ"
+        storeTitle: "🛍️ ହସ୍ତକଳା ହସ୍ତଶିଳ୍ପ ଷ୍ୋର୍ଫ୍ରଣ୍ଟ", storeDesc: "ଭାରତର ଗ୍ରାମୀଣ କାରିଗରମାନଙ୍କୁ ସିଧାସଳଖ ସମର୍ଥନ କରିବା।", asstHeader: "🎙️ ବିକ୍ରେତା ଭଏସ୍ ଆସିଷ୍ଟାଣ୍ଟ"
       },
       'as-IN': {
         welcomeTitle: "HASTHAKALA", welcomeSub: "Rural Hands • Global Reach",
@@ -838,7 +854,7 @@
         hoursText: "প্ৰস্তুত কৰিবলৈ (ঘণ্টা)", rateText: "হাৰ (₹/ঘণ্টা)", benchText: "বজাৰ গড় (₹)", floor: "তল", target: "লক্ষ্য উপযুক্ত",
         premium: "پ్రిమియం", publish: "🚀 ৰাজহুৱା ষ্ট’ৰফ্ৰণ্টত প্ৰকাশ কৰক", catalogTitle: "📊 ৫. আপোনাৰ প্ৰকাশিত কেটেলগ",
         navStudio: "ଷ୍ଟୁଡିଓ", navVoice: "ଭଏସ୍", navBank: "বেংক/QR", navPricing: "মূল্য", navCatalog: "কেটেলগ",
-        storeTitle: "🛍️ হস্তকলা হস্তশিল্প ষ্ট’ৰফ্ৰণ্ট", storeDesc: "সমগ্ৰ ভাৰতৰ গ্ৰাম্য কাৰিকৰসকলক পোনপটীয়াকৈ সমৰ্থন কৰা।", asstHeader: "🎙️ বিক্ৰେতা ভইচ এচিষ্টেণ্ট"
+        storeTitle: "🛍️ হস্তকলা হস্তশিল্প ষ্ট’ৰফ্ৰণ্ট", storeDesc: "সমগ্ৰ ভাৰতৰ গ্ৰাম্য কাৰিকৰসকলক পোনপটীয়াকৈ সমৰ্থন কৰা.", asstHeader: "🎙️ বিক্ৰେতা ভইচ এচিষ্টেণ্ট"
       }
     };
 
@@ -846,7 +862,6 @@
       const dict = translations[selectedLang] || translations['en-IN'];
       const setTxt = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.innerText = val; };
 
-      // Welcome screen title & subtitle remain in English as requested
       setTxt('lblWelcomeTitle', "HASTHAKALA"); setTxt('lblWelcomeSubtitle', "Rural Hands • Global Reach");
       setTxt('lblWelcomeTagMain', dict.tagMain); setTxt('lblWelcomeTagSub', dict.tagSub);
       setTxt('btnGetStarted', dict.getStarted); setTxt('lblSelectLangTitle', dict.selectLangTitle);
@@ -1125,7 +1140,6 @@
         document.getElementById('assistantTranscript').innerText = text;
         const lower = text.toLowerCase();
         
-        // Comprehensive multi-lingual command router including explicit support for Hindi "आवाज़" / "आवाज"
         if (lower.includes('studio') || lower.includes('photo') || lower.includes('फोटो') || lower.includes('स्टुडियो') || lower.includes('स्टूडियो') || lower.includes('ఫోటో') || lower.includes('ಸ್ಟುಡಿಯೋ') || lower.includes('ஸ்டுடியோ') || lower.includes('ଷ୍ଟୁଡିଓ') || lower.includes('স্টুডিও') || lower.includes('સ્ટુડિયો') || lower.includes('ਸਟੂਡੀਓ') || lower.includes('ഫോട്ടോ')) {
           toggleVoiceAssistantModal(); switchSellerPage('seller-studio');
         } else if (lower.includes('voice') || lower.includes('description') || lower.includes('आवाज़') || lower.includes('आवाज') || lower.includes('विवरण') || lower.includes('बोलकर') || lower.includes('వివరణ') || lower.includes('বিবরণ') || lower.includes('விவரம்') || lower.includes('वर्णन') || lower.includes('વર્ણન') || lower.includes('വിവരണം') || lower.includes('ಬೆಳವಣಿಗೆ') || lower.includes('ବର୍ଣ୍ଣନା') || lower.includes('বিৱৰণ')) {
@@ -1164,22 +1178,6 @@
       document.getElementById('priceFloor').innerText = '₹' + Math.round((raw + laborCost) * 1.15).toLocaleString('en-IN');
       document.getElementById('priceTarget').innerText = '₹' + Math.round((raw + laborCost) * 1.50).toLocaleString('en-IN');
       document.getElementById('pricePremium').innerText = '₹' + Math.max(Math.round((raw + laborCost) * 1.50), Math.round(benchmark * 1.10)).toLocaleString('en-IN');
-    }
-
-    function publishProduct() {
-      const title = document.getElementById('draftTitleInput').value || 'Handcrafted Heritage Craft';
-      const price = parseInt(document.getElementById('priceTarget').innerText.replace(/[^0-9]/g, '')) || 1520;
-      const imageSrc = window.HasthakalaAIPhotoStudio ? window.HasthakalaAIPhotoStudio.getImageDataURL() : null;
-      const englishDesc = document.getElementById('englishTranscript').innerText || 'Handcrafted authentic rural craft creation.';
-
-      if (!imageSrc) { alert('Please upload & enhance a photo in the Studio first.'); switchSellerPage('seller-studio'); return; }
-
-      publishedProducts.push({ id: Date.now(), title: title, price: price, imageSrc: imageSrc, description: englishDesc, artisan: document.getElementById('bankHolderName').value || 'Lakshmi Devi' });
-      saveProducts();
-      
-      alert('Product published to Public Storefront successfully!');
-      renderCatalog();
-      switchSellerPage('seller-inventory');
     }
 
     function renderCatalog() {
@@ -1228,7 +1226,6 @@
       }
       if (selectedModalProduct) {
         cart.push(selectedModalProduct);
-        saveCart();
         document.getElementById('cartCount').innerText = cart.length;
         alert(`${selectedModalProduct.title} added to cart!`);
         document.getElementById('buyerProductModal').style.display = 'none';
@@ -1277,7 +1274,6 @@
         alert(`Hasthakala Secure Payment Gateway:\n\nPayment Successful via ${methodNames[selectedPaymentMethod]}!\nTotal Paid: ${document.getElementById('cartTotal').innerText}\n\nFunds routed securely directly to the artisan account.`);
         
         cart = [];
-        saveCart();
         document.getElementById('cartCount').innerText = '0';
         document.getElementById('screenCartModal').classList.add('hidden');
         btn.innerText = "Proceed to Pay ➔";
