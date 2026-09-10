@@ -198,8 +198,7 @@
         <div class="welcome-tagline-main" id="lblWelcomeTagMain">Authentic Crafts from Rural India</div>
         <div class="welcome-tagline-sub" id="lblWelcomeTagSub">Support artisans. Celebrate heritage.</div>
       </div>
-      <button class="action-btn" onclick="showScreen('screenLanguage')" style="width:100%; font-size:1rem;" id="btnGetStarted">Get Started &rarr;</button>
-    </div>
+<button class="action-btn" onclick="startAppFromWelcome()" style="width:100%; font-size:1rem;" id="btnGetStarted">Get Started &rarr;</button>    </div>
 
     <!-- LANGUAGE SELECTION SCREEN -->
     <div id="screenLanguage" class="screen-overlay hidden">
@@ -465,9 +464,9 @@
 
   <script>
     // Initialize Supabase Client
-    const SUPABASE_URL = 'https://zxnhycdwcapnwzirrlmo.supabase.co';
+    const SUPABASE_URL = 'https://zxnhycdwcapnwzirrlmo.supabaseClient.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_nIbG6ou6kAh14Eh6fWHakw_30stxSCQ'; 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let selectedLang = 'en-IN';
     let appMode = 'manual';
@@ -498,7 +497,7 @@
     }
 
     async function loadProductsFromDB() {
-      const { data, error } = await supabase.from('products').select('*').order('id', { ascending: false });
+      const { data, error } = await supabaseClient.from('products').select('*').order('id', { ascending: false });
       if (!error && data) {
         publishedProducts = data.map(p => ({
           id: p.id,
@@ -526,7 +525,7 @@
 
       if (!imageSrc) { alert('Please upload & enhance a photo in the Studio first.'); switchSellerPage('seller-studio'); return; }
 
-      const { data, error } = await supabase.from('products').insert([
+      const { data, error } = await supabaseClient.from('products').insert([
         { title: title, price: price, description: englishDesc, image_url: imageSrc, artisan_name: artisanName }
       ]).select();
 
