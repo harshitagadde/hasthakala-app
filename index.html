@@ -198,7 +198,8 @@
         <div class="welcome-tagline-main" id="lblWelcomeTagMain">Authentic Crafts from Rural India</div>
         <div class="welcome-tagline-sub" id="lblWelcomeTagSub">Support artisans. Celebrate heritage.</div>
       </div>
-<button class="action-btn" onclick="showScreen('screenLanguage')" style="width:100%; font-size:1rem;" id="btnGetStarted">Get Started &rarr;</button>    </div>
+      <button class="action-btn" onclick="startAppFromWelcome()" style="width:100%; font-size:1rem;" id="btnGetStarted">Get Started &rarr;</button>
+    </div>
 
     <!-- LANGUAGE SELECTION SCREEN -->
     <div id="screenLanguage" class="screen-overlay hidden">
@@ -464,52 +465,57 @@
 
   <script>
     // Initialize Supabase Client
-  const SUPABASE_URL = 'https://zxnhycdwcapnwzirrlmo.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_nIbG6ou6kAh14Eh6fWHakw_30stxSCQ'; 
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const SUPABASE_URL = 'https://zxnhycdwcapnwzirrlmo.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_nIbG6ou6kAh14Eh6fWHakw_30stxSCQ'; 
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  let selectedLang = 'en-IN';
-  let appMode = 'manual';
-  let isRecording = false;
-  let recognition = null;
-  let assistantRecognition = null;
-  let accumulatedTranscript = '';
-  let selectedModalProduct = null;
-  let selectedPaymentMethod = 'upi';
-  let isBuyerLoggedIn = true; 
+    let selectedLang = 'en-IN';
+    let appMode = 'manual';
+    let isRecording = false;
+    let recognition = null;
+    let assistantRecognition = null;
+    let accumulatedTranscript = '';
+    let selectedModalProduct = null;
+    let selectedPaymentMethod = 'upi';
+    let isBuyerLoggedIn = true; 
 
-  let publishedProducts = [];
-  let cart = [];
+    let publishedProducts = [];
+    let cart = [];
 
-  // Fetch products live from Supabase database on startup
+    // Unified screen transition function
     function showScreen(screenId) {
-    document.querySelectorAll('.screen-overlay').forEach(screen => {
-      screen.classList.add('hidden');
-    });
-    const target = document.getElementById(screenId);
-    if (target) {
-      target.classList.remove('hidden');
+      document.querySelectorAll('.screen-overlay').forEach(screen => {
+        screen.classList.add('hidden');
+      });
+      const target = document.getElementById(screenId);
+      if (target) {
+        target.classList.remove('hidden');
+      }
+      const mainHeader = document.getElementById('mainHeader');
+      if (mainHeader) {
+        mainHeader.style.display = screenId.startsWith('screen') ? 'none' : 'flex';
+      }
     }
-  }
-  async function loadProductsFromDB() {
-    const { data, error } = await supabase.from('products').select('*').order('id', { ascending: false });
-    if (!error && data) {
-      publishedProducts = data.map(p => ({
-        id: p.id,
-        title: p.title,
-        price: p.price,
-        imageSrc: p.image_url,
-        description: p.description,
-        artisan: p.artisan_name || 'Lakshmi Devi'
-      }));
-      if (typeof renderCatalog === 'function') renderCatalog();
-      if (typeof renderBuyerStore === 'function') renderBuyerStore();
-    }
-  }
 
-  window.addEventListener('DOMContentLoaded', () => {
-    loadProductsFromDB();
-  });
+    async function loadProductsFromDB() {
+      const { data, error } = await supabase.from('products').select('*').order('id', { ascending: false });
+      if (!error && data) {
+        publishedProducts = data.map(p => ({
+          id: p.id,
+          title: p.title,
+          price: p.price,
+          imageSrc: p.image_url,
+          description: p.description,
+          artisan: p.artisan_name || 'Lakshmi Devi'
+        }));
+        if (typeof renderCatalog === 'function') renderCatalog();
+        if (typeof renderBuyerStore === 'function') renderBuyerStore();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadProductsFromDB();
+    });
 
     async function publishProduct() {
       const title = document.getElementById('draftTitleInput').value || 'Handcrafted Heritage Craft';
@@ -520,7 +526,6 @@
 
       if (!imageSrc) { alert('Please upload & enhance a photo in the Studio first.'); switchSellerPage('seller-studio'); return; }
 
-      // Insert new product into Supabase table
       const { data, error } = await supabase.from('products').insert([
         { title: title, price: price, description: englishDesc, image_url: imageSrc, artisan_name: artisanName }
       ]).select();
@@ -591,9 +596,9 @@
         modalDescLabel: "अनुवादित अंग्रेजी विवरण:", addToCart: "कार्ट में जोड़ें 🛒", cartNav: "कार्ट", portalsNav: "← पोर्टल्स", signOut: "साइन आउट",
         aiHeader: "✨ AI फोटो स्टूडियो", aiSub: "कोई भी फोटो अपलोड करें — स्टूडियो स्वचालित रूप से इसमें सुधार करता है।",
         uploadStrong: "उत्पाद की फोटो लें या अपलोड करें", uploadSpan: "फोटोग्राफी कौशल की आवश्यकता नहीं • AI लाइटिंग और बैकग्राउंड सुधारता है",
-        oneTap: "🤖 वन-टैप AI संवर्द्धन", prodBg: "🎨 उत्पाद बैकग्राउंड", bgOrig: "मूल", bgWhite: "सफेद", bgCream: "क्रीम",
+        oneTap: "🤖 वन-टैपीय संवर्द्धन", prodBg: "🎨 उत्पाद बैकग्राउंड", bgOrig: "मूल", bgWhite: "सफेद", bgCream: "क्रीम",
         nextVoice: "अगला पृष्ठ: मूल आवाज़ विवरण ➔", voiceTitle: "🎙️ 2. मूल आवाज़ विवरण",
-        recordBtn: "अपनी मूल भाषा में शिल्प का वर्णन करें", spokenTranscript: "बोली गई वाक् प्रतिलिपि (लाइव बहुभाषी रिक):",
+        recordBtn: "अपनी मूल भाषा में शिल्प का वर्णन करें", spokenTranscript: "बोली गई वाक् प्रतिलिपि:",
         voicePlaceholder: "अपनी चयनित भाषा में रिकॉर्ड करने के लिए ऊपर टैप करें...",
         translatedDesc: "स्वतः-अनुवादित अंग्रेजी विवरण:", nextBank: "अगला पृष्ठ: बैंक विवरण और QR ➔",
         bankTitle: "🏦 3. बैंक विवरण और भुगतान QR", qrSub: "📱 आपका स्कैन करने योग्य भुगतान QR कोड", nextPricing: "अगला पृष्ठ: मूल्य कैलकुलेटर ➔",
@@ -602,266 +607,6 @@
         premium: "प्रीमियम", publish: "🚀 सार्वजनिक स्टोरफ्रंट पर प्रकाशित करें", catalogTitle: "📊 5. आपकी प्रकाशित सूची",
         navStudio: "स्टूडियो", navVoice: "आवाज़", navBank: "बैंक/QR", navPricing: "मूल्य", navCatalog: "कैटलॉग",
         storeTitle: "🛍️ हस्तकला हस्तशिल्प स्टोरफ्रंट", storeDesc: "भारत भर के ग्रामीण कारीगरों का सीधा समर्थन करना।", asstHeader: "🎙️ विक्रेता वॉइस असिस्टेंट"
-      },
-      'bn-IN': {
-        welcomeTitle: "HASTHAKALA", welcomeSub: "Rural Hands • Global Reach",
-        tagMain: "Authentic Crafts from Rural India", tagSub: "Support artisans. Celebrate heritage.",
-        getStarted: "শুরু করুন ➔", selectLangTitle: "ভাষা নির্বাচন করুন", confirmLang: "নেভিগেশন মোডে চালিয়ে যান ➔",
-        chooseModeTitle: "নেভিগেশন মোড বেছে নিন", manualTitle: "ম্যানুয়াল / টাচ মোড", manualDesc: "ভিজ্যুয়াল বোতাম, স্পর্শ এবং নিয়ন্ত্রণ ব্যবহার করে নেভিগেট করুন",
-        voiceModeTitle: "ভয়েস অ্যাসিস্ট্যান্ট মোড", voiceDesc: "কথ্য নেটিভ ভয়েস কমান্ডের মাধ্যমে হ্যান্ডস-ফ্রি অ্যাপ নির্দেশিকা",
-        choosePortalTitle: "পোর্টাল বেছে নিন", buyerPortalTitle: "ক্রেতা পোর্টাল", buyerPortalDesc: "সাইন ইন করুন, কেনাকাটা করুন এবং সরাসরি অর্থ প্রদান করুন",
-        sellerPortalTitle: "কারিগর / বিক্রেতা পোর্টাল", sellerPortalDesc: "AI স্টুডিও, QR কোড এবং মূল্য নির্ধারণ",
-        buyerSignInTitle: "ক্রেতা সাইন ইন", buyerSignInDesc: "হস্তশিল্প ই-কমার্স স্টোর অ্যাক্সেস করুন", buyerSignInBtn: "কেনাকাটা করতে সাইন ইন করুন ➔", buyerGuest: "অতিথি হিসাবে চালিয়ে যান",
-        cartTitle: "🛒 শপিং কার্ট এবং চেকআউট", cartEmpty: "আপনার কার্ট খালি আছে।", totalText: "মোট:", selectPaymentLabel: "পেমেন্ট বিকল্প নির্বাচন করুন:",
-        payUpi: "ইউপিআই / গুগল পে / ফোনপে / পেটিএম", payCard: "ক্রেডিট / ডেবিট কার্ড / নেট ব্যাঙ্কিং", payCod: "ক্যাশ অন ডেলিভারি", completePay: "পেমেন্ট করতে এগিয়ে যান ➔",
-        modalDescLabel: "অনূদিত ইংরেজি বিবরণ:", addToCart: "কার্টে যোগ করুন 🛒", cartNav: "কার্ট", portalsNav: "← পোর্টাল", signOut: "সাইন আউট",
-        aiHeader: "✨ AI ফটো স্টুডিও", aiSub: "যেকোনো ছবি আপলোড করুন — স্টুডিও বিক্রির জন্য স্বয়ংক্রিয়ভাবে এটিকে উন্নত করে।",
-        uploadStrong: "পণ্যের ছবি তুলুন বা আপলোড করুন", uploadSpan: "কোনো ফটোগ্রাফি দক্ষতার প্রয়োজন নেই • AI লাইটিং এবং ব্যাকগ্রাউন্ড উন্নত করে",
-        oneTap: "🤖 ওয়ান-ট্যাপ AI বর্ধিতকরণ", prodBg: "🎨 পণ্যের পটভূমি", bgOrig: "মূল", bgWhite: "সাদা", bgCream: "ক্রিম",
-        nextVoice: "পরবর্তী পৃষ্ঠা: নেটিভ ভয়েস বিবরণ ➔", voiceTitle: "🎙️ ২. নেটিভ ভয়েস বিবরণ",
-        recordBtn: "আপনার স্থানীয় ভাষায় কারুশিল্প বর্ণনা করুন", spokenTranscript: "কথ্য বক্তব্য প্রতিলিপি (লাইভ বহুভাষিক রিক):",
-        voicePlaceholder: "আপনার নির্বাচিত ভাষায় রেকর্ড করতে উপরে ট্যাপ করুন...",
-        translatedDesc: "স্বয়ংক্রিয়ভাবে অনূদিত ইংরেজি বিবরণ:", nextBank: "পরবর্তী পৃষ্ঠা: ব্যাঙ্কের বিবরণ এবং QR ➔",
-        bankTitle: "🏦 ৩. ব্যাঙ্কের বিবরণ এবং পেমেন্ট QR", qrSub: "📱 আপনার স্ক্যানযোগ্য পেমেন্ট QR কোড", nextPricing: "পরবর্তী পৃষ্ঠা: মূল্য ক্যালকুলেটর ➔",
-        calcTitle: "🧮 ৪. বাজার মূল্য ক্যালকুলেটর", prodTitleLabel: "পণ্যের শিরোনাম:", rawText: "কাঁচামাল (₹)",
-        hoursText: "তৈরি করতে (ঘণ্টা)", rateText: "রেট (₹/ঘণ্টা)", benchText: "বাজার গড় (₹)", floor: "মেঝে", target: "লক্ষ্য ন্যায্য",
-        premium: "প্রিমিয়াম", publish: "🚀 পাবলিক স্টোরফ্রন্টে প্রকাশ করুন", catalogTitle: "📊 ৫. আপনার প্রকাশিত ক্যাটালগ",
-        navStudio: "স্টুডিও", navVoice: "ভয়েস", navBank: "ব্যাঙ্ক/QR", navPricing: "মূল্য", navCatalog: "ক্যাটালগ",
-        storeTitle: "🛍️ হস্তকলা হস্তশিল্প স্টোরফ্রন্ট", storeDesc: "ভারত জুড়ে গ্রামীণ কারিগরদের সরাসরি সহায়তা করা।", asstHeader: "🎙️ বিক্রেতা ভয়েস অ্যাসিস্ট্যান্ট"
-      },
-      'te-IN': {
-        welcomeTitle: "HASTHAKALA", welcomeSub: "Rural Hands • Global Reach",
-        tagMain: "Authentic Crafts from Rural India", tagSub: "Support artisans. Celebrate heritage.",
-        getStarted: "ప్రారంభించండి ➔", selectLangTitle: "భాషను ఎంచుకోండి", confirmLang: "నేవిగేషన్ మోడ్‌కి వెళ్లండి ➔",
-        chooseModeTitle: "నేవిగేషన్ మోడ్‌ని ఎంచుకోండి", manualTitle: "మాన్యువల్ / టచ్ మోడ్", manualDesc: "విజువల్ బటన్లు, టచ్ & కంట్రోల్స్ ఉపయోగించి నావిగేట్ చేయండి",
-        voiceModeTitle: "వాయిస్ అసిస్టెంట్ మోడ్", voiceDesc: "మాట్లాడే స్థానిక వాయిస్ ఆదేశాల ద్వారా హ్యాండ్స్-ఫ్రీ యాప్ గైడెన్స్",
-        choosePortalTitle: "పోర్టల్‌ని ఎంచుకోండి", buyerPortalTitle: "కొనుగోలుదారు పోర్టల్", buyerPortalDesc: "సైన్ ఇన్ చేయండి, షాపింగ్ & డైరెక్ట్ పే",
-        sellerPortalTitle: "ఆర్టిసన్ / విక్రేత పోర్టల్", sellerPortalDesc: "AI స్టూడియో, QR కోడ్ & ధర",
-        buyerSignInTitle: "కొనుగోలుదారు సైన్ ఇన్", buyerSignInDesc: "హస్తకళ ఈ-కామర్స్ స్టోర్‌ని యాక్సెస్ చేయండి", buyerSignInBtn: "షాపింగ్ చేయడానికి సైన్ ఇన్ చేయండి ➔", buyerGuest: "అతిథిగా కొనసాగించండి",
-        cartTitle: "🛒 షాపింగ్ కార్ట్ & చెక్‌అవుట్", cartEmpty: "మీ కార్ట్ ఖాళీగా ఉంది.", totalText: "మొత్తం:", selectPayLabel: "చెల్లింపు ఎంపికను ఎంచుకోండి:",
-        payUpi: "యూపీఐ / గూగుల్ పే / ఫోన్‌పే / పేటీఎం", payCard: "క్రెడిట్ / డెబిట్ కార్డ్ / నెట్ బ్యాంకింగ్", payCod: "క్యాష్ ఆన్ డెలివరీ", completePay: "చెల్లించడానికి కొనసాగించండి ➔",
-        modalDescLabel: "అనువదించబడిన ఇంగ్లీష్ వివరణ:", addToCart: "కార్ట్‌కి జోడించండి 🛒", cartNav: "కార్ట్", portalsNav: "← పోర్టల్స్", signOut: "సైన్ అవుట్",
-        aiHeader: "✨ AI ఫోటో స్టూడియో", aiSub: "ఏదైనా ఫోటోను అప్‌లోడ్ చేయండి — స్టూడియో అమ్మకం కోసం స్వయంచాలకంగా మెరుగుపరుస్తుంది.",
-        uploadStrong: "ఉత్పత్తి ఫోటోను తీయండి లేదా అప్‌లోడ్ చేయండి", uploadSpan: "ఫోటోగ్రఫీ నైపుణ్యాలు అవసరం లేదు • AI లైటింగ్ & బ్యాక్‌గ్రౌండ్‌ని మెరుగుపరుస్తుంది",
-        oneTap: "🤖 వన్-ట్యాప్ AI మెరుగుదల", prodBg: "🎨 ఉత్పత్తి నేపథ్యం", bgOrig: "అసలు", bgWhite: "తెలుపు", bgCream: "క్రీమ్",
-        nextVoice: "తదుపరి పేజీ: స్థానిక వాయిస్ వివరణ ➔", voiceTitle: "🎙️ 2. స్థానిక వాయిస్ వివరణ",
-        recordBtn: "మీ స్థానిక భాషలో హస్తకళను వివరించండి", spokenTranscript: "మాట్లాడిన ప్రసంగ ట్రాన్‌స్క్రిప్ట్ (లైవ్ బహుభాషా రికార్డింగ్):",
-        voicePlaceholder: "మీ ఎంచుకున్న భాషలో రికార్డ్ చేయడానికి పైన నొక్కండి...",
-        translatedDesc: "స్వయంచాలకంగా అనువదించబడిన ఇంగ్లీష్ వివరణ:", nextBank: "తదుపరి పేజీ: బ్యాంక్ వివరాలు & QR ➔",
-        bankTitle: "🏦 3. బ్యాంక్ వివరాలు & చెల్లింపు QR", qrSub: "📱 మీ స్కాన్ చేయదగిన చెల్లింపు QR కోడ్", nextPricing: "తదుపరి పేజీ: ధర కాలిక్యులేటర్ ➔",
-        calcTitle: "🧮 4. మార్కెట్ ధర కాలిక్యులేటర్", prodTitleLabel: "ఉత్పత్తి శీర్షిక:", rawText: "ముడి పదార్థం (₹)",
-        hoursText: "తయారీ (గంటలు)", rateText: "రేటు (₹/గంట)", benchText: "మార్కెట్ సగటు (₹)", floor: "ఫ్లోర్", target: "టార్గెట్ ఫెయిర్",
-        premium: "ప్రీమియం", publish: "🚀 పబ్లిక్ స్టోర్‌ఫ్రంట్‌కి ప్రచురించండి", catalogTitle: "📊 5. మీ ప్రచురించిన కేటలాగ్",
-        navStudio: "స్టూడియో", navVoice: "వాయిస్", navBank: "బ్యాంక్/QR", navPricing: "ధరలు", navCatalog: "కేటలాగ్",
-        storeTitle: "🛍️ హస్తకళ హస్తకళల స్టోర్‌ఫ్రంట్", storeDesc: "భారతదేశం అంతటా ఉన్న గ్రామీణ చేతివృత్తులవారికి నేరుగా మద్దతు ఇస్తోంది.", asstHeader: "🎙️ విక్రేత వాయిస్ అసిస్టెంట్"
-      },
-      'ta-IN': {
-        welcomeTitle: "HASTHAKALA", welcomeSub: "Rural Hands • Global Reach",
-        tagMain: "Authentic Crafts from Rural India", tagSub: "Support artisans. Celebrate heritage.",
-        getStarted: "தொடங்கவும் ➔", selectLangTitle: "மொழியைத் தேர்ந்தெடுக்கவும்", confirmLang: "வழிசெலுத்தல் முறைக்குச் செல்லவும் ➔",
-        chooseModeTitle: "வழிசெலுத்தல் முறையைத் தேர்ந்தெடுக்கவும்", manualTitle: "கைமுறை / தொடு முறை", manualDesc: "காட்சி பொத்தான்கள், தொடுதல் & கட்டுப்பாடுகளைப் பயன்படுத்தி செல்லவும்",
-        voiceModeTitle: "குரல் உதவியாளர் முறை", voiceDesc: "பேசப்பட்ட சொந்த குரல் கட்டளைகள் மூலம் கைகள் இல்லாத பயன்பாட்டு வழிகாட்டுதல்",
-        choosePortalTitle: "போர்ட்டலைத் தேர்ந்தெடுக்கவும்", buyerPortalTitle: "வாங்குபவர் போர்ட்டல்", buyerPortalDesc: "உள்நுழையவும், ஷாப்பிங் & நேரடி கட்டணம்",
-        sellerPortalTitle: "கைவினைஞர் / விற்பனையாளர் போர்ட்டல்", sellerPortalDesc: "AI ஸ்டுடியோ, QR குறியீடு & விலை நிர்ணயம்",
-        buyerSignInTitle: "வாங்குபவர் உள்நுழைவு", buyerSignInDesc: "ஹஸ்தகலா இ-காமர்ஸ் கடையை அணுகவும்", buyerSignInBtn: "ஷாப்பிங் செய்ய உள்நுழையவும் ➔", buyerGuest: "விருந்தினராக தொடரவும்",
-        cartTitle: "🛒 ஷாப்பிங் கார்ட் & செக்அவுட்", cartEmpty: "உங்கள் கார்ட் காலியாக உள்ளது.", totalText: "மொத்தம்:", selectPayLabel: "கட்டண விருப்பத்தைத் தேர்ந்தெடுக்கவும்:",
-        payUpi: "UPI / Google Pay / PhonePe / Paytm", payCard: "கிரெடிட் / டெபிட் கார்டு / நிகர வங்கி", payCod: "டெலிவரியில் ரொக்கம்", completePay: "செலுத்த தொடரவும் ➔",
-        modalDescLabel: "மொழிபெயர்க்கப்பட்ட ஆங்கில விவரம்:", addToCart: "கார்ட்டில் சேர் 🛒", cartNav: "கார்ட்", portalsNav: "← போர்ட்டல்கள்", signOut: "வெளியேறு",
-        aiHeader: "✨ AI போட்டோ ஸ்டுடியோ", aiSub: "எந்தப் புகைப்படத்தையும் பதிவேற்றவும் — ஸ்டுடியோ விற்பனைக்காக அதை தானாகவே மேம்படுத்துகிறது.",
-        uploadStrong: "தயாரிப்பு புகைப்படத்தை எடுக்கவும் அல்லது பதிவேற்றவும்", uploadSpan: "புகைப்பட திறன்கள் தேவையில்லை • AI லைட்டிங் & பின்னணியை மேம்படுத்துகிறது",
-        oneTap: "🤖 ஒன்-டேப் AI மேம்படுத்தல்", prodBg: "🎨 தயாரிப்பு பின்னணி", bgOrig: "அசல்", bgWhite: "வெள்ளை", bgCream: "கிரீம்",
-        nextVoice: "அடுத்த பக்கம்: சொந்த குரல் விளக்கம் ➔", voiceTitle: "🎙️ 2. சொந்த குரல் விளக்கம்",
-        recordBtn: "உங்கள் சொந்த மொழியில் கைவினைப்பொருளை விவரிக்கவும்", spokenTranscript: "பேசப்பட்ட பேச்சு டிரான்ஸ்கிரிப்ட் (நேரலை பல மொழி பதிவு):",
-        voicePlaceholder: "நீங்கள் தேர்ந்தெடுத்த மொழியில் பதிவு செய்ய மேலே தட்டவும்...",
-        translatedDesc: "தானாக மொழிபெயர்க்கப்பட்ட ஆங்கில விளக்கம்:", nextBank: "அடுத்த பக்கம்: வங்கி விவரங்கள் & QR ➔",
-        bankTitle: "🏦 3. வங்கி விவரங்கள் & கட்டண QR", qrSub: "📱 உங்கள் ஸ்கேன் செய்யக்கூடிய கட்டண QR குறியீடு", nextPricing: "அடுத்த பக்கம்: விலை கால்குலேட்டர் ➔",
-        calcTitle: "🧮 4. சந்தை விலை கால்குலேட்டர்", prodTitleLabel: "தயாரிப்பு தலைப்பு:", rawText: "மூலப்பொருள் (₹)",
-        hoursText: "தயாரிப்பு (மணிநேரம்)", rateText: "வீதம் (₹/மணி)", benchText: "சந்தை சராசரி (₹)", floor: "தரை", target: "இலக்கு நியாயமான",
-        premium: "பிரீமியம்", publish: "🚀 பொது ஸ்டோர்ஃபிரண்டில் வெளியிடவும்", catalogTitle: "📊 5. உங்கள் வெளியிடப்பட்ட பட்டியல்",
-        navStudio: "ஸ்டுடியோ", navVoice: "குரல்", navBank: "வங்கி/QR", navPricing: "விலை", navCatalog: "பட்டியல்",
-        storeTitle: "🛍️ ஹஸ்தகலா கைவினைப்பொருட்கள் ஸ்டோர்ஃபிரண்ட்", storeDesc: "இந்தியா முழுவதும் உள்ள கிராமப்புற கைவினைஞர்களை நேரடியாக ஆதரிக்கிறது.", asstHeader: "🎙️ விற்பனையாளர் குரல் உதவியாளர்"
-      },
-      'mr-IN': {
-        welcomeTitle: "HASTHAKALA", welcomeSub: "Rural Hands • Global Reach",
-        tagMain: "Authentic Crafts from Rural India", tagSub: "Support artisans. Celebrate heritage.",
-        getStarted: "सुरू करा ➔", selectLangTitle: "भाषा निवडा", confirmLang: "नव्हिगेशन मोडवर продолжить ➔",
-        chooseModeTitle: "नव्हिगेशन मोड निवडा", manualTitle: "मॅन्युअल / टच मोड", manualDesc: "व्हिज्युअल बटणे, टच आणि नियंत्रणे वापरून नॅव्हिगेट करा",
-        voiceModeTitle: "व्हॉइस असिस्टंट मोड", voiceDesc: "बोलल्या जाणाऱ्या मूळ व्हॉइस कमांडद्वारे हँड्स-फ्री अॅप मार्गदर्शन",
-        choosePortalTitle: "पोर्टल निवडा", buyerPortalTitle: "खरेदीदार पोर्टल", buyerPortalDesc: "साइन इन करा, खरेदी करा आणि थेट पेमेंट करा",
-        sellerPortalTitle: "कारागीर / विक्रेता पोर्टल", sellerPortalDesc: "AI स्टुडियो, QR कोड आणि किंमत",
-        buyerSignInTitle: "खरेदीदार साइन इन", buyerSignInDesc: "हस्तकला ई-कॉमर्स स्टोअरमध्ये प्रवेश करा", buyerSignInBtn: "खरेदीसाठी साइन इन करा ➔", buyerGuest: "पाहुणा म्हणून सुरू ठेवा",
-        cartTitle: "🛒 शॉपिंग कार्ट आणि चेकआउट", cartEmpty: "तुमची कार्ट रिकामी आहे.", totalText: "एकूण:", selectPayLabel: "पेमेंट पर्याय निवडा:",
-        payUpi: "युपीआय / गुगल पे / फोनपे / पेटीएम", payCard: "क्रेडिट / डेबिट कार्ड / नेट बँकिंग", payCod: "कॅश ऑन डिलिव्हरी", completePay: "पेमेंटसाठी पुढे जा ➔",
-        modalDescLabel: "इंग्रजीत भाषांतरित केलेले वर्णन:", addToCart: "कार्टमध्ये జోडा 🛒", cartNav: "कार्ट", portalsNav: "← पोर्टल", signOut: "साइन आउट",
-        aiHeader: "✨ AI फोटो स्टुडियो", aiSub: "कोणताही फोटो अपलोड करा — स्टुडियो विक्रीसाठी आपोआप त्यात सुधारणा करतो.",
-        uploadStrong: "उत्पादनाचा फोटो घ्या किंवा अपलोड करा", uploadSpan: "फोटोग्राफी कौशल्याची गरज नाही • AI लायटिंग आणि पार्श्वभूमी सुधारते",
-        oneTap: "🤖 वन-टॅप AI वर्धन", prodBg: "🎨 उत्पादन पार्श्वभूमी", bgOrig: "मूळ", bgWhite: "पांढरा", bgCream: "क्रिम",
-        nextVoice: "पुढील पृष्ठ: मूळ व्हॉइस वर्णन ➔", voiceTitle: "🎙️ २. मूळ व्हॉइस वर्णन",
-        recordBtn: "तुमच्या मातृभाषेत शिल्पकलेचे वर्णन करा", spokenTranscript: "बोललेली भाषण प्रत (थेट बहुभाषिक रेक):",
-        voicePlaceholder: "तुमच्या निवडलेल्या भाषेत रेकॉर्ड करण्यासाठी वर टॅप करा...",
-        translatedDesc: "स्वयंचलित-भाषांतरित इंग्रजी वर्णन:", nextBank: "पुढील पृष्ठ: बँक तपशील आणि QR ➔",
-        bankTitle: "🏦 ३. बँक तपशील आणि पेमेंट QR", qrSub: "📱 तुमचा स्कॅन करण्यायोग्य पेमेंट QR कोड", nextPricing: "पुढील पृष्ठ: किंमत कॅल्क्युलेटर ➔",
-        calcTitle: "🧮 ४. बाजार किंमत कॅल्क्युलेटर", prodTitleLabel: "उत्पादन शीर्षक:", rawText: "कच्चा माल (₹)",
-        hoursText: "बनवण्याची वेळ (तास)", rateText: "दर (₹/तास)", benchText: "बाजार सरासरी (₹)", floor: "तळ", target: "लक्ष्य उचित",
-        premium: "प्रीमियम", publish: "🚀 सार्वजनिक स्टोअरफ्रंटवर प्रकाशित करा", catalogTitle: "📊 ५. तुमची प्रकाशित कॅटलॉग",
-        navStudio: "स्टुडियो", navVoice: "व्हॉइस", navBank: "बँक/QR", navPricing: "किंमत", navCatalog: "कॅटलॉग",
-        storeTitle: "🛍️ हस्तकला हस्तकला स्टोअरफ्रंट", storeDesc: "भारतभरातील ग्रामीण कारागीरांना थेट पाठिंबा देणे.", asstHeader: "🎙️ विक्रेता व्हॉइस असिस्टंट"
-      },
-      'gu-IN': {
-        welcomeTitle: "HASTHAKALA", welcomeSub: "Rural Hands • Global Reach",
-        tagMain: "Authentic Crafts from Rural India", tagSub: "Support artisans. Celebrate heritage.",
-        getStarted: "શરૂ કરો ➔", selectLangTitle: "भाषा પસંદ કરો", confirmLang: "નેવિગેશન મોડ પર આગળ વધો ➔",
-        chooseModeTitle: "નેવિગેશન મોડ પસંદ કરો", manualTitle: "મેન્યુઅલ / ટચ મોડ", manualDesc: "વિઝ્યુઅલ બટનો, ટચ અને કંટ્રોલનો ઉપયોગ કરીને નેવિગેટ કરો",
-        voiceModeTitle: "વોઇસ આસિસ્ટન્ટ મોડ", voiceDesc: "બોલાતી નેટીવ વોઇસ કમાન્ડ દ્વારા હેન્ડ્સ-ફ્રી એપ્લિકેશન માર્ગદર્શન",
-        choosePortalTitle: "પોર્ટલ પસંદ કરો", buyerPortalTitle: "ખરીદદાર પોર્ટલ", buyerPortalDesc: "સાઇન ઇન કરો, ખરીદી કરો અને સીધી ચૂકવણી કરો",
-        sellerPortalTitle: "કારીગર / વેચનાર પોર્ટલ", sellerPortalDesc: "AI સ્ટુડિયો, QR કોડ અને કિંમત",
-        buyerSignInTitle: "ખરીદદાર સાઇન ઇન", buyerSignInDesc: "હસ્તકલા ઇ-કોમર્સ સ્ટોર Accessક્સેસ કરો", buyerSignInBtn: "ખરીદી કરવા માટે સાઇન ઇન કરો ➔", buyerGuest: "મહેમાન તરીકે ચાલુ રાખો",
-        cartTitle: "🛒 શૉપિંગ કાર્ટ અને ચેકઆઉટ", cartEmpty: "તમારું કાર્ટ ખાલી છે.", totalText: "કુલ:", selectPayLabel: "ચૂકવણીનો વિકલ્પ પસંદ કરો:",
-        payUpi: "UPI / Google Pay / PhonePe / Paytm", payCard: "ક્રેડિટ / ડેબિટ કાર્ડ / નેટ બેંકિંગ", payCod: "કેશ ઓન ડિલિવરી", completePay: "ચૂકવણી માટે આગળ વધો ➔",
-        modalDescLabel: "અનુવાદિત અંગ્રેજી વર્ણન:", addToCart: "કાર્ટમાં ઉમેરો 🛒", cartNav: "કાર્ટ", portalsNav: "← પોર્ટલ્સ", signOut: "સાઇન આઉટ",
-        aiHeader: "✨ AI ફોટો સ્ટુડિયો", aiSub: "કોઈપણ ફોટો અપલોડ કરો — સ્ટુડિયો વેચાણ માટે આપમેળે તેને સુધારે છે.",
-        uploadStrong: "ઉત્પાદનનો ફોટો લો અથવા અપલોડ કરો", uploadSpan: "ફોટોગ્રાફી કૌશલ્યની જરૂર નથી • AI લાઇટિંગ અને બેકગ્રાઉન્ડ સુધારે છે",
-        oneTap: "🤖 વન-ટેપ AI એન્હાંસમેન્ટ", prodBg: "🎨 પ્રોડક્ટ બેકગ્રાઉન્ડ", bgOrig: "મૂળ", bgWhite: "સફેદ", bgCream: "ક્રીમ",
-        nextVoice: "આગળનું પૃષ્ઠ: નેટીવ વોઇး વર્ણન ➔", voiceTitle: "🎙️ ૨. નેટીવ વોઇး વર્ણન",
-        recordBtn: "તમારી માતૃભાષામાં શિલ્પનું વર્ણન કરો", spokenTranscript: "બોલાયેલ વાણી લખાણ (લાઇવ બહુભાષી રેક):",
-        voicePlaceholder: "તમારી પસંદગીની ભાષામાં રેકોર્ડ કરવા માટે ઉપર ટેપ કરો...",
-        translatedDesc: "સ્વચાલિત-અનુવાદિત અંગ્રેજી વર્ણન:", nextBank: "આગળનું પૃષ્ઠ: બેંક વિગતો અને QR ➔",
-        bankTitle: "🏦 ૩. બેંક વિગતો અને ચૂકવણી QR", qrSub: "📱 તમારો સ્કેન કરી શકાય તેવો ચુકવણી QR કોડ", nextPricing: "આગળનું પૃષ્ઠ: પ્રાઇસ કેલ્ક્યુલેટર ➔",
-        calcTitle: "🧮 4. બજાર ભાવ કેલ્ક્યુલેટર", prodTitleLabel: "પ્રોડક્ટ શીર્ષક:", rawText: "કાચો માલ (₹)",
-        hoursText: "બનાવવામાં (કલાક)", rateText: "દેર (₹/કલાક)", benchText: "બજાર સરેરાશ (₹)", floor: "ફ્લોર", target: "લક્ષ્ય યોગ્ય",
-        premium: "પ્રીમિયમ", publish: "🚀 પબ્લિક સ્ટોરફ્રન્ટ પર પ્રકાશિત કરો", catalogTitle: "📊 ૫. તમારી પ્રકાશિત કેટેલોગ",
-        navStudio: "સ્ટુડિયો", navVoice: "વોઇસ", navBank: "બેંક/QR", navPricing: "કિંમત", navCatalog: "કેટેલોગ",
-        storeTitle: "🛍️ હસ્તકલા હસ્તકલા સ્ટોરફ્રન્ટ", storeDesc: "સમગ્ર ભારતમાં ગ્રામીણ કારીગરોને સીધો ટેકો આપે છે.", asstHeader: "🎙️ વેચનાર વોઇး આસિસ્ટન્ટ"
-      },
-      'kn-IN': {
-        welcomeTitle: "HASTHAKALA", welcomeSub: "Rural Hands • Global Reach",
-        tagMain: "Authentic Crafts from Rural India", tagSub: "Support artisans. Celebrate heritage.",
-        getStarted: "ಪ್ರಾರಂಭಿಸಿ ➔", selectLangTitle: "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ", confirmLang: "ನ್ಯಾವಿಗೇಷನ್ ಮೋಡ್‌ಗೆ ಮುಂದುವರಿಯಿರಿ ➔",
-        chooseModeTitle: "ನ್ಯಾವಿಗೇಷನ್ ಮೋಡ್ ಅನ್ನು ಆಯ್ಕೆಮಾಡಿ", manualTitle: "ಮ್ಯಾನುಯಲ್ / ಟಚ್ ಮೋಡ್", manualDesc: "ದೃಶ್ಯ ಗುಂಡಿಗಳು, ಸ್ಪರ್ಶ ಮತ್ತು ನಿಯಂತ್ರಣಗಳನ್ನು ಬಳಸಿ ನ್ಯಾವಿಗೇಟ್ ಮಾಡಿ",
-        voiceModeTitle: "ಧ್ವನಿ ಸಹಾಯಕ ಮೋಡ್", voiceDesc: "ಮಾತನಾಡುವ ಸ್ಥಳೀಯ ಧ್ವನಿ ಆಜ್ಞೆಗಳ ಮೂಲಕ ಹ್ಯಾಂಡ್ಸ್-ಫ್ರೀ ಅಪ್ಲಿಕೇಶನ್ ಮಾರ್ಗದರ್ಶನ",
-        choosePortalTitle: "ಪೋರ್ಟಲ್ ಅನ್ನು ಆಯ್ಕೆಮಾಡಿ", buyerPortalTitle: "ಖರೀದಾರರ ಪೋರ್ಟಲ್", buyerPortalDesc: "ಸೈನ್ ಇನ್ ಮಾಡಿ, ಶಾಪಿಂಗ್ ಮಾಡಿ ಮತ್ತು ನೇರ ಪಾವತಿ ಮಾಡಿ",
-        sellerPortalTitle: "ಕುಶಲಕರ್ಮಿ / ಮಾರಾಟಗಾರರ ಪೋರ್ಟಲ್", sellerPortalDesc: "AI ಸ್ಟುಡಿಯೋ, QR ಕೋಡ್ ಮತ್ತು ಬೆಲೆ",
-        buyerSignInTitle: "ಖರೀದಾರರ ಸೈನ್ ಇನ್", buyerSignInDesc: "ಹಸ್ತಕಳ ಇ-ಕಾಮರ್ಸ್ ಸ್ಟೋರ್ ಅನ್ನು ಪ್ರವೇಶಿಸಿ", buyerSignInBtn: "ಶಾಪಿಂಗ್ ಮಾಡಲು ಸೈನ್ ಇನ್ ಮಾಡಿ ➔", buyerGuest: "ಅತಿಥಿಯಾಗಿ ಮುಂದುವರಿಸಿ",
-        cartTitle: "🛒 ಶಾಪಿಂಗ್ ಕಾರ್ಟ್ ಮತ್ತು ಚೆಕ್‌ಔಟ್", cartEmpty: "ನಿಮ್ಮ ಕಾರ್ಟ್ ಖಾಲಿಯಾಗಿದೆ.", totalText: "ಒಟ್ಟು:", selectPayLabel: "ಪಾವತಿ ಆಯ್ಕೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ:",
-        payUpi: "UPI / Google Pay / PhonePe / Paytm", payCard: "ಕ್ರೆಡಿಟ್ / ಡೆಬಿಟ್ ಕಾರ್ಡ್ / ನೆಟ್ ಬ್ಯಾಂಕಿಂಗ್", payCod: "ಕ್ಯಾಶ್ ಆನ್ ಡೆಲಿವರಿ", completePay: "ಪಾವತಿಸಲು ಮುಂದುವರಿಯಿರಿ ➔",
-        modalDescLabel: "ಅನುವಾದಿಸಲಾದ ಇಂಗ್ಲಿಷ್ ವಿವರಣೆ:", addToCart: "ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಿ 🛒", cartNav: "ಕಾರ್ಟ್", portalsNav: "← ಪೋರ್ಟಲ್‌ಗಳು", signOut: "ಸೈನ್ ಔಟ್",
-        aiHeader: "✨ AI ಫೋಟೋ ಸ್ಟುಡಿಯೋ", aiSub: "ಯಾವುದೇ ಫೋಟೋವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ — ಸ್ಟುಡಿಯೋ ಮಾರಾಟಕ್ಕಾಗಿ ಅದನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಸುಧಾರಿಸುತ್ತದೆ.",
-        uploadStrong: "ಉತ್ಪನ್ನದ ಫೋಟೋವನ್ನು ತೆಗೆದುಕೊಂಡು ಅಥವಾ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ", uploadSpan: "ಫೋಟೋಗ್ರಫಿ ಕೌಶಲ್ಯಗಳ ಅಗತ್ಯವಿಲ್ಲ • AI ಲೈಟಿಂಗ್ ಮತ್ತು ಹಿನ್ನೆಲೆಯನ್ನು ಸುಧಾರಿಸುತ್ತದೆ",
-        oneTap: "🤖 ಒನ್-ಟ್ಯಾಪ್ AI ವರ್ಧನೆ", prodBg: "🎨 ಉತ್ಪನ್ನ ಹಿನ್ನೆಲೆ", bgOrig: "ಮೂಲ", bgWhite: "ಬಿಳಿ", bgCream: "ಕ್ರೀಮ್",
-        nextVoice: "ಮುಂದಿನ ಪುಟ: ಸ್ಥಳೀಯ ಧ್ವನಿ ವಿವರಣೆ ➔", voiceTitle: "🎙️ 2. ಸ್ಥಳೀಯ ಧ್ವನಿ ವಿವರಣೆ",
-        recordBtn: "ನಿಮ್ಮ ಸ್ಥಳೀಯ ಭಾಷೆಯಲ್ಲಿ ಕರಕುಶಲತೆಯನ್ನು ವಿವರಿಸಿ", spokenTranscript: "ಮಾತನಾಡುವ ಭಾಷಣದ ಪ್ರತಿಲಿಪಿ (ಲೈವ್ ಬಹುಭಾಷಾ ದಾಖಲೆ):",
-        voicePlaceholder: "ನಿಮ್ಮ ಆಯ್ಕೆಯ ಭಾಷೆಯಲ್ಲಿ ರೆಕಾರ್ಡ್ ಮಾಡಲು ಮೇಲೆ ಟ್ಯಾಪ್ ಮಾಡಿ...",
-        translatedDesc: "ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಅನುವಾದಿಸಲಾದ ಇಂಗ್ಲಿಷ್ ವಿವರಣೆ:", nextBank: "ಮುಂದಿನ ಪುಟ: ಬ್ಯಾಂಕ್ ವಿವರಗಳು ಮತ್ತು QR ➔",
-        bankTitle: "🏦 3. ಬ್ಯಾಂಕ್ ವಿವರಗಳು ಮತ್ತು ಪಾವತಿ QR", qrSub: "📱 ನಿಮ್ಮ ಸ್ಕ್ಯಾನ್ ಮಾಡಬಹುದಾದ ಪಾವತಿ QR ಕೋಡ್", nextPricing: "ಮುಂದಿನ ಪುಟ: ಬೆಲೆ ಕ್ಯಾಲ್ಕುಲೇಟರ್ ➔",
-        calcTitle: "🧮 4. ಮಾರುಕಟ್ಟೆ ಬೆಲೆ ಕ್ಯಾಲ್ಕುಲೇಟರ್", prodTitleLabel: "ಉತ್ಪನ್ನ ಶೀರ್ಷಿಕೆ:", rawText: "ಕಚ್ಚಾ ವಸ್ತು (₹)",
-        hoursText: "ತಯಾರಿಕೆ (ಗಂಟೆಗಳು)", rateText: "ದರ (₹/ಗಂಟೆ)", benchText: "ಮಾರುಕಟ್ಟೆ ಸರಾಸರಿ (₹)", floor: "ನೆಲ", target: "ಗುರಿ ನ್ಯಾಯಯುತ",
-        premium: "ಪ್ರೀಮಿಯಂ", publish: "🚀 ಸಾರ್ವಜನಿಕ ಸ್ಟೋರ್‌ಫ್ರಂಟ್‌ನಲ್ಲಿ ಪ್ರಕಟಿಸಿ", catalogTitle: "📊 5. ನಿಮ್ಮ ಪ್ರಕಟಿತ ಕ್ಯಾಟಲಾಗ್",
-        navStudio: "ಸ್ಟುಡಿಯೋ", navVoice: "ಧ್ವನಿ", navBank: "ಬ್ಯಾಂಕ್/QR", navPricing: "ಬೆಲೆ", navCatalog: "ಕ್ಯಾಟಲಾಗ್",
-        storeTitle: "🛍️ ಹಸ್ತಕಳ ಕರಕುಶಲ ವಸ್ತುಗಳ ಸ್ಟೋರ್‌ಫ್ರಂಟ್", storeDesc: "ಭಾರತದಾದ್ಯಂತ ಗ್ರಾಮೀಣ ಕುಶಲಕರ್ಮಿಗಳನ್ನು ನೇರವಾಗಿ ಬೆಂಬಲಿಸುವುದು.", asstHeader: "🎙️ ಮಾರಾಟಗಾರರ ಧ್ವನಿ ಸಹಾಯಕ"
-      },
-      'ml-IN': {
-        welcomeTitle: "HASTHAKALA", welcomeSub: "Rural Hands • Global Reach",
-        tagMain: "Authentic Crafts from Rural India", tagSub: "Support artisans. Celebrate heritage.",
-        getStarted: "തുടങ്ങുക ➔", selectLangTitle: "ഭാഷ തിരഞ്ഞെടുക്കുക", confirmLang: "നാവിഗേഷൻ മോഡിലേക്ക് തുടരുക ➔",
-        chooseModeTitle: "നാവിഗേഷൻ മോഡ് തിരഞ്ഞെടുക്കുക", manualTitle: "മാനുവൽ / ടച്ച് മോഡ്", manualDesc: "വിഷ്വൽ ബട്ടണുകൾ, ടച്ച് & കൺട്രോളുകൾ ഉപയോഗിച്ച് നാവിഗേറ്റ് ചെയ്യുക",
-        voiceModeTitle: "വോイス അസിസ്റ്റന്റ് മോഡ്", voiceDesc: "സംസാരിക്കുന്ന നേറ്റീവ് വോയ്സ് കമാൻഡുകൾ വഴി ഹാൻഡ്സ്-ഫ്രീ ആപ്പ് മാർഗ്ഗനിർദ്ദേശം",
-        choosePortalTitle: "പോർട്ടൽ തിരഞ്ഞെടുക്കുക", buyerPortalTitle: "വായർ പോർട്ടൽ", buyerPortalDesc: "സൈൻ ഇൻ ചെയ്യുക, ഷോപ്പിംഗ് & ഡയറക്ട് പേ",
-        sellerPortalTitle: "ആർട്ടിസൻ / വിൽപ്പനക്കാരന്റെ പോർട്ടൽ", sellerPortalDesc: "AI സ്റ്റുഡിയോ, QR കോഡ് & വില",
-        buyerSignInTitle: "വായർ സൈൻ ഇൻ", buyerSignInDesc: "ഹസ്തകല ഇ-കോമേഴ്സ് സ്റ്റോർ ആക്സസ് ചെയ്യുക", buyerSignInBtn: "ഷോപ്പിംഗിനായി സൈൻ ഇൻ ചെയ്യുക ➔", buyerGuest: "അതിഥിയായി തുടരുക",
-        cartTitle: "🛒 ഷോപ്പിംഗ് കാർട്ടും ചെക്ക്ഔട്ടും", cartEmpty: "നിങ്ങളുടെ കാർട്ട് காலியாகയാണ്.", totalText: "ആകെ:", selectPayLabel: "പേയ്മെന്റ് ഓപ്ഷൻ തിരഞ്ഞെടുക്കുക:",
-        payUpi: "UPI / Google Pay / PhonePe / Paytm", payCard: "ക്രെഡിറ്റ് / ഡെബിറ്റ് കാർഡ് / നെറ്റ് ബാങ്കിംഗ്", payCod: "കാഷ് ഓൺ ഡെലിവറി", completePay: "പേയ്മെന്റിലേക്ക് തുടരുക ➔",
-        modalDescLabel: "വിവർത്തനം ചെയ്ത ഇംഗ്ലീഷ് വിവരണം:", addToCart: "കാർട്ടിലേക്ക് ചേർക്കുക 🛒", cartNav: "കാർട്ട്", portalsNav: "← പോർട്ടലുകൾ", signOut: "സൈൻ ഔട്ട്",
-        aiHeader: "✨ AI ഫോട്ടോ സ്റ്റുഡിയോ", aiSub: "ഏതെങ്കിലും ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക — സ്റ്റുഡിയോ വിൽപ്പനയ്ക്കായി അത് സ്വയമേവ മെച്ചപ്പെടുത്തുന്നു.",
-        uploadStrong: "ഉൽപ്പന്ന ഫോട്ടോ എടുക്കുക അല്ലെങ്കിൽ അപ്‌ലോഡ് ചെയ്യുക", uploadSpan: "ഫോട്ടോഗ്രാഫി കഴിവുകൾ ആവശ്യമില്ല • AI ലൈറ്റിംഗും പശ്ചാത്തലവും മെച്ചപ്പെടുത്തുന്നു",
-        oneTap: "🤖 ഒറ്റ-ടാപ്പ് AI മെച്ചപ്പെടുത്തൽ", prodBg: "🎨 ഉൽപ്പന്ന പശ്ചാത്തലം", bgOrig: "യഥാർത്ഥ", bgWhite: "വെള്ള", bgCream: "ക്രീം",
-        nextVoice: "അടുത്ത പേജ്: നേറ്റീവ് വോയ്സ് വിവരണം ➔", voiceTitle: "🎙️ 2. നേറ്റീവ് വോയ്സ് വിവരണം",
-        recordBtn: "നിങ്ങളുടെ മാതൃഭാഷയിൽ കരകൗശലം വിവരിക്കുക", spokenTranscript: "സംസാരിച്ച സംഭാഷണ ട്രാൻസ്ക്രിപ്റ്റ് (ലൈവ് ബഹുഭാഷാ റെക്കോർഡ്):",
-        voicePlaceholder: "നിങ്ങൾ തിരഞ്ഞെടുത്ത ഭാഷയിൽ റെക്കോർഡ് ചെയ്യാൻ മുകളിൽ ടാപ്പ് ചെയ്യുക...",
-        translatedDesc: "സ്വയം വിവർത്തനം ചെയ്ത ഇംഗ്ലീഷ് വിവരണം:", nextBank: "അടുത്ത പേജ്: ബാങ്ക് വിശദാംശങ്ങളും QR ഉം ➔",
-        bankTitle: "🏦 3. ബാങ്ക് വിശദാംശങ്ങളും പേയ്മെന്റ് QR ഉം", qrSub: "📱 നിങ്ങളുടെ സ്കാൻ ചെയ്യാവുന്ന പേയ്മെന്റ് QR കോഡ്", nextPricing: "അടുത്ത പേജ്: വില കാൽക്കുലേറ്റർ ➔",
-        calcTitle: "🧮 4. മാർക്കറ്റ് വില കാൽക്കുലേറ്റർ", prodTitleLabel: "ഉൽപ്പന്ന ശീർഷകം:", rawText: "അസംസ്കൃത വസ്തു (₹)",
-        hoursText: "നിർമ്മാണം (മണിക്കൂർ)", rateText: "നിരക്ക് (₹/മണിക്കൂർ)", benchText: "വിപണി ശരാശരി (₹)", floor: "ഫ്ലോർ", target: "ടാർഗെറ്റ് ന്യായമായ",
-        premium: "പ്രീമിയം", publish: "🚀 പബ്ലിക് സ്റ്റോർഫ്രണ്ടിൽ പ്രസിദ്ധീകരിക്കുക", catalogTitle: "📊 5. നിങ്ങളുടെ പ്രസിദ്ധീകരിച്ച കാറ്റലോഗ്",
-        navStudio: "സ്റ്റുഡിയോ", navVoice: "വോയ്സ്", navBank: "ബാങ്ക്/QR", navPricing: "വില", navCatalog: "കാറ്റലോഗ്",
-        storeTitle: "🛍️ ഹസ്തകല കരകൗശല സ്റ്റോർഫ്രണ്ട്", storeDesc: "ഇന്ത്യയിലുടനീളമുള്ള ഗ്രാമീണ കരകൗശല വിദഗ്ധരെ നേരിട്ട് പിന്തുണയ്ക്കുന്നു.", asstHeader: "🎙️ വിൽപ്പനക്കാരന്റെ വോയ്സ് അസിസ്റ്റന്റ്"
-      },
-      'pa-IN': {
-        welcomeTitle: "HASTHAKALA", welcomeSub: "Rural Hands • Global Reach",
-        tagMain: "Authentic Crafts from Rural India", tagSub: "Support artisans. Celebrate heritage.",
-        getStarted: "ਸ਼ੁਰੂ ਕਰੋ ➔", selectLangTitle: "ਭਾਸ਼ਾ ਚੁਣੋ", confirmLang: "ਨੈਵੀਗੇਸ਼ਨ ਮੋਡ 'ਤੇ ਜਾਰੀ ਰੱਖੋ ➔",
-        chooseModeTitle: "ਨੈਵੀਗੇਸ਼ਨ ਮੋਡ ਚੁਣੋ", manualTitle: "ਮੈਨੂਅਲ / ਟੱਚ ਮੋਡ", manualDesc: "ਵਿਜ਼ੁਅਲ ਬਟਨਾਂ, ਟੱਚ ਅਤੇ ਨਿਯੰਤਰਣ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਨੈਵੀਗੇਟ ਕਰੋ",
-        voiceModeTitle: "ਵੌਇਸ ਅਸਿਸਟੈਂਟ ਮੋਡ", voiceDesc: "ਬੋਲੀ ਜਾਣ ਵਾਲੀ ਮੂਲ ਵੌਇਸ ਕਮਾਂਡ ਰਾਹੀਂ ਹੈਂਡਸ-ਫ੍ਰੀ ਐਪ ਮਾਰਗਦਰਸ਼ਨ",
-        choosePortalTitle: "ਪੋਰਟਲ ਚੁਣੋ", buyerPortalTitle: "ਖਰੀਦਦਾਰ ਪੋਰਟਲ", buyerPortalDesc: "ਸਾਈਨ ਇਨ ਕਰੋ, ਖਰੀਦਦਾਰੀ ਕਰੋ ਅਤੇ ਸਿੱਧਾ ਭੁਗਤਾਨ ਕਰੋ",
-        sellerPortalTitle: "ਕਾਰੀਗਰ / ਵਿਕਰੇਤਾ ਪੋਰਟਲ", sellerPortalDesc: "AI ਸਟੂਡੀਓ, QR ਕੋਡ ਅਤੇ ਕੀਮਤ",
-        buyerSignInTitle: "ਖਰੀਦਦਾਰ ਸਾਈਨ ਇਨ", buyerSignInDesc: "ਹਸਤਕਲਾ ਈ-ਕਾਮਰਸ ਸਟੋਰ ਤੱਕ ਪਹੁੰਚ ਕਰੋ", buyerSignInBtn: "ਖਰੀਦਦਾਰੀ ਲਈ ਸਾਈਨ ਇਨ ਕਰੋ ➔", buyerGuest: "ਮਹਿਮਾਨ ਵਜੋਂ ਜਾਰੀ ਰੱਖੋ",
-        cartTitle: "🛒 ਸ਼ਾਪਿੰਗ ਕਾਰਟ ਅਤੇ ਚੈੱਕਆਉਟ", cartEmpty: "ਤੁਹਾਡੀ ਕਾਰਟ ਖਾਲੀ ਹੈ।", totalText: "ਕੁੱਲ:", selectPayLabel: "ਭੁਗਤਾਨ ਵਿਕਲਪ ਚੁਣੋ:",
-        payUpi: "UPI / Google Pay / PhonePe / Paytm", payCard: "ਕ੍ਰੈਡਿਟ / ਡੈਬਿਟ ਕਾਰਡ / ਨੇੱਟ ਬੈਂਕਿੰਗ", payCod: "ਕੈਸ਼ ਆਨ ਡਿਲੀਵਰੀ", completePay: "ਭੁਗਤਾਨ ਲਈ ਅੱਗੇ ਵਧੋ ➔",
-        modalDescLabel: "ਅਨੁਵਾਦਿਤ ਅੰਗਰੇਜ਼ੀ ਵਰਣਨ:", addToCart: "ਕਾਰਟ ਵਿੱਚ ਸ਼ਾਮਲ ਕਰੋ 🛒", cartNav: "ਕਾਰਟ", portalsNav: "← ਪੋਰਟਲ", signOut: "ਸਾਈਨ ਆਉਟ",
-        aiHeader: "✨ AI ਫੋਟੋ ਸਟੂਡੀਓ", aiSub: "ਕਈ ਵੀ ਫੋਟੋ ਅੱਪਲੋਡ ਕਰੋ — ਸਟੂਡੀਓ ਵਿਕਰੀ ਲਈ ਇਸਨੂੰ ਆਪਣੇ ਆਪ ਸੁਧਾਰਦਾ ਹੈ।",
-        uploadStrong: "ਉਤਪਾਦ ਦੀ ਫੋਟੋ ਲਓ ਜਾਂ ਅੱਪਲੋਡ ਕਰੋ", uploadSpan: "ਫੋਟੋਗ੍ਰਾਫੀ ਹੁਨਰ ਦੀ ਲੋੜ ਨਹੀਂ • AI ਲਾਈਟਿੰਗ ਅਤੇ ਬੈਕਗ੍ਰਾਊਂਡ ਵਿੱਚ ਸੁਧਾਰ ਕਰਦਾ ਹੈ",
-        oneTap: "🤖 ਵਨ-ਟੈਪ AI ਸੁਧਾਰ", prodBg: "🎨 ਉਤਪਾਦ ਪਿਛੋਕੜ", bgOrig: "ਅਸਲੀ", bgWhite: "ਸਫ਼ेद", bgCream: "ਕਰੀਮ",
-        nextVoice: "ਅਗਲਾ ਪੰਨਾ: ਮੂਲ ਵੌਇਸ ਵਰਣਨ ➔", voiceTitle: "🎙️ 2. ਮੂਲ ਵੌਇਸ ਵਰਣਨ",
-        recordBtn: "ਆਪਣੀ ਮਾਂ ਬੋਲੀ ਵਿੱਚ ਦਸਤਕਾਰੀ ਦਾ ਵਰਣਨ ਕਰੋ", spokenTranscript: "ਬੋਲੀ ਗਈ ਬੋਲੀ ਦਾ ਪ੍ਰਤੀਲਿਪੀ (ਲਾਈਵ ਬਹੁ-ਭਾਸ਼ਾਈ ਰਿਕਾਰਡ):",
-        voicePlaceholder: "ਆਪਣੀ ਚੁਣੀ ਗਈ ਭਾਸ਼ਾ ਵਿੱਚ ਰਿਕਾਰਡ ਕਰਨ ਲਈ ਉੱਪਰ ਟੈਪ ਕਰੋ...",
-        translatedDesc: "ਆਟੋ-ਅਨੁਵਾਦਿਤ ਅੰਗਰੇਜ਼ੀ ਵਰਣਨ:", nextBank: "ਅਗਲਾ ਪੰਨਾ: ਬੈਂਕ ਵੇਰਵੇ ਅਤੇ QR ➔",
-        bankTitle: "🏦 3. ਬੈਂਕ ਵੇਰਵੇ ਅਤੇ ਭੁਗਤਾਨ QR", qrSub: "📱 ਤੁਹਾਡਾ ਸਕੈਨਯੋਗ ਭੁਗਤਾਨ QR ਕੋਡ", nextPricing: "ਅਗਲਾ ਪੰਨਾ: ਕੀਮਤ ਕੈਲਕੁਲੇਟਰ ➔",
-        calcTitle: "🧮 4. ਬਾਜ਼ਾਰ ਕੀਮਤ ਕੈਲਕੁਲੇਟਰ", prodTitleLabel: "ਉਤਪਾਦ ਸਿਰਲੇਖ:", rawText: "ਕੱਚਾ ਮਾਲ (₹)",
-        hoursText: "ਬਣਾਉਣ ਵਿੱਚ (ਘੰਟੇ)", rateText: "ਦਰ (₹/ਘੰਟਾ)", benchText: "ਬਾਜ਼ਾਰ ਔਸਤ (₹)", floor: "ਫਰਸ਼", target: "ਟੀਚਾ ਉਚਿਤ",
-        premium: "ਪ੍ਰੀਮੀਅਮ", publish: "🚀 ਪਬਲਿਕ ਸਟੋਰਫ੍ਰੰਟ 'ਤੇ ਪ੍ਰਕਾਸ਼ਿਤ ਕਰੋ", catalogTitle: "📊 5. ਤੁਹਾਡੀ ਪ੍ਰਕਾਸ਼ਿਤ ਕੈਟਾਲਾਗ",
-        navStudio: "ਸਟੂਡੀਓ", navVoice: "ਵੌਇਸ", navBank: "ਬੈਂਕ/QR", navPricing: "ਕੀਮਤ", navCatalog: "ਕੈਟਾਲਾਗ",
-        storeTitle: "🛍️ ਹਸਤਕਲਾ ਦਸਤਕਾਰੀ ਸਟੋਰਫ੍ਰੰਟ", storeDesc: "ਭਰ ਭਰ ਦੇ ਪੇਂਡੂ ਕਾਰੀਗਰਾਂ ਦਾ ਸਿੱਧਾ ਸਮਰਥਨ ਕਰਨਾ।", asstHeader: "🎙️ ਵਿਕਰੇਤਾ ਵੌਇਸ ਅਸਿਸਟੈਂਟ"
-      },
-      'or-IN': {
-        welcomeTitle: "HASTHAKALA", welcomeSub: "Rural Hands • Global Reach",
-        tagMain: "Authentic Crafts from Rural India", tagSub: "Support artisans. Celebrate heritage.",
-        getStarted: "ଆରମ୍ଭ କରନ୍ତୁ ➔", selectLangTitle: "ଭାଷା ଚୟନ କରନ୍ତୁ", confirmLang: "ନେଭିଗେସନ୍ ମୋଡ୍ କୁ ଜାରି ରଖନ୍ତୁ ➔",
-        chooseModeTitle: "ନେଭିଗେସନ୍ ମୋଡ୍ ଚୟନ କରନ୍ତୁ", manualTitle: "ମାନୁଆଲ୍ / ଟଚ୍ ମୋଡ୍", manualDesc: "ଭିଜୁଆଲ୍ ବଟନ୍, ଟଚ୍ ଏବଂ କଣ୍ଟ୍ରୋଲ୍ ବ୍ୟବହାର କରି ନେଭିଗେଟ୍ କରନ୍ତୁ",
-        voiceModeTitle: "ଭଏସ୍ ଆସିଷ୍ଟାଣ୍ଟ ମୋଡ୍", voiceDesc: "କଥିତ ନାଟିଭ୍ ଭଏସ୍ କମାଣ୍ଡ୍ ମାଧ୍ୟମରେ ହ୍ୟାଣ୍ଡସ୍-ଫ୍ରି ଆପ୍ ମାର୍ଗଦର୍ଶନ",
-        choosePortalTitle: "ପୋର୍ଟାଲ୍ ଚୟନ କରନ୍ତୁ", buyerPortalTitle: "କ୍ରେତା ପୋର୍ଟାଲ୍", buyerPortalDesc: "ସାଇନ୍ ଆଇନ୍ କରନ୍ତୁ, ସପିଂ ଏବଂ ସିଧାସଳଖ ପେମେଣ୍ଟ କରନ୍ତୁ",
-        sellerPortalTitle: "କାରିଗର / ବିକ୍ରେତା ପୋର୍ଟାଲ୍", sellerPortalDesc: "AI ଷ୍ଟୁଡିଓ, QR କୋଡ୍ ଏବଂ ମୂଲ୍ୟ",
-        buyerSignInTitle: "କ୍ରେତା ସାଇନ୍ ଆଇନ୍", buyerSignInDesc: "ହସ୍ତକଳା ଇ-କମର୍ସ ଷ୍ଟୋର୍ କୁ ପ୍ରବେଶ କରନ୍ତୁ", buyerSignInBtn: "ସପିଂ ପାଇଁ ସାଇନ୍ ଆଇନ୍ କରନ୍ତୁ ➔", buyerGuest: "ଅତିଥି ଭାବରେ ଜାରି ରଖନ୍ତୁ",
-        cartTitle: "🛒 ସପିଂ କାର୍ଟ ଏବଂ ଚେକ୍ଆଉଟ୍", cartEmpty: "ଆପଣଙ୍କର କାର୍ଟ ଖାଲି ଅଛି।", totalText: "ମୋଟ:", selectPayLabel: "ପେମେଣ୍ଟ ବିକଳ୍ପ ଚୟନ କରନ୍ତୁ:",
-        payUpi: "UPI / Google Pay / PhonePe / Paytm", payCard: "କ୍ରେଡିଟ୍ / ଡେବିଟ୍ କାର୍ଡ / ନେଟ୍ ବ୍ୟାଙ୍କି operation", payCod: "କ୍ୟାଶ୍ ଅନ୍ ଡେଲିଭରି", completePay: "ପେମେଣ୍ଟ କରିବାକୁ ଆଗକୁ ବଢ଼ନ୍ତୁ ➔",
-        modalDescLabel: "ଅନୁବାଦିତ ଇଂରାଜୀ ବର୍ଣ୍ଣନା:", addToCart: "କାର୍ଟରେ ଯୋଡନ୍ତୁ 🛒", cartNav: " କାର୍ଟ", portalsNav: "← ପୋର୍ଟାଲ୍", signOut: "ସାଇନ୍ ଆଉଟ୍",
-        aiHeader: "✨ AI ଫଟୋ ଷ୍ଟୁଡିଓ", aiSub: "ଯେକୌଣସି ଫଟୋ ଅପଲୋଡ୍ କରନ୍ତୁ — ଷ୍ଟୁଡିଓ ବିକ୍ରି ପାଇଁ ଏହାକୁ ସ୍ୱୟଂଚାଳିତ ଭାବରେ ଉନ୍ନତ କରେ।",
-        uploadStrong: "ଉତ୍ପାଦର ଫଟୋ ନିଅନ୍ତୁ ବା ଅପଲୋଡ୍ କରନ୍ତୁ", uploadSpan: "ଫଟୋଗ୍ରାଫି କୌଶଳର ଆବଶ୍ୟକତା ନାହିଁ • AI ଲାଇଟିଂ ଏବଂ ପୃଷ୍ଠଭୂମି ଉନ୍ନତ କରେ",
-        oneTap: "🤖 ୱାନ୍-ଟ୍ୟାପ୍ AI ବୃଦ୍ଧି", prodBg: "🎨 ଉତ୍ପାଦ ପୃଷ୍ଠଭୂମି", bgOrig: "ମୂଳ", bgWhite: "ଧଳା", bgCream: "କ୍ରିମ୍",
-        nextVoice: "ପରବର୍ତ୍ତୀ ପୃଷ୍ଠା: ନାଟିଭ୍ ଭଏସ୍ ବର୍ଣ୍ଣନା ➔", voiceTitle: "🎙️ ୨. ନାଟିଭ୍ ଭଏସ୍ ବର୍ଣ୍ଣନା",
-        recordBtn: "ଆପଣଙ୍କ ସ୍ଥାନୀୟ ଭାଷାରେ ଶିଳ୍ପ ବର୍ଣ୍ଣନା କରନ୍ତୁ", spokenTranscript: "କଥିତ ବକ୍ତବ୍ୟ ପ୍ରତିଲିପି (ଲାଇଭ୍ ବହୁଭାଷୀ ରେକର୍ଡ):",
-        voicePlaceholder: "ଆପଣଙ୍କ ଚୟନିତ ଭାଷାରେ ରେକର୍ଡ କରିବାକୁ ଉପରେ ଟ୍ୟାପ୍ କରନ୍ତୁ...",
-        translatedDesc: "ସ୍ୱୟଂଚାଳିତ-ଅନୁବାଦିତ ଇଂରାଜୀ ବର୍ଣ୍ଣନା:", nextBank: "ପରବର୍ତ୍ତୀ ପୃଷ୍ଠା: ବ୍ୟାଙ୍କ ବିବରଣୀ ଏବଂ QR ➔",
-        bankTitle: "🏦 3. ବ୍ୟାଙ୍କ ବିବରଣୀ ଏବଂ ପେମେଣ୍ଟ QR", qrSub: "📱 ଆପଣଙ୍କର ସ୍କାନ୍ ଯୋଗ୍ୟ ପେମେଣ୍ଟ QR କୋଡ୍", nextPricing: "ପରବର୍ତ୍ତୀ ପୃଷ୍ଠା: ମୂଲ୍ୟ କ୍ୟାଲ୍କୁଲେଟର ➔",
-        calcTitle: "🧮 4. ବଜାର ମୂଲ୍ୟ କ୍ୟାଲ୍କୁଲେଟର", prodTitleLabel: "ଉତ୍ପାଦ ଶୀର୍ଷକ:", rawText: "କଞ୍ଚାମାଲ (₹)",
-        hoursText: "ତିଆରି କରିବା (ଘଣ୍ଟା)", rateText: "ହାର୍ (₹/ଘଣ୍ଟା)", benchText: "ବଜାର ହାରାହାରି (₹)", floor: "ମହଲା", target: "ଲକ୍ଷ୍ୟ ଉଚିତ",
-        premium: "ପ୍ରିମିୟମ୍", publish: "🚀 ସାର୍ବଜନୀନ ଷ୍ଟୋର୍ଫ୍ରଣ୍ଟରେ ପ୍ରକାଶ କରନ୍ତୁ", catalogTitle: "📊 5. ଆପଣଙ୍କର ପ୍ରକାଶିତ କାଟାଲଗ୍",
-        navStudio: "ଷ୍ଟୁଡିଓ", navVoice: "ଭଏସ୍", navBank: "ବ୍ୟାଙ୍କ/QR", navPricing: "ମୂଲ୍ୟ", navCatalog: "କାଟାଲଗ୍",
-        storeTitle: "🛍️ ହସ୍ତକଳା ହସ୍ତଶିଳ୍ପ ଷ୍ୋର୍ଫ୍ରଣ୍ଟ", storeDesc: "ଭାରତର ଗ୍ରାମୀଣ କାରିଗରମାନଙ୍କୁ ସିଧାସଳଖ ସମର୍ଥନ କରିବା।", asstHeader: "🎙️ ବିକ୍ରେତା ଭଏସ୍ ଆସିଷ୍ଟାଣ୍ଟ"
-      },
-      'as-IN': {
-        welcomeTitle: "HASTHAKALA", welcomeSub: "Rural Hands • Global Reach",
-        tagMain: "Authentic Crafts from Rural India", tagSub: "Support artisans. Celebrate heritage.",
-        getStarted: "ଆରମ୍ଭ কৰক ➔", selectLangTitle: "ভাষা নিৰ্বাচন কৰক", confirmLang: "নভিগেচন ম'ডলৈ আগবাঢ়ক ➔",
-        chooseModeTitle: "নভিগেচন ম'ড নিৰ্বাচন কৰক", manualTitle: "মেনুৱেল / স্পৰ্শ ম'ড", manualDesc: "ভিজুৱেল বুটাম, স্পৰ্শ আৰু নিয়ন্ত্ৰণ ব্যৱহাৰ কৰি নভিগেট কৰক",
-        voiceModeTitle: "ভইচ এচিষ্টেণ্ট ম'ড", voiceDesc: "কথিত নেটিভ ভইচ কমাণ্ডৰ জৰিয়তে হেণ্ডছ-ଫ্ৰী এপ নিৰ্দেশনা",
-        choosePortalTitle: "পৰ্টেল নিৰ্বাচন কৰক", buyerPortalTitle: "ক্ৰেতা পৰ্টেল", buyerPortalDesc: "চাইন ইন কৰক, শ্বপিং কৰক আৰু পোনপটীয়া পৰিশোধ কৰক",
-        sellerPortalTitle: "কাৰিকৰ / বিক্রেতা পৰ্টেল", sellerPortalDesc: "AI ষ্টুডিও, QR ক'ড আৰু মূল্য নিৰ্ধাৰণ",
-        buyerSignInTitle: "ক্ৰেতা ছাইন ইন", buyerSignInDesc: "হস্তকলা ই-কমাৰ্চ ষ্টোৰ এক্সেছ কৰক", buyerSignInBtn: "শ্বপিং কৰিবলৈ ছাইন ইন কৰক ➔", buyerGuest: "অতিথি হিচাপে অব্যাহত ৰাখক",
-        cartTitle: "🛒 শ্বপিং কাৰ্ট আৰু চেকআউট", cartEmpty: "আপোনাৰ কাৰ্ট খালী আছে।", totalText: "মুঠ:", selectPayLabel: "পেমেন্ট বিকল্প নিৰ্বাচন কৰক:",
-        payUpi: "UPI / Google Pay / PhonePe / Paytm", payCard: "ক্ৰেডিট / ডেবিট কাৰ্ড / নেট বেংকিং", payCod: "কেশ অন ডেলিভেৰী", completePay: "পেমেন্ট কৰিবলৈ আগবাঢ়ক ➔",
-        modalDescLabel: "অনূদিত ইংৰাজী বিৱৰণ:", addToCart: "কাৰ্টত যোগ কৰক 🛒", cartNav: "কাৰ্ট", portalsNav: "← পৰ্টেল", signOut: "ছাইন আউট",
-        aiHeader: "✨ AI ফটো ষ্টুডিও", aiSub: "যিকোনো ফটো আপলোড কৰক — ষ্টুডিওৱে বিক্ৰীৰ বাবে ইয়াক স্বয়ংক্ৰিয়ভাৱে উন্নত কৰে।",
-        uploadStrong: "উৎপাদনৰ ফটো লওক বা আপলোড কৰক", uploadSpan: "কোনো ফটোগ্ৰাফী দক্ষতাৰ প্ৰয়োজন নাই • AI লাইটিং আৰু বেকগাউন্ড উন্নত কৰে",
-        oneTap: "🤖 ৱান-টেপ AI বৰ্ধন", prodBg: "🎨 উৎপাদকৰ পটভূমি", bgOrig: "মূল", bgWhite: "বগা", bgCream: "ক্ৰীম",
-        nextVoice: "পৰৱৰ্তী পৃষ্ঠা: নেটিভ ভইচ বিৱৰণ ➔", voiceTitle: "🎙️ ২. নেটিভ ভইচ বিৱৰণ",
-        recordBtn: "আপোনাৰ থলুৱা ভাষাত শিল্পৰ বিৱৰণ দিয়ক", spokenTranscript: "কথিত ভাষণ প্ৰতিলিপি (লাইভ বহুভাষিক ৰেক):",
-        voicePlaceholder: "আপোনাৰ নিৰ্বাচিত ভাষাত ৰেকৰ্ড কৰিবলৈ ওপৰত টেপ কৰক...",
-        translatedDesc: "স্বয়ংক্রিয়ভাৱে অনূদিত ইংৰাজী বিৱৰণ:", nextBank: "পৰৱৰ্তী পৃষ্ঠা: বেংক বিৱৰণ আৰু QR ➔",
-        bankTitle: "🏦 ৩. বেংক বিৱৰণ আৰু পেমেন্ট QR", qrSub: "📱 আপোনাৰ স্কেন কৰিব পৰা পেমেন্ট QR ক'ড", nextPricing: "পৰৱৰ্তী পৃষ্ঠা: মূল্য কেলকুলেটৰ ➔",
-        calcTitle: "🧮 ৪. বজাৰ মূল্য কেলকুলেটর", prodTitleLabel: "উৎপাদন শিৰোনাম:", rawText: "कঁচামাল (₹)",
-        hoursText: "প্ৰস্তুত কৰিবলৈ (ঘণ্টা)", rateText: "হাৰ (₹/ঘণ্টা)", benchText: "বজাৰ গড় (₹)", floor: "তল", target: "লক্ষ্য উপযুক্ত",
-        premium: "پ్రిమియం", publish: "🚀 ৰাজহুৱା ষ্ট’ৰফ্ৰণ্টত প্ৰকাশ কৰক", catalogTitle: "📊 ৫. আপোনাৰ প্ৰকাশিত কেটেলগ",
-        navStudio: "ଷ୍ଟୁଡିଓ", navVoice: "ଭଏସ୍", navBank: "বেংক/QR", navPricing: "মূল্য", navCatalog: "কেটেলগ",
-        storeTitle: "🛍️ হস্তকলা হস্তশিল্প ষ্ট’ৰফ্ৰণ্ট", storeDesc: "সমগ্ৰ ভাৰতৰ গ্ৰাম্য কাৰিকৰসকলক পোনপটীয়াকৈ সমৰ্থন কৰা.", asstHeader: "🎙️ বিক্ৰେতা ভইচ এচিষ্টেণ্ট"
       }
     };
 
@@ -905,12 +650,6 @@
       setTxt('navTxtPricing', dict.navPricing); setTxt('navTxtCatalog', dict.navCatalog);
       setTxt('lblStorefrontTitle', dict.storeTitle); setTxt('lblStorefrontDesc', dict.storeDesc);
       setTxt('lblAsstHeader', dict.asstHeader);
-    }
-
-    function showScreen(screenId) {
-      document.querySelectorAll('.screen-overlay').forEach(s => s.classList.add('hidden'));
-      document.getElementById(screenId).classList.remove('hidden');
-      document.getElementById('mainHeader').style.display = screenId.startsWith('screen') ? 'none' : 'flex';
     }
 
     function startAppFromWelcome() {
@@ -1147,17 +886,17 @@
         document.getElementById('assistantTranscript').innerText = text;
         const lower = text.toLowerCase();
         
-        if (lower.includes('studio') || lower.includes('photo') || lower.includes('फोटो') || lower.includes('स्टुडियो') || lower.includes('स्टूडियो') || lower.includes('ఫోటో') || lower.includes('ಸ್ಟುಡಿಯೋ') || lower.includes('ஸ்டுடியோ') || lower.includes('ଷ୍ଟୁଡିଓ') || lower.includes('স্টুডিও') || lower.includes('સ્ટુડિયો') || lower.includes('ਸਟੂਡੀਓ') || lower.includes('ഫോട്ടോ')) {
+        if (lower.includes('studio') || lower.includes('photo')) {
           toggleVoiceAssistantModal(); switchSellerPage('seller-studio');
-        } else if (lower.includes('voice') || lower.includes('description') || lower.includes('आवाज़') || lower.includes('आवाज') || lower.includes('विवरण') || lower.includes('बोलकर') || lower.includes('వివరణ') || lower.includes('বিবরণ') || lower.includes('விவரம்') || lower.includes('वर्णन') || lower.includes('વર્ણન') || lower.includes('വിവരണം') || lower.includes('ಬೆಳವಣಿಗೆ') || lower.includes('ବର୍ଣ୍ଣନା') || lower.includes('বিৱৰণ')) {
+        } else if (lower.includes('voice') || lower.includes('description')) {
           toggleVoiceAssistantModal(); switchSellerPage('seller-voice');
-        } else if (lower.includes('bank') || lower.includes('qr') || lower.includes('upi') || lower.includes('pay') || lower.includes('बैंक') || lower.includes('బ్యాంక్') || lower.includes('ব্যাঙ্ক') || lower.includes('வங்கி') || lower.includes('ಬ್ಯಾಂಕ್') || lower.includes('ਬੈਂਕ') || lower.includes('ବ୍ୟାଙ୍କ') || lower.includes('বেংক')) {
+        } else if (lower.includes('bank') || lower.includes('qr') || lower.includes('upi') || lower.includes('pay')) {
           toggleVoiceAssistantModal(); switchSellerPage('seller-bank');
-        } else if (lower.includes('price') || lower.includes('cost') || lower.includes('calculator') || lower.includes('मूल्य') || lower.includes('कीमत') || lower.includes('ధర') || lower.includes('মূল্য') || lower.includes('விலை') || lower.includes('किंमत') || lower.includes('કિંમત') || lower.includes('ಬೆಲೆ') || lower.includes('മില്യൺ') || lower.includes('କ୍ୟାଲ୍କୁଲେଟର') || lower.includes('কেলকুলেটৰ')) {
+        } else if (lower.includes('price') || lower.includes('cost') || lower.includes('calculator')) {
           toggleVoiceAssistantModal(); switchSellerPage('seller-pricing');
-        } else if (lower.includes('catalog') || lower.includes('catalogue') || lower.includes('inventory') || lower.includes('published') || lower.includes('कैटलॉग') || lower.includes('सूची') || lower.includes('కేటలాగ్') || lower.includes('ক্যাটালগ') || lower.includes('பட்டியல்') || lower.includes('ಕ್ಯಾಟಲಾಗ್') || lower.includes('കറ്റലോഗ്') || lower.includes('ਕੈਟਾਲਾਗ') || lower.includes('କାଟାଲଗ୍') || lower.includes('কেটেলগ')) {
+        } else if (lower.includes('catalog') || lower.includes('inventory')) {
           toggleVoiceAssistantModal(); switchSellerPage('seller-inventory');
-        } else if (lower.includes('cart') || lower.includes('checkout') || lower.includes('shop') || lower.includes('कार्ट') || lower.includes('கார்ட்') || lower.includes('ಕಾರ್ಟ್') || lower.includes('കാർട്ട്') || lower.includes('ਕਾਰਟ') || lower.includes('କାର୍ଟ') || lower.includes('কাৰ্ট')) {
+        } else if (lower.includes('cart') || lower.includes('checkout')) {
           toggleVoiceAssistantModal(); openCartModal();
         }
       };
