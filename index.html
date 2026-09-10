@@ -465,44 +465,43 @@
 
   <script>
     // Initialize Supabase Client
-    // Initialize Supabase Client
   const SUPABASE_URL = 'https://zxnhycdwcapnwzirrlmo.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_nIbG6ou6kAh14Eh6fWHakw_30stxSCQ'; 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    let selectedLang = 'en-IN';
-    let appMode = 'manual';
-    let isRecording = false;
-    let recognition = null;
-    let assistantRecognition = null;
-    let accumulatedTranscript = '';
-    let selectedModalProduct = null;
-    let selectedPaymentMethod = 'upi';
-    let isBuyerLoggedIn = true; 
 
-    let publishedProducts = [];
-    let cart = [];
+  let selectedLang = 'en-IN';
+  let appMode = 'manual';
+  let isRecording = false;
+  let recognition = null;
+  let assistantRecognition = null;
+  let accumulatedTranscript = '';
+  let selectedModalProduct = null;
+  let selectedPaymentMethod = 'upi';
+  let isBuyerLoggedIn = true; 
 
-    // Fetch products live from Supabase database on startup
-    async function loadProductsFromDB() {
-      const { data, error } = await supabase.from('products').select('*').order('id', { ascending: false });
-      if (!error && data) {
-        publishedProducts = data.map(p => ({
-          id: p.id,
-          title: p.title,
-          price: p.price,
-          imageSrc: p.image_url,
-          description: p.description,
-          artisan: p.artisan_name || 'Lakshmi Devi'
-        }));
-        if (typeof renderCatalog === 'function') renderCatalog();
-        if (typeof renderBuyerStore === 'function') renderBuyerStore();
-      }
+  let publishedProducts = [];
+  let cart = [];
+
+  // Fetch products live from Supabase database on startup
+  async function loadProductsFromDB() {
+    const { data, error } = await supabase.from('products').select('*').order('id', { ascending: false });
+    if (!error && data) {
+      publishedProducts = data.map(p => ({
+        id: p.id,
+        title: p.title,
+        price: p.price,
+        imageSrc: p.image_url,
+        description: p.description,
+        artisan: p.artisan_name || 'Lakshmi Devi'
+      }));
+      if (typeof renderCatalog === 'function') renderCatalog();
+      if (typeof renderBuyerStore === 'function') renderBuyerStore();
     }
+  }
 
-    // Load products when the app boots up
-    window.addEventListener('DOMContentLoaded', () => {
-      loadProductsFromDB();
-    });
+  window.addEventListener('DOMContentLoaded', () => {
+    loadProductsFromDB();
+  });
 
     async function publishProduct() {
       const title = document.getElementById('draftTitleInput').value || 'Handcrafted Heritage Craft';
