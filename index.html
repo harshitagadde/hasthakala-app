@@ -487,7 +487,9 @@
       const map = {
         'en-IN':'en-IN','hi-IN':'hi-IN','bn-IN':'bn-IN','te-IN':'te-IN','ta-IN':'ta-IN',
         'mr-IN':'mr-IN','gu-IN':'gu-IN','kn-IN':'kn-IN','ml-IN':'ml-IN','pa-IN':'pa-IN',
-        'or-IN':'or-IN','as-IN':'as-IN'
+        'or-IN':'or-IN','as-IN':'as-IN','ur-IN':'ur-IN','sa-IN':'sa-IN','ks-IN':'ks-IN',
+        'kok-IN':'kok-IN','ne-IN':'ne-IN','sd-IN':'sd-IN','mai-IN':'mai-IN',
+        'mni-IN':'mni-IN','brx-IN':'brx-IN','sat-IN':'sat-IN'
       };
       return map[code] || 'en-IN';
     }
@@ -1823,109 +1825,260 @@
     return oldFindVoiceCommand(text);
   };
 
-  /* Continuous multi-command voice assistant. */
+  /* BRILLIANT / ROBUST CONTINUOUS VOICE ASSISTANT */
   startAssistantListening = function () {
     const status = document.getElementById('assistantStatusText');
     const transcript = document.getElementById('assistantTranscript');
-    if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-      if (status) status.innerText = 'Voice recognition is not supported in this browser. Use Chrome or Edge.';
+    const modal = document.getElementById('voiceAssistantModal');
+    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!Recognition) {
+      if (status) status.innerText = '🎙️ Voice recognition is not supported. Please use the latest Google Chrome or Microsoft Edge.';
       return;
     }
     if (!window.isSecureContext && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-      if (status) status.innerText = 'Microphone access requires HTTPS or localhost.';
+      if (status) status.innerText = '🎙️ Voice needs HTTPS or localhost for microphone access.';
       return;
     }
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (assistantRecognition) { try { assistantRecognition.onend = null; assistantRecognition.abort(); } catch(e){} }
-    assistantRecognition = new SpeechRecognition();
-    assistantRecognition.continuous = true;
-    assistantRecognition.interimResults = false;
-    assistantRecognition.maxAlternatives = 3;
-    assistantRecognition.lang = voiceLanguageCode(selectedLang);
+
+    // Stop any previous recognizer cleanly before creating a fresh one.
+    if (assistantRecognition) {
+      try { assistantRecognition.onend = null; assistantRecognition.onerror = null; assistantRecognition.abort(); } catch (e) {}
+    }
+
+    const rec = new Recognition();
+    assistantRecognition = rec;
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.maxAlternatives = 5;
+    rec.lang = voiceLanguageCode(selectedLang);
 
     let commandBusy = false;
-    let lastCommand = '';
-    let lastAt = 0;
+    let started = false;
+    let restartTimer = null;
+    let lastText = '';
+    let lastCommandAt = 0;
+    let speechWatchdog = null;
 
-    const restart = (delay) => {
-      setTimeout(() => {
-        const modal = document.getElementById('voiceAssistantModal');
-        if (!modal || modal.style.display !== 'flex' || !assistantRecognition) return;
-        try { assistantRecognition.start(); } catch(e) {}
-      }, delay || 250);
+    const isOpen = () => {
+      const m = document.getElementById('voiceAssistantModal');
+      return !!(m && m.style.display === 'flex' && assistantRecognition === rec);
     };
 
-    assistantRecognition.onstart = () => {
-      if (status) status.innerText = '🎙️ Listening... Speak your next command.';
+    const clearTimers = () => {
+      if (restartTimer) { clearTimeout(restartTimer); restartTimer = null; }
+      if (speechWatchdog) { clearTimeout(speechWatchdog); speechWatchdog = null; }
     };
 
-    assistantRecognition.onresult = (event) => {
-      let text = '';
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        if (event.results[i].isFinal) text += event.results[i][0].transcript + ' ';
+    const setStatus = (text) => { if (status) status.innerText = text; };
+
+    const safeRestart = (delay = 300) => {
+      if (restartTimer) clearTimeout(restartTimer);
+      restartTimer = setTimeout(() => {
+        restartTimer = null;
+        if (!isOpen() || commandBusy) return;
+        try { rec.start(); } catch (e) {
+          // InvalidStateError simply means recognition is already running.
+          if (e && e.name !== 'InvalidStateError') setTimeout(() => safeRestart(500), 500);
+        }
+      }, delay);
+    };
+
+    // More tolerant command resolver. It checks every SpeechRecognition alternative,
+    // common filler words, exact multilingual aliases, and small recognition mistakes.
+    const resolveCommand = (texts) => {
+      const candidates = [];
+      (texts || []).forEach(t => {
+        const n = normalizeVoiceText(t);
+        if (n && !candidates.includes(n)) candidates.push(n);
+      });
+
+      for (const text of candidates) {
+        const direct = findVoiceCommand(text);
+        if (direct) return direct;
       }
-      text = text.trim();
-      if (!text || commandBusy) return;
-      if (transcript) transcript.innerText = text;
 
-      const command = findVoiceCommand(text);
-      if (!command) {
-        if (status) status.innerText = '🎙️ I did not recognize that. Try Studio, Voice, Bank, Pricing, Catalog, or Cart.';
-        return;
+      const aliases = {
+        studio: ['studio','photo studio','photo','photos','ai studio','open studio','फोटो स्टूडियो','स्टूडियो','ఫోటో స్టూడియో','స్టూడియో','புகைப்பட ஸ்டுடியோ','ஸ்டுடியோ','ಸ್ಟುಡಿಯೋ','ഫോട്ടോ സ്റ്റുഡിയോ'],
+        voice: ['voice','voice description','description','native voice','वॉइस','आवाज़','विवरण','वायిస్','వాయిస్','వివరణ','குரல்','விளக்கம்','ವಾಯ್ಸ್','ವಿವರಣೆ'],
+        bank: ['bank','bank details','qr','qr code','upi','payment','pay','बैंक','क्यूआर','यूपीआई','भुगतान','బ్యాంక్','క్యూఆర్','యూపీఐ','చెల్లింపు','வங்கி','க்யூஆர்','பணம்','ಬ್ಯಾಂಕ್','ಕ್ಯೂಆರ್','ಪಾವತಿ'],
+        pricing: ['price','pricing','price calculator','calculator','cost','market price','कीमत','मूल्य','भाव','दर','प्राइस','ధర','ధర కాలిక్యులేటర్','விலை','கணக்கீடு','ಬೆಲೆ','ಕ್ಯಾಲ್ಕುಲೇಟರ್','വില'],
+        catalog: ['catalog','catalogue','inventory','store','products','shop','कatalog','कैटलॉग','इन्वेंटरी','स्टोर','उत्पाद','కేటలాగ్','ఇన్వెంటరీ','స్టోర్','ఉత్పత్తులు','கேட்டலாக்','சரக்கு','ಸ್ಟೋರ್','ಕ್ಯಾಟಲಾಗ್','കാറ്റലോഗ്'],
+        cart: ['cart','shopping cart','checkout','basket','कार्ट','चेकआउट','బండి','కార్ట్','செக்அவுட்','கார்ட்','ಕಾರ್ಟ್','ಚೆಕ್ಔಟ್','കാർട്ട്']
+      };
+
+      // Exact phrase matching first.
+      for (const text of candidates) {
+        for (const [cmd, words] of Object.entries(aliases)) {
+          if (words.some(w => text.includes(normalizeVoiceText(w)))) return cmd;
+        }
       }
 
-      const now = Date.now();
-      if (command === lastCommand && now - lastAt < 1800) return;
-      lastCommand = command;
-      lastAt = now;
-      commandBusy = true;
+      // Small typo tolerance for short English command words.
+      const distance = (a, b) => {
+        if (Math.abs(a.length - b.length) > 2) return 99;
+        const prev = Array.from({length:b.length + 1}, (_, i) => i);
+        for (let i = 1; i <= a.length; i++) {
+          const cur = [i];
+          for (let j = 1; j <= b.length; j++) {
+            cur[j] = Math.min(
+              cur[j - 1] + 1,
+              prev[j] + 1,
+              prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+            );
+          }
+          for (let j = 0; j <= b.length; j++) prev[j] = cur[j];
+        }
+        return prev[b.length];
+      };
+      const shortWords = {studio:'studio',voice:'voice',bank:'bank',pricing:'pricing',catalog:'catalog',cart:'cart'};
+      for (const text of candidates) {
+        const tokens = text.split(/\s+/).filter(Boolean);
+        for (const [cmd, word] of Object.entries(shortWords)) {
+          if (tokens.some(t => t.length >= 4 && distance(t, word) <= (word.length >= 7 ? 2 : 1))) return cmd;
+        }
+      }
+      return null;
+    };
 
-      try { assistantRecognition.abort(); } catch(e) {}
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-
-      if (status) status.innerText = 'Opening ' + command + '...';
+    const executeCommand = (command) => {
       if (command === 'studio') switchSellerPage('seller-studio');
       else if (command === 'voice') switchSellerPage('seller-voice');
       else if (command === 'bank') switchSellerPage('seller-bank');
       else if (command === 'pricing') switchSellerPage('seller-pricing');
       else if (command === 'catalog') switchSellerPage('seller-inventory');
       else if (command === 'cart') openCartModal();
+    };
 
-      speakAssistant(getLocalizedCommandReply(command) || ('Opening ' + command + '.'));
-      setTimeout(() => {
+    const speakAndListen = (text) => {
+      if (!text || !('speechSynthesis' in window)) {
         commandBusy = false;
-        lastCommand = '';
-        if (transcript) transcript.innerText = 'Listening for your next command...';
-        if (status) status.innerText = '🎙️ Listening... Speak your next command.';
-        restart(250);
-      }, 900);
-    };
-
-    assistantRecognition.onerror = (e) => {
-      console.warn('Assistant speech error:', e.error);
-      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
-        if (status) status.innerText = 'Microphone permission was denied. Allow microphone access and try again.';
+        setStatus('🎙️ Listening... Speak your next command.');
+        safeRestart(350);
         return;
       }
-      if (e.error === 'audio-capture') {
-        if (status) status.innerText = 'No microphone was detected.';
-        return;
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = voiceLanguageCode(selectedLang);
+        u.rate = 0.88;
+        u.pitch = 1;
+        u.volume = 1;
+        const resume = () => {
+          if (speechWatchdog) { clearTimeout(speechWatchdog); speechWatchdog = null; }
+          commandBusy = false;
+          if (!isOpen()) return;
+          setStatus('🎙️ Listening... Speak your next command.');
+          if (transcript) transcript.innerText = 'Listening for your next command...';
+          safeRestart(250);
+        };
+        u.onend = resume;
+        u.onerror = resume;
+        window.speechSynthesis.speak(u);
+        // Some browsers fail to fire onend reliably; never get stuck.
+        speechWatchdog = setTimeout(resume, Math.max(1800, Math.min(5000, 1200 + text.length * 55)));
+      } catch (e) {
+        commandBusy = false;
+        setStatus('🎙️ Listening... Speak your next command.');
+        safeRestart(300);
       }
-      if (e.error === 'network') {
-        if (status) status.innerText = 'Speech service network error. Check your internet connection.';
-        restart(1200);
-        return;
-      }
-      if (e.error === 'no-speech') restart(300);
     };
 
-    assistantRecognition.onend = () => {
-      const modal = document.getElementById('voiceAssistantModal');
-      if (modal && modal.style.display === 'flex' && !commandBusy) restart(250);
+    rec.onstart = () => {
+      started = true;
+      setStatus('🎙️ Listening clearly... Speak naturally.');
     };
 
-    try { assistantRecognition.start(); }
-    catch(e) { if (status) status.innerText = 'Tap the microphone button to start voice assistance.'; }
+    rec.onsoundstart = () => {
+      if (!commandBusy) setStatus('🎙️ I can hear you...');
+    };
+
+    rec.onspeechstart = () => {
+      if (!commandBusy) setStatus('🎙️ Hearing your command...');
+    };
+
+    rec.onresult = (event) => {
+      const finalTexts = [];
+      const allTexts = [];
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const result = event.results[i];
+        for (let j = 0; j < Math.min(result.length, 5); j++) {
+          const t = (result[j].transcript || '').trim();
+          if (t) allTexts.push(t);
+        }
+        if (result.isFinal && result[0] && result[0].transcript) finalTexts.push(result[0].transcript.trim());
+      }
+
+      const displayText = finalTexts.join(' ').trim() || allTexts[0] || '';
+      if (displayText && transcript) transcript.innerText = displayText;
+      if (commandBusy || !finalTexts.length) return;
+
+      const command = resolveCommand(allTexts.concat(finalTexts));
+      if (!command) {
+        setStatus('🎙️ I heard you, but did not match a command. Try “Studio”, “Voice”, “Bank”, “Pricing”, “Catalog”, or “Cart”.');
+        return;
+      }
+
+      const now = Date.now();
+      const normalized = normalizeVoiceText(displayText);
+      if (normalized === lastText && now - lastCommandAt < 2200) return;
+      lastText = normalized;
+      lastCommandAt = now;
+      commandBusy = true;
+
+      // Stop recognition before speaking so the assistant never hears its own reply.
+      try { rec.abort(); } catch (e) {}
+      if ('speechSynthesis' in window) { try { window.speechSynthesis.cancel(); } catch (e) {} }
+
+      const labels = {studio:'AI Photo Studio',voice:'Voice Description',bank:'Bank and QR',pricing:'Price Calculator',catalog:'Catalog',cart:'Shopping Cart'};
+      setStatus('Opening ' + (labels[command] || command) + '...');
+      executeCommand(command);
+      speakAndListen(getLocalizedCommandReply(command) || ('Opening ' + (labels[command] || command) + '.'));
+    };
+
+    rec.onnomatch = () => {
+      if (!commandBusy) setStatus('🎙️ I heard speech but could not understand it. Please say the feature name clearly.');
+    };
+
+    rec.onerror = (event) => {
+      const err = event && event.error;
+      console.warn('Voice assistant recognition:', err);
+      if (err === 'not-allowed' || err === 'service-not-allowed') {
+        setStatus('🎙️ Microphone permission is blocked. Allow the microphone for this site, then tap the voice button again.');
+        return;
+      }
+      if (err === 'audio-capture') {
+        setStatus('🎙️ No microphone was detected. Check your microphone and try again.');
+        return;
+      }
+      if (err === 'network') {
+        setStatus('🎙️ Speech service connection failed. Check your internet and I will retry.');
+        if (!commandBusy) safeRestart(1200);
+        return;
+      }
+      if (err === 'language-not-supported') {
+        setStatus('🎙️ This browser does not support recognition for the selected language. Please use Chrome/Edge or select English for voice commands.');
+        return;
+      }
+      if (err === 'no-speech' || err === 'aborted') {
+        if (!commandBusy && isOpen()) safeRestart(350);
+        return;
+      }
+      if (!commandBusy && isOpen()) safeRestart(600);
+    };
+
+    rec.onend = () => {
+      started = false;
+      if (isOpen() && !commandBusy) safeRestart(300);
+    };
+
+    try {
+      rec.start();
+    } catch (e) {
+      if (e && e.name !== 'InvalidStateError') {
+        setStatus('🎙️ Tap the voice button again to start listening.');
+      }
+    }
   };
 
   /* Localized confirmations for the added languages; existing languages keep their originals. */
