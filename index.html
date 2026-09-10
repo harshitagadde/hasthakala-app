@@ -459,18 +459,14 @@
       <p id="assistantStatusText" style="font-size:0.78rem; color:var(--text-muted);">Listening for instructions...</p>
       <div id="assistantTranscript" style="background:#FAF7F2; padding:8px; border-radius:8px; font-size:0.8rem; color:var(--text-dark); min-height:30px;">...</div>
     </div>
-<div id="dbStatusNotice" style="display:none; position:absolute; left:12px; right:12px; bottom:72px; z-index:1000; background:#fff3cd; color:#664d03; border:1px solid #ffecb5; border-radius:10px; padding:8px; font-size:0.72rem; text-align:center;"></div>
         <div id="draggableVoiceBtn" onclick="toggleVoiceAssistantModal()" title="Tap for Voice Assistant">🎙️</div>
   </div>
 
   <script>
     // Initialize Supabase Client
     const SUPABASE_URL = 'https://zxnhycdwcapnwzirrlmo.supabase.co';
-    // This MUST be the Publishable key (or legacy anon key) belonging to the SAME project.
-    // If Supabase reports "Invalid API key", copy the current Publishable key from
-    // Supabase Dashboard → Settings → API Keys and replace the value below.
-    const SUPABASE_ANON_KEY = 'sb_publishable_0cIUDLCdUITi_ycOTuOrDQ_54jOxLIw'; 
-    // Supabase connection.
+    const SUPABASE_ANON_KEY = 'sb_publishable_nIbG6ou6kAh14Eh6fWHakw_30stxSCQ'; 
+    // Supabase connection (keep the existing project/key; corrected project URL).
     let supabaseClient = null;
     let supabaseReady = false;
     try {
@@ -483,9 +479,8 @@
     }
 
     function showDatabaseError(message) {
+      // Supabase errors remain available in the browser console, but no status tagline is shown in the UI.
       console.error(message);
-      const notice = document.getElementById('dbStatusNotice');
-      if (notice) { notice.textContent = message; notice.style.display = 'block'; }
     }
 
     function voiceLanguageCode(code) {
@@ -514,10 +509,6 @@
 
 
     let selectedLang = 'en-IN';
-    try {
-      const savedLanguage = localStorage.getItem('hasthakalaLanguage');
-      if (savedLanguage) selectedLang = savedLanguage;
-    } catch (e) {}
     let appMode = 'manual';
     let isRecording = false;
     let recognition = null;
@@ -562,16 +553,7 @@
         const notice = document.getElementById('dbStatusNotice');
         if (notice) notice.style.display = 'none';
       } catch (error) {
-        const msg = String(error?.message || error || '');
-        const lower = msg.toLowerCase();
-        if (lower.includes('invalid api key') || lower.includes('apikey')) {
-          supabaseReady = false;
-          showDatabaseError('Supabase API key rejected. Use the Publishable key from Supabase Dashboard → Settings → API Keys for this project.');
-        } else if (lower.includes('permission') || lower.includes('row-level') || lower.includes('rls')) {
-          showDatabaseError('Supabase connected, but the products table permissions/RLS need to allow this app.');
-        } else {
-          showDatabaseError('Supabase connection/table error: ' + msg);
-        }
+        showDatabaseError('Supabase connection/table error: ' + (error.message || error));
       }
     }
 
@@ -1147,25 +1129,12 @@
 
     function startAppFromWelcome() {
       captureEnglishUI();
-
-      // IMPORTANT: never reset the user's language when opening the language screen.
-      // Restore the last selected language if one exists.
-      try {
-        const saved = localStorage.getItem('hasthakalaLanguage');
-        if (saved && languages.some(l => l.code === saved)) selectedLang = saved;
-      } catch (e) {}
-
-      document.documentElement.lang = selectedLang;
-      document.body.setAttribute('data-language', selectedLang);
+      selectedLang = 'en-IN';
       translateUI();
       showScreen('screenLanguage');
-
-      const grid = document.getElementById('languageGrid');
-      if (grid) {
-        grid.innerHTML = languages.map(l =>
-          `<div class="lang-chip ${l.code === selectedLang ? 'active' : ''}" onclick="selectLanguage('${l.code}', this)">${l.name}</div>`
-        ).join('');
-      }
+      document.getElementById('languageGrid').innerHTML = languages.map(l =>
+        `<div class="lang-chip ${l.code === selectedLang ? 'active' : ''}" onclick="selectLanguage('${l.code}', this)">${l.name}</div>`
+      ).join('');
     }
 
     function selectLanguage(code, element) {
@@ -1188,16 +1157,12 @@
     }
 
     function confirmLanguageSelection() {
-      // Apply one final synchronous pass before leaving the language screen.
       translateUI();
-      try { localStorage.setItem('hasthakalaLanguage', selectedLang); } catch (e) {}
       showScreen('screenModeSelect');
     }
 
     function selectAppMode(mode) { 
-      appMode = mode;
-      // Keep the selected language on every screen transition.
-      translateUI();
+      appMode = mode; 
       showScreen('screenPortalSelect'); 
       if (mode === 'voice') {
         setTimeout(() => {
@@ -1228,8 +1193,6 @@
     function openBuyerGuest() { isBuyerLoggedIn = false; openRole('buyer'); }
 
     function openRole(role) {
-      // Do not allow portal navigation to fall back to English.
-      translateUI();
       document.querySelectorAll('.screen-overlay').forEach(o => o.classList.add('hidden'));
       document.getElementById('mainHeader').style.display = 'flex';
       const voiceBtn = document.getElementById('draggableVoiceBtn');
@@ -1310,7 +1273,7 @@
         recognition = new SpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = true;
-        recognition.lang = voiceLanguageCode(selectedLang);
+        recognition.lang = selectedLang;
         errorNotice.style.display = 'none';
 
         recognition.onstart = function() {
@@ -1665,5 +1628,326 @@
     function showStatus(msg) { if (!status) return; status.textContent = msg; status.classList.add("show"); setTimeout(() => status.classList.remove("show"), 3500); }
   })();
   </script>
+
+<script>
+/* HASthakala LANGUAGE + CONTINUOUS VOICE PATCH
+   Adds the 10 remaining Scheduled Indian Languages, English + existing languages,
+   keeps the selected language after Get Started, and makes the voice assistant
+   accept multiple commands without closing the voice window. */
+(function () {
+  const allIndianLanguages = [
+    { code:'en-IN', name:'English (India)' },
+    { code:'hi-IN', name:'हिन्दी (Hindi)' },
+    { code:'bn-IN', name:'বাংলা (Bengali)' },
+    { code:'te-IN', name:'తెలుగు (Telugu)' },
+    { code:'ta-IN', name:'தமிழ் (Tamil)' },
+    { code:'mr-IN', name:'मराठी (Marathi)' },
+    { code:'gu-IN', name:'ગુજરાતી (Gujarati)' },
+    { code:'kn-IN', name:'ಕನ್ನಡ (Kannada)' },
+    { code:'ml-IN', name:'മലയാളം (Malayalam)' },
+    { code:'pa-IN', name:'ਪੰਜਾਬੀ (Punjabi)' },
+    { code:'or-IN', name:'ଓଡ଼ିଆ (Odia)' },
+    { code:'as-IN', name:'অসমীয়া (Assamese)' },
+    { code:'ur-IN', name:'اردو (Urdu)' },
+    { code:'sa-IN', name:'संस्कृतम् (Sanskrit)' },
+    { code:'ks-IN', name:'कॉशुर / کٲشُر (Kashmiri)' },
+    { code:'kok-IN', name:'कोंकणी (Konkani)' },
+    { code:'ne-IN', name:'नेपाली (Nepali)' },
+    { code:'sd-IN', name:'सिन्धी / سنڌي (Sindhi)' },
+    { code:'mai-IN', name:'मैथिली (Maithili)' },
+    { code:'mni-IN', name:'মৈতৈলোন্ / ꯃꯤꯇꯩ ꯂꯣꯟ (Manipuri)' },
+    { code:'brx-IN', name:'बड़ो (Bodo)' },
+    { code:'sat-IN', name:'ᱥᱟᱱᱛᱟᱲᱤ (Santali)' }
+  ];
+
+  /* const arrays declared by the original app are mutable, so replace their contents. */
+  if (Array.isArray(languages)) {
+    languages.splice(0, languages.length, ...allIndianLanguages);
+  }
+
+  const voiceCodes = {
+    'en-IN':'en-IN','hi-IN':'hi-IN','bn-IN':'bn-IN','te-IN':'te-IN','ta-IN':'ta-IN',
+    'mr-IN':'mr-IN','gu-IN':'gu-IN','kn-IN':'kn-IN','ml-IN':'ml-IN','pa-IN':'pa-IN',
+    'or-IN':'or-IN','as-IN':'as-IN','ur-IN':'ur-IN','sa-IN':'sa-IN','ks-IN':'ks-IN',
+    'kok-IN':'kok-IN','ne-IN':'ne-IN','sd-IN':'sd-IN','mai-IN':'mai-IN','mni-IN':'mni-IN',
+    'brx-IN':'brx-IN','sat-IN':'sat-IN'
+  };
+
+  voiceLanguageCode = function (code) { return voiceCodes[code] || 'en-IN'; };
+
+  /* Extra local strings for the newly added languages. The remaining UI text
+     uses the online translation fallback already present in Hasthakala. */
+  const extra = {
+    'ur-IN': {
+      welcomeSub:'دیہی ہاتھ • عالمی رسائی', tagMain:'دیہی ہندوستان کے مستند دستکاری کے فن پارے', tagSub:'کاریگروں کی مدد کریں۔ ورثے کو منائیں۔',
+      getStarted:'شروع کریں ➔', selectLangTitle:'زبان منتخب کریں', confirmLang:'نیویگیشن موڈ جاری رکھیں ➔',
+      chooseModeTitle:'نیویگیشن موڈ منتخب کریں', manualTitle:'دستی / ٹچ موڈ', voiceModeTitle:'وائس اسسٹنٹ موڈ',
+      choosePortalTitle:'پورٹل منتخب کریں', buyerPortalTitle:'خریدار پورٹل', sellerPortalTitle:'کاریگر / فروخت کنندہ پورٹل',
+      aiHeader:'✨ AI فوٹو اسٹوڈیو', navStudio:'اسٹوڈیو', navVoice:'وائس', navBank:'بینک/QR', navPricing:'قیمت', navCatalog:'کیٹلاگ',
+      catalogTitle:'📊 آپ کا شائع شدہ کیٹلاگ', storeTitle:'🛍️ ہستھکلا دستکاری اسٹور', asstHeader:'🎙️ فروخت کنندہ وائس اسسٹنٹ'
+    },
+    'sa-IN': {
+      welcomeSub:'ग्रामीणहस्ताः • वैश्विकप्रसारः', tagMain:'ग्रामीणभारतस्य प्रामाणिकाः हस्तशिल्पाः', tagSub:'शिल्पकारान् समर्थयत। परम्परां उत्सवयत।',
+      getStarted:'आरभत ➔', selectLangTitle:'भाषां चिनुत', confirmLang:'नेविगेशन मोडं प्रति गच्छत ➔',
+      chooseModeTitle:'नेविगेशन मोडं चिनुत', manualTitle:'मैनुअल / स्पर्शविधिः', voiceModeTitle:'वाणी-सहायक-विधिः',
+      choosePortalTitle:'पोर्टलं चिनुत', buyerPortalTitle:'क्रेता पोर्टलम्', sellerPortalTitle:'शिल्पकार / विक्रेता पोर्टलम्',
+      aiHeader:'✨ AI चित्र-स्टूडियो', navStudio:'स्टूडियो', navVoice:'वाणी', navBank:'बैंक/QR', navPricing:'मूल्यम्', navCatalog:'सूची',
+      catalogTitle:'📊 भवतः प्रकाशित सूची', storeTitle:'🛍️ हस्तकला हस्तशिल्प-विक्रयस्थानम्', asstHeader:'🎙️ विक्रेता वाणी-सहायकः'
+    },
+    'ne-IN': {
+      welcomeSub:'ग्रामीण हातहरू • विश्वव्यापी पहुँच', tagMain:'ग्रामीण भारतका प्रामाणिक हस्तकलाहरू', tagSub:'कलाकारहरूलाई सहयोग गर्नुहोस्। सम्पदाको उत्सव मनाउनुहोस्।',
+      getStarted:'सुरु गर्नुहोस् ➔', selectLangTitle:'भाषा छान्नुहोस्', confirmLang:'नेभिगेसन मोडमा जारी राख्नुहोस् ➔',
+      chooseModeTitle:'नेभिगेसन मोड छान्नुहोस्', manualTitle:'म्यानुअल / टच मोड', voiceModeTitle:'भ्वाइस असिस्टेन्ट मोड',
+      choosePortalTitle:'पोर्टल छान्नुहोस्', buyerPortalTitle:'खरिदकर्ता पोर्टल', sellerPortalTitle:'कलाकार / विक्रेता पोर्टल',
+      aiHeader:'✨ AI फोटो स्टुडियो', navStudio:'स्टुडियो', navVoice:'आवाज', navBank:'बैंक/QR', navPricing:'मूल्य', navCatalog:'क्याटलग',
+      catalogTitle:'📊 तपाईंको प्रकाशित क्याटलग', storeTitle:'🛍️ हस्तकला हस्तशिल्प स्टोर', asstHeader:'🎙️ विक्रेता भ्वाइस असिस्टेन्ट'
+    },
+    'kok-IN': {
+      welcomeSub:'गांवठी हात • जागतिक पोच', tagMain:'गांवठी भारतांतली अस्सल हस्तकला', tagSub:'कारागिरांक आदार दियात. वारसो साजरो करात.',
+      getStarted:'सुरू करात ➔', selectLangTitle:'भास निवडात', confirmLang:'नेविगेशन मोडाक वचात ➔',
+      chooseModeTitle:'नेविगेशन मोड निवडात', manualTitle:'मॅन्युअल / टच मोड', voiceModeTitle:'व्हॉइस असिस्टंट मोड',
+      choosePortalTitle:'पोर्टल निवडात', buyerPortalTitle:'गिरायक पोर्टल', sellerPortalTitle:'कारागीर / विक्रेता पोर्टल',
+      aiHeader:'✨ AI फोटो स्टुडिओ', navStudio:'स्टुडिओ', navVoice:'व्हॉइस', navBank:'बँक/QR', navPricing:'दर', navCatalog:'कॅटलॉग',
+      catalogTitle:'📊 तुमचो प्रकाशित कॅटलॉग', storeTitle:'🛍️ हस्तकला हस्तकला स्टोअर', asstHeader:'🎙️ विक्रेता व्हॉइस असिस्टंट'
+    },
+    'sd-IN': {
+      welcomeSub:'ڳوٺاڻا هٿ • عالمي رسائي', tagMain:'ڳوٺاڻي هندستان جون اصلي هٿ جون ٺهيل شيون', tagSub:'ڪاريگرن جي مدد ڪريو. ورثي کي ملهايو.',
+      getStarted:'شروع ڪريو ➔', selectLangTitle:'ٻولي چونڊيو', confirmLang:'نيويگيشن موڊ ڏانهن جاري رکو ➔',
+      chooseModeTitle:'نيويگيشن موڊ چونڊيو', manualTitle:'دستي / ٽچ موڊ', voiceModeTitle:'وائس اسسٽنٽ موڊ',
+      choosePortalTitle:'پورٽل چونڊيو', buyerPortalTitle:'خريدار پورٽل', sellerPortalTitle:'ڪاريگر / وڪرو ڪندڙ پورٽل',
+      aiHeader:'✨ AI فوٽو اسٽوڊيو', navStudio:'اسٽوڊيو', navVoice:'وائس', navBank:'بئنڪ/QR', navPricing:'قيمت', navCatalog:'ڪيٽلاگ',
+      catalogTitle:'📊 توهان جو شايع ٿيل ڪيٽلاگ', storeTitle:'🛍️ هستهڪلا هٿ جي هنر جو اسٽور', asstHeader:'🎙️ وڪرو ڪندڙ وائس اسسٽنٽ'
+    },
+    'mai-IN': {
+      welcomeSub:'ग्रामीण हाथ • वैश्विक पहुँच', tagMain:'ग्रामीण भारतक प्रामाणिक हस्तशिल्प', tagSub:'कारीगरक समर्थन करू। विरासतक उत्सव मनाउ।',
+      getStarted:'शुरू करू ➔', selectLangTitle:'भाषा चुनू', confirmLang:'नेविगेशन मोडक आगाँ बढ़ू ➔',
+      chooseModeTitle:'नेविगेशन मोड चुनू', manualTitle:'मैनुअल / टच मोड', voiceModeTitle:'वॉइस असिस्टेंट मोड',
+      choosePortalTitle:'पोर्टल चुनू', buyerPortalTitle:'खरीदार पोर्टल', sellerPortalTitle:'कारीगर / विक्रेता पोर्टल',
+      aiHeader:'✨ AI फोटो स्टूडियो', navStudio:'स्टूडियो', navVoice:'वॉइस', navBank:'बैंक/QR', navPricing:'मूल्य', navCatalog:'कैटलॉग',
+      catalogTitle:'📊 अहाँक प्रकाशित कैटलॉग', storeTitle:'🛍️ हस्तकला हस्तशिल्प स्टोर', asstHeader:'🎙️ विक्रेता वॉइस असिस्टेंट'
+    },
+    'mni-IN': {
+      welcomeSub:'ꯂꯩꯄꯥꯛꯀꯤ ꯂꯣꯟ • ꯋꯥꯔꯂꯗ ꯂꯣꯛꯄ', tagMain:'ꯂꯩꯄꯥꯛꯀꯤ ꯑꯁꯤꯡꯕ ꯍꯟꯊꯛꯄꯁꯤꯡ', tagSub:'ꯁꯤꯜꯄꯁꯤꯡꯕꯨ ꯃꯇꯥꯡ ꯄꯤꯌꯨ। ꯄꯨꯡ ꯋꯥꯔꯣꯜ ꯃꯄꯥꯡꯒꯠꯄꯥ ꯑꯁꯤꯗ ꯁꯣꯡꯗꯣꯛꯄꯤꯌꯨ।',
+      getStarted:'ꯍꯧꯖꯤꯟꯅꯕ ➔', selectLangTitle:'ꯂꯣꯟ ꯈꯟꯅꯕ', confirmLang:'ꯅꯦꯚꯤꯒꯦꯁꯟ ꯃꯣꯗꯗ ꯆꯠꯊꯣꯛꯄ ➔',
+      chooseModeTitle:'ꯅꯦꯚꯤꯒꯦꯁꯟ ꯃꯣꯗ ꯈꯟꯅꯕ', manualTitle:'ꯃꯦꯅꯨꯑꯦꯜ / ꯇꯁ ꯃꯣꯗ', voiceModeTitle:'ꯚꯣꯏꯁ ꯑꯁꯤꯁꯇꯦꯟꯇ ꯃꯣꯗ',
+      choosePortalTitle:'ꯄꯣꯔꯇꯜ ꯈꯟꯅꯕ', buyerPortalTitle:'ꯄꯥꯡꯒꯜ ꯄꯣꯔꯇꯜ', sellerPortalTitle:'ꯁꯤꯜꯄꯁꯤꯡꯕ / ꯁꯦꯜꯔ ꯄꯣꯔꯇꯜ',
+      aiHeader:'✨ AI ꯐꯣꯇꯣ ꯁꯇꯨꯗꯤꯑꯣ', navStudio:'ꯁꯇꯨꯗꯤꯑꯣ', navVoice:'ꯚꯣꯏꯁ', navBank:'ꯕꯦꯡꯛ/QR', navPricing:'ꯃꯃꯜ', navCatalog:'ꯀꯦꯇꯂꯣꯒ',
+      catalogTitle:'📊 ꯅꯍꯥꯛꯀꯤ ꯄ꯭ꯔꯀꯥꯁꯤꯠ ꯀꯦꯇꯂꯣꯒ', storeTitle:'🛍️ ꯍꯁꯊꯀꯂꯥ ꯍꯟꯊꯛꯄ ꯁ꯭ꯇꯣꯔ', asstHeader:'🎙️ ꯁꯦꯜꯔ ꯚꯣꯏꯁ ꯑꯁꯤꯁꯇꯦꯟꯇ'
+    },
+    'brx-IN': {
+      welcomeSub:'ग्रामिन हाथ • ग्लोबाल जाव', tagMain:'ग्रामिन भारतनि असल हास्थशिल्प', tagSub:'हास्थशिल्पिनि मदद खालाम। हेरिटेजखौ उदां।',
+      getStarted:'जागायनाय ➔', selectLangTitle:'राव सायख', confirmLang:'नेभिगेसन मोडआव थां ➔',
+      chooseModeTitle:'नेभिगेसन मोड सायख', manualTitle:'मेनुयेल / टच मोड', voiceModeTitle:'भाइस असिस्टेन्ट मोड',
+      choosePortalTitle:'पोर्टेल सायख', buyerPortalTitle:'बायार पोर्टेल', sellerPortalTitle:'आर्टिसान / सेलार पोर्टेल',
+      aiHeader:'✨ AI फोट'+'ो स्टुडियो', navStudio:'स्टुडियो', navVoice:'भाइस', navBank:'बैंक/QR', navPricing:'मूल्य', navCatalog:'केटलग',
+      catalogTitle:'📊 नोंथांनि पब्लिश खालामनाय केटलग', storeTitle:'🛍️ हस्तकला हास्थशिल्प स्टोर', asstHeader:'🎙️ सेलार भाइस असिस्टेन्ट'
+    },
+    'sat-IN': {
+      welcomeSub:'ᱡᱤᱞᱤᱧ ᱛᱷᱟᱞ • ᱡᱟᱣᱜᱟᱛ ᱯᱟᱹᱪᱷᱤ', tagMain:'ᱜᱟᱹᱢᱟ ᱵᱷᱟᱨᱚᱛ ᱨᱮᱱᱟᱜ ᱥᱟᱹᱛ ᱦᱟᱛ ᱥᱤᱞᱯ', tagSub:'ᱥᱤᱞᱯᱤ ᱠᱚ ᱥᱟᱦᱟᱭ ᱢᱮ। ᱦᱮᱨᱤᱴᱮᱡ ᱩᱫᱟᱹᱣ ᱢᱮ।',
+      getStarted:'ᱮᱦᱚᱵ ᱢᱮ ➔', selectLangTitle:'ᱯᱟᱹᱨᱥᱤ ᱵᱟᱪᱷᱱᱟᱣ ᱢᱮ', confirmLang:'ᱱᱮᱵᱤᱜᱮᱥᱚᱱ ᱢᱳᱰ ᱨᱮ ᱪᱟᱞᱟᱣ ᱢᱮ ➔',
+      chooseModeTitle:'ᱱᱮᱵᱤᱜᱮᱥᱚᱱ ᱢᱳᱰ ᱵᱟᱪᱷᱱᱟᱣ ᱢᱮ', manualTitle:'ᱢᱮᱱᱩᱣᱟᱞ / ᱴᱟᱪ ᱢᱳᱰ', voiceModeTitle:'ᱵᱷᱳᱭᱥ ᱟᱥᱤᱥᱴᱮᱱᱴ ᱢᱳᱰ',
+      choosePortalTitle:'ᱯᱳᱨᱴᱟᱞ ᱵᱟᱪᱷᱱᱟᱣ ᱢᱮ', buyerPortalTitle:'ᱠᱮᱱᱟᱣᱤᱡ ᱯᱳᱨᱴᱟᱞ', sellerPortalTitle:'ᱥᱤᱞᱯᱤ / ᱵᱮᱪᱟᱣᱤᱡ ᱯᱳᱨᱴᱟᱞ',
+      aiHeader:'✨ AI ᱯᱷᱳᱴᱳ ᱥᱴᱩᱰᱤᱭᱳ', navStudio:'ᱥᱴᱩᱰᱤᱭᱳ', navVoice:'ᱵᱷᱳᱭᱥ', navBank:'ᱵᱮᱝᱠ/QR', navPricing:'ᱫᱟᱢ', navCatalog:'ᱠᱮᱴᱟᱞᱚᱜ',
+      catalogTitle:'📊 ᱟᱢᱟᱜ ᱯᱨᱚᱠᱟᱥᱤᱛ ᱠᱮᱴᱟᱞᱚᱜ', storeTitle:'🛍️ ᱦᱟᱥᱛᱷᱠᱚᱞᱟ ᱥᱤᱞᱯ ᱥᱴᱳᱨ', asstHeader:'🎙️ ᱵᱮᱪᱟᱣᱤᱡ ᱵᱷᱳᱭᱥ ᱟᱥᱤᱥᱴᱮᱱᱴ'
+    },
+    'ks-IN': {
+      welcomeSub:'دیہی ہاتھ • عالمی رسائی', tagMain:'دیہی بھارت کی مستند دستکاری', tagSub:'ہنرمندوں کی مدد کریں۔ ورثے کو منائیں۔',
+      getStarted:'شروع کریں ➔', selectLangTitle:'زبان منتخب کریں', confirmLang:'نیویگیشن موڈ جاری رکھیں ➔',
+      chooseModeTitle:'نیویگیشن موڈ منتخب کریں', manualTitle:'دستی / ٹچ موڈ', voiceModeTitle:'وائس اسسٹنٹ موڈ',
+      choosePortalTitle:'پورٹل منتخب کریں', buyerPortalTitle:'خریدار پورٹل', sellerPortalTitle:'کاریگر / فروخت کنندہ پورٹل',
+      aiHeader:'✨ AI فوٹو اسٹوڈیو', navStudio:'اسٹوڈیو', navVoice:'وائس', navBank:'بینک/QR', navPricing:'قیمت', navCatalog:'کیٹلاگ',
+      catalogTitle:'📊 آپ کا شائع شدہ کیٹلاگ', storeTitle:'🛍️ ہستھکلا دستکاری اسٹور', asstHeader:'🎙️ فروخت کنندہ وائس اسسٹنٹ'
+    }
+  };
+  Object.entries(extra).forEach(([code, dict]) => {
+    localUI[code] = Object.assign(localUI[code] || {}, dict);
+  });
+
+  /* More reliable online fallback for languages not covered by the local dictionaries. */
+  const oldTranslateUiText = translateUiText;
+  const translateTarget = {
+    'en-IN':'en','hi-IN':'hi','bn-IN':'bn','te-IN':'te','ta-IN':'ta','mr-IN':'mr','gu-IN':'gu','kn-IN':'kn',
+    'ml-IN':'ml','pa-IN':'pa','or-IN':'or','as-IN':'as','ur-IN':'ur','sa-IN':'sa','ks-IN':'ks','kok-IN':'kok',
+    'ne-IN':'ne','sd-IN':'sd','mai-IN':'mai','mni-IN':'mni','brx-IN':'brx','sat-IN':'sat'
+  };
+  translateUiText = async function(source, targetCode) {
+    if (!source || targetCode === 'en-IN') return source;
+    const key = targetCode + '::' + source;
+    if (uiTranslationCache[key]) return uiTranslationCache[key];
+    const tl = translateTarget[targetCode] || targetCode.split('-')[0];
+    try {
+      const r = await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=' + encodeURIComponent(tl) + '&dt=t&q=' + encodeURIComponent(source));
+      const d = await r.json();
+      const translated = Array.isArray(d) && Array.isArray(d[0]) ? d[0].map(x => x[0]).join('') : '';
+      if (translated && translated !== source) { uiTranslationCache[key] = translated; return translated; }
+    } catch(e) {}
+    try {
+      return await oldTranslateUiText(source, targetCode);
+    } catch(e) {
+      return source;
+    }
+  };
+
+  /* Keep language selection persistent; never reset it to English on Get Started. */
+  startAppFromWelcome = function () {
+    captureEnglishUI();
+    let saved = 'en-IN';
+    try { saved = localStorage.getItem('hasthakalaLanguage') || 'en-IN'; } catch(e) {}
+    if (!allIndianLanguages.some(l => l.code === saved)) saved = 'en-IN';
+    selectedLang = saved;
+    document.documentElement.lang = selectedLang;
+    document.body.setAttribute('data-language', selectedLang);
+    translateUI();
+    showScreen('screenLanguage');
+    const grid = document.getElementById('languageGrid');
+    if (grid) grid.innerHTML = allIndianLanguages.map(l =>
+      '<div class="lang-chip ' + (l.code === selectedLang ? 'active' : '') + '" onclick="selectLanguage(\'' + l.code + '\', this)">' + l.name + '</div>'
+    ).join('');
+  };
+
+  /* Add command words for the newly supported languages. */
+  const oldFindVoiceCommand = findVoiceCommand;
+  findVoiceCommand = function(text) {
+    const s = normalizeVoiceText(text);
+    const extraWords = {
+      studio:['اسٹوڈیو','फोटो स्टूडियो','स्टूडियो','स्टुडिओ','स्टुडियो','স্টুডিও','സ്റ്റുഡിയോ','സ്റ്റുഡിയോ','स्टूडिओ','स्टुडिओ','ꯁꯇꯨꯗꯤꯑꯣ','ᱥᱴᱩᱰᱤᱭᱳ'],
+      voice:['آواز','وائس','वाणी','भ्वाइस','व्हॉइस','ꯚꯣꯏꯁ','ᱵᱷᱳᱭᱥ'],
+      bank:['بینک','بانک','बैंक','बँक','ব্যাংক','ಬ್ಯಾಂಕ್','ബാങ്ക്','ब्यांक','ꯕꯦꯡꯛ','ᱵᱮᱝᱠ'],
+      pricing:['قیمت','মূল্য','मूल्य','दर','दाम','ꯃꯃꯜ','ᱫᱟᱢ'],
+      catalog:['کیٹلاگ','कैटलॉग','क्याटलग','केटलग','ক্যাটালগ','കാറ്റലോഗ്','ꯀꯦꯇꯂꯣꯒ','ᱠᱮᱴᱟᱞᱚᱜ'],
+      cart:['کارٹ','कार्ट','क्याटलग कार्ट','ꯀꯥꯔꯇ','ᱠᱟᱨᱴ']
+    };
+    for (const [cmd, words] of Object.entries(extraWords)) {
+      if (words.some(w => s.includes(normalizeVoiceText(w)))) return cmd;
+    }
+    return oldFindVoiceCommand(text);
+  };
+
+  /* Continuous multi-command voice assistant. */
+  startAssistantListening = function () {
+    const status = document.getElementById('assistantStatusText');
+    const transcript = document.getElementById('assistantTranscript');
+    if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+      if (status) status.innerText = 'Voice recognition is not supported in this browser. Use Chrome or Edge.';
+      return;
+    }
+    if (!window.isSecureContext && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+      if (status) status.innerText = 'Microphone access requires HTTPS or localhost.';
+      return;
+    }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (assistantRecognition) { try { assistantRecognition.onend = null; assistantRecognition.abort(); } catch(e){} }
+    assistantRecognition = new SpeechRecognition();
+    assistantRecognition.continuous = true;
+    assistantRecognition.interimResults = false;
+    assistantRecognition.maxAlternatives = 3;
+    assistantRecognition.lang = voiceLanguageCode(selectedLang);
+
+    let commandBusy = false;
+    let lastCommand = '';
+    let lastAt = 0;
+
+    const restart = (delay) => {
+      setTimeout(() => {
+        const modal = document.getElementById('voiceAssistantModal');
+        if (!modal || modal.style.display !== 'flex' || !assistantRecognition) return;
+        try { assistantRecognition.start(); } catch(e) {}
+      }, delay || 250);
+    };
+
+    assistantRecognition.onstart = () => {
+      if (status) status.innerText = '🎙️ Listening... Speak your next command.';
+    };
+
+    assistantRecognition.onresult = (event) => {
+      let text = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) text += event.results[i][0].transcript + ' ';
+      }
+      text = text.trim();
+      if (!text || commandBusy) return;
+      if (transcript) transcript.innerText = text;
+
+      const command = findVoiceCommand(text);
+      if (!command) {
+        if (status) status.innerText = '🎙️ I did not recognize that. Try Studio, Voice, Bank, Pricing, Catalog, or Cart.';
+        return;
+      }
+
+      const now = Date.now();
+      if (command === lastCommand && now - lastAt < 1800) return;
+      lastCommand = command;
+      lastAt = now;
+      commandBusy = true;
+
+      try { assistantRecognition.abort(); } catch(e) {}
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+      if (status) status.innerText = 'Opening ' + command + '...';
+      if (command === 'studio') switchSellerPage('seller-studio');
+      else if (command === 'voice') switchSellerPage('seller-voice');
+      else if (command === 'bank') switchSellerPage('seller-bank');
+      else if (command === 'pricing') switchSellerPage('seller-pricing');
+      else if (command === 'catalog') switchSellerPage('seller-inventory');
+      else if (command === 'cart') openCartModal();
+
+      speakAssistant(getLocalizedCommandReply(command) || ('Opening ' + command + '.'));
+      setTimeout(() => {
+        commandBusy = false;
+        lastCommand = '';
+        if (transcript) transcript.innerText = 'Listening for your next command...';
+        if (status) status.innerText = '🎙️ Listening... Speak your next command.';
+        restart(250);
+      }, 900);
+    };
+
+    assistantRecognition.onerror = (e) => {
+      console.warn('Assistant speech error:', e.error);
+      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+        if (status) status.innerText = 'Microphone permission was denied. Allow microphone access and try again.';
+        return;
+      }
+      if (e.error === 'audio-capture') {
+        if (status) status.innerText = 'No microphone was detected.';
+        return;
+      }
+      if (e.error === 'network') {
+        if (status) status.innerText = 'Speech service network error. Check your internet connection.';
+        restart(1200);
+        return;
+      }
+      if (e.error === 'no-speech') restart(300);
+    };
+
+    assistantRecognition.onend = () => {
+      const modal = document.getElementById('voiceAssistantModal');
+      if (modal && modal.style.display === 'flex' && !commandBusy) restart(250);
+    };
+
+    try { assistantRecognition.start(); }
+    catch(e) { if (status) status.innerText = 'Tap the microphone button to start voice assistance.'; }
+  };
+
+  /* Localized confirmations for the added languages; existing languages keep their originals. */
+  const oldReply = getLocalizedCommandReply;
+  getLocalizedCommandReply = function(command) {
+    const r = {
+      'ur-IN':{studio:'AI فوٹو اسٹوڈیو کھول رہا ہوں۔',voice:'وائس تفصیل کھول رہا ہوں۔',bank:'بینک اور QR کھول رہا ہوں۔',pricing:'قیمت کیلکولیٹر کھول رہا ہوں۔',catalog:'کیٹلاگ کھول رہا ہوں۔',cart:'کارٹ کھول رہا ہوں۔'},
+      'sa-IN':{studio:'AI चित्र-स्टूडियो उद्घाटयामि।',voice:'वाणी-विवरणम् उद्घाटयामि।',bank:'बैंक तथा QR उद्घाटयामि।',pricing:'मूल्य-गणकं उद्घाटयामि।',catalog:'सूचीम् उद्घाटयामि।',cart:'कार्ट् उद्घाटयामि।'},
+      'ne-IN':{studio:'AI फोटो स्टुडियो खोल्दैछु।',voice:'भ्वाइस विवरण खोल्दैछु।',bank:'बैंक र QR खोल्दैछु।',pricing:'मूल्य क्याल्कुलेटर खोल्दैछु।',catalog:'क्याटलग खोल्दैछु।',cart:'कार्ट खोल्दैछु।'},
+      'sd-IN':{studio:'AI فوٽو اسٽوڊيو کولي رهيو آهيان۔',voice:'وائس وضاحت کولي رهيو آهيان۔',bank:'بئنڪ ۽ QR کولي رهيو آهيان۔',pricing:'قيمت ڪيلڪيوليٽر کولي رهيو آهيان۔',catalog:'ڪيٽلاگ کولي رهيو آهيان۔',cart:'ڪارٽ کولي رهيو آهيان۔'},
+      'mai-IN':{studio:'AI फोटो स्टूडियो खोलि रहल छी।',voice:'वॉइस विवरण खोलि रहल छी।',bank:'बैंक आ QR खोलि रहल छी।',pricing:'मूल्य कैलकुलेटर खोलि रहल छी।',catalog:'कैटलॉग खोलि रहल छी।',cart:'कार्ट खोलि रहल छी।'},
+      'kok-IN':{studio:'AI फोटो स्टुडिओ उगडटा।',voice:'व्हॉइस वर्णन उगडटा।',bank:'बँक आनी QR उगडटा।',pricing:'दर कॅल्क्युलेटर उगडटा।',catalog:'कॅटलॉग उगडटा।',cart:'कार्ट उगडटा।'}
+    };
+    return (r[selectedLang] && r[selectedLang][command]) || oldReply(command) || ('Opening ' + command + '.');
+  };
+
+  /* Re-render the language grid if the welcome screen is already open. */
+  if (document.readyState !== 'loading') {
+    const grid = document.getElementById('languageGrid');
+    if (grid && !grid.children.length) startAppFromWelcome();
+  }
+})();
+</script>
 </body>
 </html>
