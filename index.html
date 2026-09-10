@@ -482,6 +482,15 @@
   let cart = [];
 
   // Fetch products live from Supabase database on startup
+    function showScreen(screenId) {
+    document.querySelectorAll('.screen-overlay').forEach(screen => {
+      screen.classList.add('hidden');
+    });
+    const target = document.getElementById(screenId);
+    if (target) {
+      target.classList.remove('hidden');
+    }
+  }
   async function loadProductsFromDB() {
     const { data, error } = await supabase.from('products').select('*').order('id', { ascending: false });
     if (!error && data) {
